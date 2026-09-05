@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Türkiyem Adalet Gaming - Sunucuya Bağlan</title>
+  <link rel="icon" href="logo.png" type="image/png">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    body {
+      background: radial-gradient(circle at center, #1e130c 0%, #0d0907 100%);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 20px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(243, 115, 33, 0.2);
+      backdrop-filter: blur(14px);
+      border-radius: 24px;
+      padding: 40px 30px;
+      max-width: 460px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(243, 115, 33, 0.1);
+      animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(24px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .logo-container {
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .logo {
+      max-width: 260px;
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 0 25px rgba(243, 115, 33, 0.45));
+      animation: pulseLogo 3s infinite ease-in-out;
+    }
+    @keyframes pulseLogo {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(243, 115, 33, 0.4)); }
+      50% { transform: scale(1.02); filter: drop-shadow(0 0 35px rgba(243, 115, 33, 0.7)); }
+    }
+    h1 {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+    }
+    p {
+      color: #b5a79e;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .ip-box {
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px dashed rgba(243, 115, 33, 0.4);
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 17px;
+      font-weight: 600;
+      font-family: 'Consolas', 'Courier New', monospace;
+      color: #ff9d42;
+      margin-bottom: 24px;
+      user-select: all;
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+    }
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px 20px;
+      background: linear-gradient(135deg, #f37321 0%, #d8570c 100%);
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 16px;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 8px 25px rgba(243, 115, 33, 0.4);
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(243, 115, 33, 0.6);
+      background: linear-gradient(135deg, #ff8438 0%, #e66113 100%);
+    }
+    .btn:active {
+      transform: translateY(0);
+    }
+    .footer-text {
+      font-size: 12px;
+      color: #7a6e65;
+      margin-top: 22px;
+    }
+    .footer-text a {
+      color: #f37321;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .footer-text a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo-container">
+      <img src="logo.png" alt="Türkiyem Adalet Gaming" class="logo">
+    </div>
+
+    <h1>Oyuna Bağlanılıyor...</h1>
+    <p>Tarayıcınız otomatik olarak <strong>Multi Theft Auto</strong> uygulamasını başlatacak. Açılmazsa aşağıdaki butona tıklayabilirsiniz.</p>
+
+    <div class="ip-box" id="ipDisplay">51.91.91.80:22003</div>
+
+    <a href="mtasa://51.91.91.80:22003" class="btn" id="connectBtn">
+      <span>🚀</span> Oyunu Başlat
+    </a>
+
+    <div class="footer-text">
+      Eğer MTA yüklü değilse <a href="https://multitheftauto.com" target="_blank">multitheftauto.com</a> adresinden indirebilirsiniz.
+    </div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const ipParam = urlParams.get('ip') || '51.91.91.80:22003';
+
+    const mtaUri = 'mtasa://' + ipParam;
+    document.getElementById('ipDisplay').innerText = ipParam;
+    document.getElementById('connectBtn').href = mtaUri;
+
+    // Sayfa açıldığında MTA:SA'yı otomatik tetikle
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        window.location.href = mtaUri;
+      }, 500);
+    });
+  </script>
+</body>
+</html>
