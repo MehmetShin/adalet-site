@@ -2,8 +2,8 @@
   --primary-orange: #f37321;
   --primary-orange-glow: rgba(243, 115, 33, 0.45);
   --primary-orange-light: #ff9142;
-  --dark-bg: #09090d;
-  --dark-surface: rgba(18, 18, 24, 0.85);
+  --dark-bg: #313338;
+  --dark-surface: rgba(43, 45, 49, 0.9);
   --dark-glass: rgba(255, 255, 255, 0.03);
   --glass-border: rgba(243, 115, 33, 0.18);
   --glass-border-hover: rgba(243, 115, 33, 0.5);
@@ -25,11 +25,7 @@ html {
 }
 
 body {
-  background-color: var(--dark-bg);
-  background-image:
-    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(243, 115, 33, 0.18) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 50% 100%, rgba(243, 115, 33, 0.08) 0%, transparent 60%);
-  background-attachment: fixed;
+  background-color: #313338;
   color: var(--text-main);
   font-family: var(--font-body);
   overflow-x: hidden;
@@ -37,16 +33,7 @@ body {
 }
 
 .ambient-glow {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  background:
-    radial-gradient(ellipse 70% 40% at 50% -5%, rgba(243, 115, 33, 0.35) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 30% at 50% 105%, rgba(243, 115, 33, 0.12) 0%, transparent 70%);
-  z-index: 0;
-  pointer-events: none;
+  display: none;
 }
 
 .navbar {
@@ -59,7 +46,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(9, 9, 13, 0.82);
+  background: rgba(43, 45, 49, 0.95);
   backdrop-filter: blur(18px);
   border-bottom: 1px solid rgba(243, 115, 33, 0.14);
   transition: var(--transition);
@@ -188,7 +175,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at center, rgba(243, 115, 33, 0.08) 0%, rgba(9, 9, 13, 0.85) 75%);
+  background: radial-gradient(circle at center, rgba(243, 115, 33, 0.08) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -442,10 +429,21 @@ body {
   z-index: 10;
 }
 
-#card-tsk   { background-image: url('tsk.png'); }
-#card-jgk   { background-image: url('jgk.png'); }
-#card-egm   { background-image: url('egm.png'); }
-#card-cetin { background-image: url('cetin.png'); }
+#card-tsk {
+  background-image: url('tsk.png');
+}
+
+#card-jgk {
+  background-image: url('jgk.png');
+}
+
+#card-egm {
+  background-image: url('egm.png');
+}
+
+#card-cetin {
+  background-image: url('cetin.png');
+}
 
 .factions-grid {
   display: grid;
@@ -473,18 +471,18 @@ body {
   position: absolute;
   inset: 0;
   background: linear-gradient(to top,
-      rgba(9, 9, 13, 0.92) 0%,
-      rgba(9, 9, 13, 0.55) 50%,
-      rgba(9, 9, 13, 0.25) 100%);
+      rgba(30, 31, 34, 0.95) 0%,
+      rgba(43, 45, 49, 0.65) 50%,
+      rgba(43, 45, 49, 0.25) 100%);
   transition: var(--transition);
   z-index: 1;
 }
 
 .faction-card:hover .faction-overlay {
   background: linear-gradient(to top,
-      rgba(9, 9, 13, 0.98) 0%,
-      rgba(9, 9, 13, 0.7) 50%,
-      rgba(9, 9, 13, 0.4) 100%);
+      rgba(30, 31, 34, 0.98) 0%,
+      rgba(43, 45, 49, 0.75) 50%,
+      rgba(43, 45, 49, 0.4) 100%);
 }
 
 .faction-content {
@@ -527,7 +525,7 @@ body {
 }
 
 .shop-banner {
-  background: linear-gradient(135deg, rgba(243, 115, 33, 0.15) 0%, rgba(18, 18, 24, 0.9) 100%);
+  background: linear-gradient(135deg, rgba(243, 115, 33, 0.12) 0%, rgba(43, 45, 49, 0.95) 100%);
   border: 1px solid rgba(243, 115, 33, 0.35);
   border-radius: 24px;
   padding: 60px 40px;
@@ -536,7 +534,7 @@ body {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 30px;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(243, 115, 33, 0.15);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(243, 115, 33, 0.12);
 }
 
 .shop-text h2 {
@@ -577,7 +575,7 @@ body {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding: 40px 20px;
   text-align: center;
-  background: #060608;
+  background: #2b2d31;
 }
 
 .footer p {
