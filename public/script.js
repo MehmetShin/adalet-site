@@ -24,21 +24,23 @@ function showToast(message) {
 
 window.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
-  const ipParam = urlParams.get('ip');
+  const ipParam = urlParams.get('ip') || '51.91.91.80:22003';
 
-  if (ipParam) {
-    const ipElement = document.getElementById('serverIp');
-    if (ipElement) ipElement.innerText = ipParam;
+  const ipElement = document.getElementById('serverIp');
+  if (ipElement && urlParams.get('ip')) {
+    ipElement.innerText = ipParam;
+  }
 
-    const playButtons = document.querySelectorAll('a[href^="mtasa://"]');
-    playButtons.forEach(btn => {
-      btn.href = 'mtasa://' + ipParam;
-    });
+  const playButtons = document.querySelectorAll('a[href^="mtasa://"]');
+  playButtons.forEach(btn => {
+    btn.href = 'mtasa://' + ipParam;
+  });
 
-    if (urlParams.get('auto') === 'true') {
-      setTimeout(() => {
-        window.location.href = 'mtasa://' + ipParam;
-      }, 500);
-    }
+  if (urlParams.get('auto') === 'true') {
+    const targetUrl = 'mtasa://' + ipParam;
+    window.location.assign(targetUrl);
+    setTimeout(() => {
+      window.location.href = targetUrl;
+    }, 200);
   }
 });
