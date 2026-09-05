@@ -438,6 +438,11 @@ body {
   z-index: 10;
 }
 
+#card-tsk   { background-image: url('tsk.jpg'); }
+#card-jgk   { background-image: url('jandarma.jpg'); }
+#card-egm   { background-image: url('egm.jpg'); }
+#card-cetin { background-image: url('cetin.jpg'); }
+
 .factions-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
@@ -450,45 +455,63 @@ body {
   background: var(--dark-surface);
   border: 1px solid var(--glass-border);
   border-radius: 20px;
-  padding: 32px 24px;
-  text-align: center;
-  transition: var(--transition);
-  position: relative;
   overflow: hidden;
+  position: relative;
+  min-height: 280px;
+  transition: var(--transition);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+.faction-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(9, 9, 13, 0.92) 0%,
+    rgba(9, 9, 13, 0.55) 50%,
+    rgba(9, 9, 13, 0.25) 100%
+  );
+  transition: var(--transition);
+  z-index: 1;
+}
+
+.faction-card:hover .faction-overlay {
+  background: linear-gradient(
+    to top,
+    rgba(9, 9, 13, 0.98) 0%,
+    rgba(9, 9, 13, 0.7) 50%,
+    rgba(9, 9, 13, 0.4) 100%
+  );
+}
+
+.faction-content {
+  position: relative;
+  z-index: 2;
+  padding: 32px 24px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 280px;
 }
 
 .faction-card:hover {
-  transform: translateY(-8px);
+  transform: translateY(-6px) scale(1.01);
   border-color: var(--primary-orange);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 30px rgba(243, 115, 33, 0.2);
-}
-
-.faction-badge {
-  width: 70px;
-  height: 70px;
-  margin: 0 auto 20px;
-  background: rgba(243, 115, 33, 0.08);
-  border: 1px solid rgba(243, 115, 33, 0.3);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30px;
-  transition: var(--transition);
-}
-
-.faction-card:hover .faction-badge {
-  background: var(--primary-orange);
-  transform: scale(1.1);
-  box-shadow: 0 0 25px var(--primary-orange);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.7), 0 0 30px rgba(243, 115, 33, 0.25);
 }
 
 .faction-name {
   font-family: var(--font-heading);
   font-size: 22px;
   font-weight: 700;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   color: #fff;
+  text-align: left;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.8);
 }
 
 .faction-desc {
