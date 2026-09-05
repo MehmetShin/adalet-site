@@ -432,17 +432,18 @@ body {
 
 .factions-section {
   padding: 80px 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
+  background: var(--dark-bg);
   position: relative;
   z-index: 10;
-  background: var(--dark-bg);
 }
 
 .factions-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
   gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .faction-card {
