@@ -32,11 +32,10 @@ body {
   line-height: 1.6;
 }
 
-/* ── Arka Plan Ambient Işıkları ── */
 .ambient-glow {
   position: fixed;
-  width: 500px;
-  height: 500px;
+  width: 550px;
+  height: 550px;
   border-radius: 50%;
   background: radial-gradient(circle, var(--primary-orange-glow) 0%, rgba(0,0,0,0) 70%);
   top: -150px;
@@ -44,23 +43,22 @@ body {
   transform: translateX(-50%);
   z-index: 0;
   pointer-events: none;
-  filter: blur(100px);
+  filter: blur(120px);
 }
 
-/* ── Header / Navbar ── */
 .navbar {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
-  padding: 16px 40px;
+  padding: 14px 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(9, 9, 13, 0.75);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(243, 115, 33, 0.12);
+  background: rgba(9, 9, 13, 0.82);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(243, 115, 33, 0.14);
   transition: var(--transition);
 }
 
@@ -72,9 +70,14 @@ body {
 }
 
 .nav-logo {
-  height: 46px;
+  height: 64px;
   width: auto;
-  filter: drop-shadow(0 0 10px var(--primary-orange-glow));
+  filter: drop-shadow(0 0 14px var(--primary-orange-glow));
+  transition: var(--transition);
+}
+
+.nav-logo:hover {
+  transform: scale(1.05);
 }
 
 .nav-links {
@@ -121,10 +124,10 @@ body {
 }
 
 .btn-nav-dc {
-  padding: 8px 18px;
+  padding: 9px 20px;
   background: rgba(88, 101, 242, 0.15);
   color: #5865F2;
-  border: 1px solid rgba(88, 101, 242, 0.3);
+  border: 1px solid rgba(88, 101, 242, 0.35);
   border-radius: 10px;
   font-size: 14px;
   font-weight: 600;
@@ -138,11 +141,11 @@ body {
 .btn-nav-dc:hover {
   background: #5865F2;
   color: #fff;
-  box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
+  box-shadow: 0 4px 18px rgba(88, 101, 242, 0.45);
 }
 
 .btn-nav-play {
-  padding: 8px 22px;
+  padding: 9px 22px;
   background: linear-gradient(135deg, var(--primary-orange), #d8570c);
   color: #fff;
   border: none;
@@ -159,7 +162,6 @@ body {
   box-shadow: 0 6px 20px rgba(243, 115, 33, 0.6);
 }
 
-/* ── Hero Section ── */
 .hero {
   position: relative;
   min-height: 100vh;
@@ -167,8 +169,8 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 120px 20px 60px;
-  background: radial-gradient(circle at 50% 20%, rgba(243, 115, 33, 0.12) 0%, rgba(9, 9, 13, 1) 75%);
+  padding: 130px 20px 70px;
+  background: radial-gradient(circle at 50% 25%, rgba(243, 115, 33, 0.14) 0%, rgba(9, 9, 13, 1) 75%);
   overflow: hidden;
 }
 
@@ -186,51 +188,40 @@ body {
   position: relative;
   z-index: 10;
   max-width: 900px;
+  width: 100%;
   margin: 0 auto;
-}
-
-.hero-badge {
-  display: inline-flex;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 8px 20px;
-  background: rgba(243, 115, 33, 0.12);
-  border: 1px solid rgba(243, 115, 33, 0.35);
-  border-radius: 50px;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--primary-orange-light);
-  letter-spacing: 1px;
-  text-transform: uppercase;
+  justify-content: center;
+}
+
+.hero-logo-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
   margin-bottom: 24px;
-  animation: pulseBadge 3s infinite;
-}
-
-@keyframes pulseBadge {
-  0%, 100% { box-shadow: 0 0 10px rgba(243, 115, 33, 0.2); }
-  50% { box-shadow: 0 0 25px rgba(243, 115, 33, 0.5); }
-}
-
-.hero-badge-dot {
-  width: 8px;
-  height: 8px;
-  background: #00ff88;
-  border-radius: 50%;
-  box-shadow: 0 0 8px #00ff88;
 }
 
 .hero-logo-main {
-  max-width: 380px;
-  width: 85%;
+  max-width: 440px;
+  width: 90%;
   height: auto;
   filter: drop-shadow(0 0 35px var(--primary-orange-glow));
-  margin-bottom: 20px;
   animation: heroLogoFloat 4s ease-in-out infinite;
+  display: block;
+  margin: 0 auto;
 }
 
 @keyframes heroLogoFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); filter: drop-shadow(0 0 50px rgba(243, 115, 33, 0.7)); }
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+    filter: drop-shadow(0 0 55px rgba(243, 115, 33, 0.7));
+  }
 }
 
 .hero-title {
@@ -241,6 +232,7 @@ body {
   letter-spacing: 1px;
   line-height: 1.15;
   margin-bottom: 16px;
+  text-align: center;
 }
 
 .hero-title span {
@@ -249,20 +241,21 @@ body {
 }
 
 .hero-desc {
-  font-size: 18px;
+  font-size: 16px;
   color: var(--text-muted);
-  max-width: 650px;
-  margin: 0 auto 34px;
+  max-width: 700px;
+  margin: 0 auto 36px;
+  text-align: center;
+  line-height: 1.7;
 }
 
-/* Hero Buton & IP Kopyalama */
 .hero-cta-wrapper {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: 16px;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
 .btn-primary-play {
@@ -288,7 +281,7 @@ body {
 .ip-copy-box {
   display: flex;
   align-items: center;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.65);
   border: 1px solid var(--glass-border);
   border-radius: 14px;
   padding: 6px 6px 6px 18px;
@@ -327,7 +320,6 @@ body {
   color: #fff;
 }
 
-/* ── Canlı İstatistik Kartları ── */
 .stats-section {
   padding: 20px 20px 80px;
   max-width: 1200px;
@@ -402,7 +394,6 @@ body {
   font-weight: 600;
 }
 
-/* ── Bölüm Başlıkları ── */
 .section-header {
   text-align: center;
   margin-bottom: 60px;
@@ -433,7 +424,6 @@ body {
   font-size: 15px;
 }
 
-/* ── Birimler & Birlikler ── */
 .factions-section {
   padding: 80px 20px;
   max-width: 1200px;
@@ -497,7 +487,6 @@ body {
   line-height: 1.6;
 }
 
-/* ── Mağaza & Destek Bölümü ── */
 .shop-section {
   padding: 80px 20px;
   max-width: 1200px;
@@ -551,7 +540,6 @@ body {
   box-shadow: 0 15px 40px rgba(0, 176, 116, 0.6);
 }
 
-/* ── Footer ── */
 .footer {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding: 40px 20px;
@@ -568,7 +556,6 @@ body {
   color: var(--primary-orange);
 }
 
-/* Toast Bildirimi */
 .toast {
   position: fixed;
   bottom: 30px;
@@ -592,10 +579,9 @@ body {
   transform: translateY(0);
 }
 
-/* Mobil Uyum */
 @media (max-width: 768px) {
   .navbar {
-    padding: 16px 20px;
+    padding: 14px 20px;
   }
   .nav-links {
     display: none;
