@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adalet Gaming - Sunucuya Bağlan</title>
+  <link rel="icon" href="https://cdn.discordapp.com/icons/1162088358474940437/a_6c4664883b27dc5a6cebe6d953f9e8a7.png?size=128" type="image/png">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+    body {
+      background: radial-gradient(circle at center, #1a1a24 0%, #0d0d12 100%);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 20px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px 30px;
+      max-width: 450px;
+      width: 100%;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      animation: fadeIn 0.8s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .badge {
+      display: inline-block;
+      padding: 6px 14px;
+      background: rgba(88, 101, 242, 0.2);
+      color: #5865F2;
+      border: 1px solid rgba(88, 101, 242, 0.4);
+      border-radius: 50px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      letter-spacing: 0.5px;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 12px;
+      color: #ffffff;
+    }
+    p {
+      color: #a0a0b0;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 25px;
+    }
+    .ip-box {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 16px;
+      font-family: monospace;
+      color: #00ffaa;
+      margin-bottom: 25px;
+      user-select: all;
+    }
+    .btn {
+      display: inline-block;
+      width: 100%;
+      padding: 14px 20px;
+      background: linear-gradient(135deg, #5865F2, #4752C4);
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(88, 101, 242, 0.4);
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(88, 101, 242, 0.6);
+    }
+    .footer-text {
+      font-size: 12px;
+      color: #666;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge">TÜRKİYEM ADALET GAMING</div>
+    <h1>Oyuna Bağlanılıyor...</h1>
+    <p>Tarayıcınız otomatik olarak <strong>Multi Theft Auto</strong> uygulamasını başlatacak. Açılmazsa aşağıdaki butona tıklayabilirsiniz.</p>
+
+    <div class="ip-box" id="ipDisplay">51.91.91.80:22003</div>
+
+    <a href="mtasa://51.91.91.80:22003" class="btn" id="connectBtn">🚀 Oyunu Başlat</a>
+
+    <div class="footer-text">
+      Eğer MTA yüklü değilse <a href="https://multitheftauto.com" target="_blank" style="color: #5865F2;">multitheftauto.com</a> adresinden indirebilirsiniz.
+    </div>
+  </div>
+
+  <script>
+    // URL'den ip parametresi gelirse dinamik al (örn: ?ip=51.91.91.80:22003)
+    const urlParams = new URLSearchParams(window.location.search);
+    const ipParam = urlParams.get('ip') || '51.91.91.80:22003';
+
+    const mtaUri = 'mtasa://' + ipParam;
+    document.getElementById('ipDisplay').innerText = ipParam;
+    document.getElementById('connectBtn').href = mtaUri;
+
+    // Sayfa yüklendiğinde otomatik olarak MTA:SA'yı tetikle
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        window.location.href = mtaUri;
+      }, 500);
+    });
+  </script>
+</body>
+</html>
