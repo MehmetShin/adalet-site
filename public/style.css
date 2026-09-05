@@ -162,7 +162,7 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 130px 20px 30px;
+  padding: 95px 20px 20px;
   overflow: hidden;
 }
 
@@ -187,11 +187,11 @@ body {
   justify-content: center;
   align-items: center;
   width: 100%;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
 }
 
 .hero-logo-main {
-  max-width: 440px;
+  max-width: 420px;
   width: 90%;
   height: auto;
   animation: heroLogoFloat 4s ease-in-out infinite;
@@ -218,7 +218,7 @@ body {
   text-transform: uppercase;
   letter-spacing: 1px;
   line-height: 1.15;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   text-align: center;
 }
 
@@ -231,9 +231,9 @@ body {
   font-size: 16px;
   color: var(--text-muted);
   max-width: 700px;
-  margin: 0 auto 24px;
+  margin: 0 auto 20px;
   text-align: center;
-  line-height: 1.7;
+  line-height: 1.6;
 }
 
 .hero-cta-wrapper {
@@ -242,7 +242,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 16px;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .btn-primary-play {
