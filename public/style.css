@@ -37,7 +37,7 @@ body {
   width: 550px;
   height: 550px;
   border-radius: 50%;
-  background: radial-gradient(circle, var(--primary-orange-glow) 0%, rgba(0,0,0,0) 70%);
+  background: radial-gradient(circle, var(--primary-orange-glow) 0%, rgba(0, 0, 0, 0) 70%);
   top: -150px;
   left: 50%;
   transform: translateX(-50%);
@@ -221,9 +221,12 @@ body {
 }
 
 @keyframes heroLogoFloat {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-8px);
     filter: drop-shadow(0 0 55px rgba(243, 115, 33, 0.7));
@@ -438,10 +441,10 @@ body {
   z-index: 10;
 }
 
-#card-tsk   { background-image: url('tsk.jpg'); }
-#card-jgk   { background-image: url('jandarma.jpg'); }
-#card-egm   { background-image: url('egm.jpg'); }
-#card-cetin { background-image: url('cetin.jpg'); }
+#card-tsk   { background-image: url('tsk.png'); }
+#card-jgk   { background-image: url('jgk.png'); }
+#card-egm   { background-image: url('egm.png'); }
+#card-cetin { background-image: url('cetin.png'); }
 
 .factions-grid {
   display: grid;
@@ -468,23 +471,19 @@ body {
 .faction-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(9, 9, 13, 0.92) 0%,
-    rgba(9, 9, 13, 0.55) 50%,
-    rgba(9, 9, 13, 0.25) 100%
-  );
+  background: linear-gradient(to top,
+      rgba(9, 9, 13, 0.92) 0%,
+      rgba(9, 9, 13, 0.55) 50%,
+      rgba(9, 9, 13, 0.25) 100%);
   transition: var(--transition);
   z-index: 1;
 }
 
 .faction-card:hover .faction-overlay {
-  background: linear-gradient(
-    to top,
-    rgba(9, 9, 13, 0.98) 0%,
-    rgba(9, 9, 13, 0.7) 50%,
-    rgba(9, 9, 13, 0.4) 100%
-  );
+  background: linear-gradient(to top,
+      rgba(9, 9, 13, 0.98) 0%,
+      rgba(9, 9, 13, 0.7) 50%,
+      rgba(9, 9, 13, 0.4) 100%);
 }
 
 .faction-content {
@@ -501,7 +500,7 @@ body {
 .faction-card:hover {
   transform: translateY(-6px) scale(1.01);
   border-color: var(--primary-orange);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.7), 0 0 30px rgba(243, 115, 33, 0.25);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 30px rgba(243, 115, 33, 0.25);
 }
 
 .faction-name {
@@ -511,7 +510,7 @@ body {
   margin-bottom: 10px;
   color: #fff;
   text-align: left;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
 }
 
 .faction-desc {
@@ -536,7 +535,7 @@ body {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 30px;
-  box-shadow: 0 25px 60px rgba(0,0,0,0.7), 0 0 40px rgba(243, 115, 33, 0.15);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(243, 115, 33, 0.15);
 }
 
 .shop-text h2 {
@@ -616,12 +615,15 @@ body {
   .navbar {
     padding: 14px 20px;
   }
+
   .nav-links {
     display: none;
   }
+
   .hero-title {
     font-size: 32px;
   }
+
   .shop-banner {
     text-align: center;
     justify-content: center;
