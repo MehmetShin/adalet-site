@@ -257,12 +257,12 @@ body {
   align-items: center;
   gap: 12px;
   transition: var(--transition);
-  box-shadow: 0 10px 30px rgba(243, 115, 33, 0.45);
+  box-shadow: 0 4px 14px rgba(243, 115, 33, 0.22);
 }
 
 .btn-primary-play:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 15px 40px rgba(243, 115, 33, 0.7);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(243, 115, 33, 0.35);
 }
 
 .ip-copy-box {
@@ -457,11 +457,14 @@ body {
   overflow: hidden;
   position: relative;
   min-height: 280px;
-  transition: var(--transition);
+  transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1),
+              border-color 0.45s cubic-bezier(0.25, 1, 0.5, 1),
+              box-shadow 0.45s cubic-bezier(0.25, 1, 0.5, 1);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   cursor: pointer;
+  will-change: transform, box-shadow;
 }
 
 .faction-overlay {
@@ -471,7 +474,7 @@ body {
       rgba(30, 31, 34, 0.95) 0%,
       rgba(43, 45, 49, 0.65) 50%,
       rgba(43, 45, 49, 0.25) 100%);
-  transition: var(--transition);
+  transition: background 0.45s cubic-bezier(0.25, 1, 0.5, 1);
   z-index: 1;
 }
 
@@ -494,9 +497,9 @@ body {
 }
 
 .faction-card:hover {
-  transform: translateY(-6px) scale(1.01);
+  transform: translateY(-8px);
   border-color: var(--primary-orange);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 30px rgba(243, 115, 33, 0.25);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45), 0 0 24px rgba(243, 115, 33, 0.22);
 }
 
 .faction-name {
