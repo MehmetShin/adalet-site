@@ -1,46 +1,125 @@
-function copyIpAddress() {
-  const ipText = document.getElementById('serverIp').innerText;
-  navigator.clipboard.writeText(ipText).then(() => {
-    showToast('IP Adresi Kopyalandı! (' + ipText + ')');
-  }).catch(() => {
-    const tempInput = document.createElement('input');
-    tempInput.value = ipText;
-    document.body.appendChild(tempInput);
-    tempInput.select();
-    document.execCommand('copy');
-    document.body.removeChild(tempInput);
-    showToast('IP Adresi Kopyalandı!');
-  });
-}
+document.addEventListener('DOMContentLoaded', () => {
+  const grpLoader = document.getElementById('grpLoader');
+  if (grpLoader) {
+    const startTime = Date.now();
+    const hideLoader = () => {
+      const elapsed = Date.now() - startTime;
+      const delay = Math.max(0, 1000 - elapsed);
+      setTimeout(() => {
+        grpLoader.classList.add('hidden');
+        setTimeout(() => {
+          if (grpLoader && grpLoader.parentNode) {
+            grpLoader.style.display = 'none';
+          }
+        }, 500);
+      }, delay);
+    };
 
-function showToast(message) {
-  const toast = document.getElementById('toast');
-  toast.innerText = message;
-  toast.classList.add('show');
-  setTimeout(() => {
-    toast.classList.remove('show');
-  }, 2500);
-}
+    if (document.readyState === 'complete') {
+      hideLoader();
+    } else {
+      window.addEventListener('load', hideLoader);
+      setTimeout(hideLoader, 2000);
+    }
+  }
+  const toggleBtn = document.getElementById('grpMobileToggle');
+  const navMenu = document.getElementById('grpHeaderNav');
+  if (toggleBtn && navMenu) {
+    toggleBtn.addEventListener('click', () => {
+      navMenu.classList.toggle('open');
+    });
+    navMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('open');
+      });
+    });
+  }
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.grp-nav a');
 
-window.addEventListener('DOMContentLoaded', () => {
+  const header = document.querySelector('header.grp-header');
+  const onScroll = () => {
+    const scrollY = window.pageYOffset;
+    if (header) {
+      if (scrollY > 30) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    }
+    sections.forEach(section => {
+      const sectionHeight = section.offsetHeight;
+      const sectionTop = section.offsetTop - 120;
+      const sectionId = section.getAttribute('id');
+
+      if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === `#${sectionId}`) {
+            link.classList.add('active');
+          }
+        });
+      }
+    });
+  };
+  window.addEventListener('scroll', onScroll);
+  onScroll();
   const urlParams = new URLSearchParams(window.location.search);
-  const ipParam = urlParams.get('ip') || '51.91.91.80:22003';
-
+  const customIp = urlParams.get('ip') || '51.91.91.80:22003';
   const ipElement = document.getElementById('serverIp');
   if (ipElement && urlParams.get('ip')) {
-    ipElement.innerText = ipParam;
+    ipElement.innerText = customIp;
   }
 
   const playButtons = document.querySelectorAll('a[href^="mtasa://"]');
   playButtons.forEach(btn => {
-    btn.href = 'mtasa://' + ipParam;
+    btn.href = 'mtasa://' + customIp;
   });
 
   if (urlParams.get('auto') === 'true') {
-    const targetUrl = 'mtasa://' + ipParam;
+    const targetUrl = 'mtasa://' + customIp;
     window.location.assign(targetUrl);
-    setTimeout(() => {
-      window.location.href = targetUrl;
-    }, 200);
   }
 });
+function copyIpAddress() {
+  const ipElement = document.getElementById('serverIp');
+  if (!ipElement) return;
+
+  const ipText = ipElement.innerText.trim();
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(ipText)
+      .then(() => showToast(`IP Adresi Kopyalandı! (${ipText})`))
+      .catch(() => fallbackCopy(ipText));
+  } else {
+    fallbackCopy(ipText);
+  }
+}
+
+function fallbackCopy(text) {
+  const tempInput = document.createElement('input');
+  tempInput.value = text;
+  document.body.appendChild(tempInput);
+  tempInput.select();
+  try {
+    document.execCommand('copy');
+    showToast(`IP Adresi Kopyalandı! (${text})`);
+  } catch (err) {
+    showToast('Kopyalama Başarısız!');
+  }
+  document.body.removeChild(tempInput);
+}
+let toastTimeout;
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  const toastMsg = document.getElementById('toastMsg');
+  if (!toast) return;
+
+  if (toastMsg) toastMsg.innerText = message;
+  toast.classList.add('show');
+
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => {
+    toast.classList.remove('show');
+  }, 3000);
+}

@@ -4,127 +4,264 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Türkiyem Adalet Gaming - Resmi Web Sitesi</title>
+  <title>Türkiyem Adalet Gaming - MTA:SA Askerî & Polisiye Roleplay</title>
+  <meta name="description"
+    content="Türkiyem Adalet Gaming, MTA platformunda kaliteli, disiplinli ve gerçekçi askerî & polisiye rol deneyimi sunan topluluktur.">
   <link rel="icon" href="logo.png" type="image/png">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap"
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
     rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <div class="ambient-glow"></div>
-
-  <header class="navbar">
-    <ul class="nav-links">
-      <li><a href="#hero" class="active">Ana Sayfa</a></li>
-      <li><a href="#birimler">Birimler</a></li>
-      <li><a href="#magaza">Mağaza</a></li>
-    </ul>
-
-    <div class="nav-actions">
-      <a href="https://discord.gg/adaletgaming" target="_blank" class="btn-nav-dc">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-          <path
-            d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" />
-        </svg>
-        Discord'a Katıl
-      </a>
-      <a href="mtasa://51.91.91.80:22003" class="btn-nav-play">Sunucuya Bağlan</a>
+  <div id="grpLoader" class="grp-page-loader">
+    <div class="grp-loader-backdrop"></div>
+    <div class="grp-loader-content">
+      <div class="grp-loader-logo-wrapper">
+        <div class="grp-loader-ring-outer"></div>
+        <div class="grp-loader-ring-inner"></div>
+        <img src="logo.png" alt="Türkiyem Adalet Gaming" class="grp-loader-logo-img">
+      </div>
+      <h2 class="grp-loader-title">TÜRKİYEM ADALET <span>GAMING</span></h2>
+      <div class="grp-loader-bar-box">
+        <div class="grp-loader-bar-fill"></div>
+      </div>
+      <p class="grp-loader-text">Sunucu Varlıkları Yükleniyor<span class="grp-loader-dots"></span></p>
     </div>
+  </div>
+
+  <div class="grp-bg-effects">
+    <div class="grp-bg-image"></div>
+    <div class="grp-bg-overlay"></div>
+    <div class="grp-grid-pattern"></div>
+    <div class="grp-glow-orb orb-1"></div>
+    <div class="grp-glow-orb orb-2"></div>
+    <div class="grp-glow-orb orb-3"></div>
+  </div>
+
+  <header class="grp-header">
+    <a href="#hero" class="grp-logo-box" aria-label="Türkiyem Adalet Gaming Ana Sayfa">
+      <img src="logo.png" class="grp-logo-img" alt="Türkiyem Adalet Gaming">
+    </a>
+
+    <nav class="grp-nav" id="grpHeaderNav">
+      <a href="#hero" class="active"><i class="fas fa-house nav-icon"></i> Ana Sayfa</a>
+      <a href="#birimler"><i class="fas fa-user-shield nav-icon"></i> Birimlerimiz</a>
+      <a href="#katil"><i class="fas fa-compass nav-icon"></i> Nasıl Katılırım?</a>
+      <a href="#magaza"><i class="fas fa-store nav-icon"></i> Mağaza</a>
+    </nav>
+
+    <div class="grp-user-area">
+      <a href="https://discord.gg/adaletgaming" target="_blank" class="grp-btn-dc">
+        <i class="fab fa-discord"></i>
+        <span>Discord'a Katıl</span>
+      </a>
+      <a href="mtasa://51.91.91.80:22003" class="grp-login-button">
+        <i class="fas fa-play"></i>
+        <span>Oyuna Bağlan</span>
+      </a>
+    </div>
+
+    <button type="button" class="grp-mobile-toggle" id="grpMobileToggle" aria-label="Menüyü Aç/Kapat">
+      <i class="fas fa-bars"></i>
+    </button>
   </header>
 
-  <section class="hero" id="hero">
-    <div class="hero-overlay"></div>
+  <section class="grp-section grp-hero" id="hero">
+    <div class="grp-hero-content">
 
-    <div class="hero-content">
-      <div class="hero-logo-box">
-        <img src="logo.png" alt="Türkiyem Adalet Gaming" class="hero-logo-main">
-      </div>
+      <h1 class="grp-hero-title">
+        GERÇEKÇİ BİR ROLEPLAY <span>DENEYİMİ</span>
+      </h1>
 
-      <h1 class="hero-title">GERÇEKÇİ BİR ROLEPLAY <span>DENEYİMİ</span></h1>
-      <p class="hero-desc">
-        MTA platformunda faaliyet gösteren sesli ve yazılı askerî & polisiye roleplay topluluğudur. Sunucumuz; disiplin,
-        düzen ve kurumsallık ilkeleri üzerine inşa edilmiştir.
+      <p class="grp-hero-desc">
+        MTA platformunda faaliyet gösteren sesli ve yazılı askerî & polisiye roleplay topluluğudur.
+        Sunucumuz; disiplin, hiyerarşi, düzen ve kurumsallık ilkeleri üzerine inşa edilmiştir.
       </p>
 
-      <div class="hero-cta-wrapper">
-        <a href="mtasa://51.91.91.80:22003" class="btn-primary-play">
-          <span>🚀</span> Sunucuya Bağlan
+      <div class="grp-hero-actions">
+        <a href="mtasa://51.91.91.80:22003" class="grp-btn-primary">
+          <i class="fas fa-rocket"></i> Sunucuya Bağlan
         </a>
+      </div>
+    </div>
+  </section>
 
-        <div class="ip-copy-box" onclick="copyIpAddress()" title="Tıkla ve Kopyala">
-          <span class="ip-text" id="serverIp">51.91.91.80:22003</span>
-          <button class="btn-copy" id="copyBtn">Kopyala</button>
+  <section class="grp-section grp-factions" id="birimler">
+    <div class="grp-section-header">
+      <h2 class="grp-title">RESMÎ <span>BİRİMLERİMİZ</span></h2>
+      <p class="grp-subtitle">Sunucumuzda yer alan resmi askerî, polisiye ve sivil birimlere katılarak role başla.</p>
+    </div>
+
+    <div class="grp-factions-grid">
+      <div class="grp-faction-card" style="--card-bg: url('tsk.png');">
+        <div class="grp-faction-card-overlay"></div>
+        <div class="grp-faction-card-body">
+          <h3 class="grp-faction-name">Türk Silahlı Kuvvetleri</h3>
+          <p class="grp-faction-desc">Disiplin, ağır teçhizat, askeri üs güvenliği ve stratejik kara/hava operasyonları
+            ile vatanın bölünmez bütünlüğü.</p>
+          <a href="mtasa://51.91.91.80:22003" class="grp-btn-faction">
+            <span>Birime Katıl</span>
+            <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="grp-faction-card" style="--card-bg: url('jgk.png');">
+        <div class="grp-faction-card-overlay"></div>
+        <div class="grp-faction-card-body">
+          <h3 class="grp-faction-name">Jandarma Genel Komutanlığı</h3>
+          <p class="grp-faction-desc">Kırsal asayiş, JÖH timleri, yol kontrol noktaları ve kesintisiz devriye gücüyle
+            her an her yerde görevde.</p>
+          <a href="mtasa://51.91.91.80:22003" class="grp-btn-faction">
+            <span>Birime Katıl</span>
+            <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="grp-faction-card" style="--card-bg: url('egm.png');">
+        <div class="grp-faction-card-overlay"></div>
+        <div class="grp-faction-card-body">
+          <h3 class="grp-faction-name">Emniyet Genel Müdürlüğü</h3>
+          <p class="grp-faction-desc">Şehir içi huzur, trafik denetimleri, Asayiş ve PÖH timleri ile suçlulara göz
+            açtırmayan hızlı müdahale ekipleri.</p>
+          <a href="mtasa://51.91.91.80:22003" class="grp-btn-faction">
+            <span>Birime Katıl</span>
+            <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="grp-faction-card" style="--card-bg: url('cetin.png');">
+        <div class="grp-faction-card-overlay"></div>
+        <div class="grp-faction-card-body">
+          <h3 class="grp-faction-name">Çetin Aşireti</h3>
+          <p class="grp-faction-desc">Sunucunun köklü ve sarsılmaz aile yapısı. Saygı, sadakat, geniş konvoylar ve
+            sokaktaki gerçek güç.</p>
+          <a href="mtasa://51.91.91.80:22003" class="grp-btn-faction">
+            <span>Birime Katıl</span>
+            <i class="fas fa-arrow-right"></i>
+          </a>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="factions-section" id="birimler">
-    <div class="section-header">
-      <span class="section-badge">KLANLAR</span>
-      <h2 class="section-title">SUNUCU <span>BİRİMLERİ</span></h2>
+  <section class="grp-section grp-how-to-play" id="katil">
+    <div class="grp-section-header">
+      <h2 class="grp-title">3 MADDEDE OYUNA NASIL <span>BAŞLARIM?</span></h2>
+      <p class="grp-subtitle">Sunucumuza katılmak ve role başlamak sadece 3 basit adımdan ibarettir.</p>
     </div>
 
-    <div class="factions-grid">
-      <div class="faction-card" id="card-tsk">
-        <div class="faction-overlay"></div>
-        <div class="faction-content">
-          <h3 class="faction-name">Türk Silahlı Kuvvetleri</h3>
-          <p class="faction-desc">Disiplin, ağır teçhizat ve stratejik askeri operasyonlarla vatanın bölünmez bütünlüğü.
-          </p>
-        </div>
+    <div class="grp-steps-grid">
+      <div class="grp-step-card">
+        <div class="grp-step-number">01</div>
+        <div class="grp-step-icon"><i class="fas fa-download"></i></div>
+        <h3>GTA SA & MTA İndir</h3>
+        <p>Bilgisayarında temiz bir GTA San Andreas kurulumu olduğundan ve MTA:SA istemcisinin yüklü olduğundan emin ol.
+        </p>
       </div>
 
-      <div class="faction-card" id="card-jgk">
-        <div class="faction-overlay"></div>
-        <div class="faction-content">
-          <h3 class="faction-name">Jandarma Genel Komutanlığı</h3>
-          <p class="faction-desc">Kırsal asayiş, özel harekat timleri ve kesintisiz devriye gücüyle her zaman görevde.
-          </p>
-        </div>
+      <div class="grp-step-card">
+        <div class="grp-step-number">02</div>
+        <div class="grp-step-icon"><i class="fas fa-server"></i></div>
+        <h3>Sunucuya Bağlan</h3>
+        <p>MTA'yı açıp Hızlı Bağlan kısmına <code>51.91.91.80:22003</code> yazarak veya doğrudan butonumuzla giriş yap.
+        </p>
       </div>
 
-      <div class="faction-card" id="card-egm">
-        <div class="faction-overlay"></div>
-        <div class="faction-content">
-          <h3 class="faction-name">Emniyet Genel Müdürlüğü</h3>
-          <p class="faction-desc">Şehir içi huzur, asayiş denetimleri ve suçlulara göz açtırmayan hızlı müdahale
-            ekipleri.</p>
-        </div>
-      </div>
-
-      <div class="faction-card" id="card-cetin">
-        <div class="faction-overlay"></div>
-        <div class="faction-content">
-          <h3 class="faction-name">Çetin Aşireti</h3>
-          <p class="faction-desc">Sunucunun köklü ve sarsılmaz aile yapısı. Saygı, sadakat ve sokaktaki gerçek güç.</p>
-        </div>
+      <div class="grp-step-card">
+        <div class="grp-step-number">03</div>
+        <div class="grp-step-icon"><i class="fas fa-masks-theater"></i></div>
+        <h3>Bu Kadar!</h3>
+        <p>Sunucunun keyfini çıkarmaya başlayabilirsin.</p>
       </div>
     </div>
   </section>
 
-  <section class="shop-section" id="magaza">
-    <div class="shop-banner">
-      <div class="shop-text">
-        <h2>Resmi Sunucu Mağazası</h2>
-        <p>VIP üyelikler, özel araçlar ve oyun içi ayrıcalıklar için Shopier güvencesiyle güvenle alışveriş yapın.</p>
+  <section class="grp-section grp-shop" id="magaza">
+    <div class="grp-shop-banner">
+      <div class="grp-shop-badge">RESMİ MAĞAZA</div>
+      <div class="grp-shop-content">
+        <h2>Ayrıcalıklı Oyun Keyfi: <span>Shopier Mağazamız</span></h2>
+        <p>VIP paketler, özel zırhlı araç tasarımları, özel telsiz kodları ve oyun içi ayrıcalıklar için güvenli Shopier
+          altyapımızla alışverişinizi anında gerçekleştirin.</p>
+        <div class="grp-shop-features">
+          <span><i class="fas fa-check-circle"></i> Anında Otomatik Teslimat</span>
+          <span><i class="fas fa-lock"></i> 256-Bit SSL Güvenli Ödeme</span>
+          <span><i class="fas fa-headset"></i> 7/24 Alışveriş Desteği</span>
+        </div>
       </div>
-      <a href="https://www.shopier.com/tagmagaza" target="_blank" class="btn-shop">
-        <span>🛒</span> Shopier Mağazasına Git
-      </a>
+      <div class="grp-shop-action">
+        <a href="https://www.shopier.com/tagmagaza" target="_blank" class="grp-btn-shop">
+          <i class="fas fa-cart-shopping"></i> Mağazaya Git
+        </a>
+      </div>
     </div>
   </section>
 
-  <footer class="footer">
-    <p>© 2020 <span>Türkiyem Adalet Gaming</span>. Tüm Hakları Saklıdır.</p>
+  <section class="grp-section grp-community">
+    <div class="grp-community-box">
+      <div class="grp-community-text">
+        <h2>Aramıza Katılmaya Hazır mısın?</h2>
+        <p>Binlerce oyuncunun yer aldığı Adalet Gaming ailesinde sen de yerini al. Asker, polis ya da sivillerin
+          arasında iz bırak!</p>
+      </div>
+      <div class="grp-community-btns">
+        <a href="https://discord.gg/adaletgaming" target="_blank" class="grp-btn-primary">
+          <i class="fab fa-discord"></i> Discord Sunucusu
+        </a>
+        <a href="https://discord.gg/9NJ9xetUDS" target="_blank" class="grp-btn-secondary">
+          <i class="fas fa-gavel"></i> Ban Affı & İtiraz
+        </a>
+        <a href="mtasa://51.91.91.80:22003" class="grp-btn-primary">
+          <i class="fas fa-gamepad"></i> Hemen Oyuna Gir
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="grp-footer">
+    <div class="grp-footer-inner">
+      <div class="grp-footer-top">
+        <div class="grp-footer-brand">
+          <img src="logo.png" alt="Türkiyem Adalet Gaming Logo" class="grp-footer-logo">
+          <div>
+            <h3>TÜRKİYEM ADALET GAMING</h3>
+            <p>Türkiyem Adalet Gaming, hiç şüphesiz MTA askeri piyasasında şimdiye kadar gelmiş geçmiş en iyi sunucu olarak tanımlanabilir.</p>
+          </div>
+        </div>
+        <div class="grp-footer-links">
+          <a href="#hero">Ana Sayfa</a>
+          <a href="#birimler">Birimler</a>
+          <a href="#katil">Nasıl Katılırım?</a>
+          <a href="#magaza">Mağaza</a>
+          <a href="https://discord.gg/9NJ9xetUDS" target="_blank">Ban Affı & İtiraz</a>
+        </div>
+      </div>
+      <div class="grp-footer-bottom">
+        <p>© 2020 - 2026 <span>Türkiyem Adalet Gaming</span>. Tüm Hakları Saklıdır.</p>
+        <div class="grp-social-links">
+          <a href="https://discord.gg/adaletgaming" target="_blank" aria-label="Discord"><i class="fab fa-discord"></i></a>
+          <a href="https://www.youtube.com/@turkiyemadaletgaming" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+          <a href="https://www.instagram.com/mta.turkiyemadaletgaming/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.tiktok.com/@mtadaletgaming" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+        </div>
+      </div>
+    </div>
   </footer>
 
-  <div class="toast" id="toast">IP Adresi Kopyalandı!</div>
+  <div class="grp-toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastMsg">IP Adresi Kopyalandı!</span>
+  </div>
 
   <script src="script.js"></script>
 </body>
