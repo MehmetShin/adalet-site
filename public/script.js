@@ -100,3 +100,20 @@ function showToast(message) {
     toast.classList.remove('show');
   }, 3000);
 }
+
+document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+document.addEventListener('dragstart', (e) => e.preventDefault());
+
+document.addEventListener('keydown', (e) => {
+  if (
+    e.key === 'F12' ||
+    (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) ||
+    (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S'))
+  ) {
+    e.preventDefault();
+  }
+});
+
+console.log('%cDUR!', 'color: red; font-size: 40px; font-weight: bold; -webkit-text-stroke: 1px black;');
+console.log('%cBu alan sadece geliştiriciler içindir. İzinsiz işlem yapılması yasaktır!', 'color: #ff6b00; font-size: 16px; font-weight: bold;');
