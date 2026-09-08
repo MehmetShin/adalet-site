@@ -1,27 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const grpLoader = document.getElementById('grpLoader');
-  if (grpLoader) {
-    const startTime = Date.now();
-    const hideLoader = () => {
-      const elapsed = Date.now() - startTime;
-      const delay = Math.max(0, 1000 - elapsed);
-      setTimeout(() => {
-        grpLoader.classList.add('hidden');
-        setTimeout(() => {
-          if (grpLoader && grpLoader.parentNode) {
-            grpLoader.style.display = 'none';
-          }
-        }, 500);
-      }, delay);
-    };
-
-    if (document.readyState === 'complete') {
-      hideLoader();
-    } else {
-      window.addEventListener('load', hideLoader);
-      setTimeout(hideLoader, 2000);
-    }
-  }
   const toggleBtn = document.getElementById('grpMobileToggle');
   const navMenu = document.getElementById('grpHeaderNav');
   if (toggleBtn && navMenu) {
