@@ -504,13 +504,13 @@ function initShopPage() {
     if (countEl) countEl.innerText = `${filtered.length} Ürün Listeleniyor`;
 
     renderProducts(cat);
-    window.scrollTo({ top: 120, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function showAllCategories() {
     if (showcase) showcase.style.display = 'grid';
     if (productsWrap) productsWrap.style.display = 'none';
-    window.scrollTo({ top: 100, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   catCards.forEach(card => {
