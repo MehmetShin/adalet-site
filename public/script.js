@@ -235,7 +235,7 @@ const PRODUCTS = [
   {
     id: 'dn-1', name: 'McLaren 720S Spider', price: 250, category: 'donate', icon: 'fa-car-side',
     image: 'mclaren-720s.jpg',
-    desc: 'McLaren 720S Spider Araç Paketi',
+    desc: 'McLaren 720S Spider Araç',
     features: [
       'Aldıktan sonra discord sunucumuzda destek talebi açınız.',
       'Araç 1 aylık olarak size zimmetlenir.',
@@ -246,7 +246,7 @@ const PRODUCTS = [
   {
     id: 'dn-2', name: 'Ferrari California', price: 200, category: 'donate', icon: 'fa-car',
     image: 'ferrari-california.jpg',
-    desc: 'Ferrari California Araç Paketi',
+    desc: 'Ferrari California Araç',
     features: [
       'Aldıktan sonra discord sunucumuzda destek talebi açınız.',
       'Araç 1 aylık olarak size zimmetlenir.',
@@ -254,9 +254,9 @@ const PRODUCTS = [
     ]
   },
   {
-    id: 'dn-3', name: 'Luxury Helikopter', price: 250, category: 'donate', icon: 'fa-helicopter',
+    id: 'dn-3', name: 'Buckingham Swift Retro', price: 250, category: 'donate', icon: 'fa-helicopter',
     image: 'luxury-helikopter.png',
-    desc: 'Luxury Helikopter Paketi',
+    desc: 'Buckingham Swift Retro Helikopter',
     features: [
       'Aldıktan sonra discord sunucumuzda destek talebi açınız.',
       'Araç 1 aylık olarak size zimmetlenir.',
