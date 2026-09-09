@@ -68,8 +68,88 @@
 
 
 
+    <!-- Kategori Seçim Vitrini (İlk Ekranda Görünen 3 Kart) -->
+    <div class="grp-category-showcase" id="categoryShowcase">
+      <!-- Donate Kartı -->
+      <div class="grp-cat-card" data-category="donate">
+        <div class="grp-cat-card-glow"></div>
+        <div class="grp-cat-icon-wrap">
+          <i class="fas fa-hand-holding-dollar"></i>
+        </div>
+        <div class="grp-cat-content">
+          <h2 class="grp-cat-title">DONATE</h2>
+          <p class="grp-cat-desc">Özel lüks araçlar, VIP helikopterler ve popüler karakter / skin modelleri.</p>
+          <div class="grp-cat-badge">11 Ürün Mevcut</div>
+        </div>
+        <button type="button" class="grp-cat-btn" data-category="donate">
+          <span>İncele</span>
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
 
-    <div class="grp-products-grid" id="productsGrid"></div>
+      <!-- Yetkiler Kartı -->
+      <div class="grp-cat-card grp-cat-featured" data-category="yetkiler">
+        <div class="grp-cat-card-glow"></div>
+        <div class="grp-cat-icon-wrap">
+          <i class="fas fa-user-shield"></i>
+        </div>
+        <div class="grp-cat-content">
+          <h2 class="grp-cat-title">YETKİLER</h2>
+          <p class="grp-cat-desc">Yönetici Personel, P Panel yetkileri ve üst kademe yönetim pozisyonları.</p>
+          <div class="grp-cat-badge">5 Paket Mevcut</div>
+        </div>
+        <button type="button" class="grp-cat-btn" data-category="yetkiler">
+          <span>İncele</span>
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+
+      <!-- Özel Ayrıcalıklar Kartı -->
+      <div class="grp-cat-card" data-category="ozel-ayricaliklar">
+        <div class="grp-cat-card-glow"></div>
+        <div class="grp-cat-icon-wrap">
+          <i class="fas fa-crown"></i>
+        </div>
+        <div class="grp-cat-content">
+          <h2 class="grp-cat-title">ÖZEL AYRICALIKLAR</h2>
+          <p class="grp-cat-desc">Gold/Silver/Bronz VIP paketleri, ek klan hakları ve hesap hizmetleri.</p>
+          <div class="grp-cat-badge">6 Avantaj Mevcut</div>
+        </div>
+        <button type="button" class="grp-cat-btn" data-category="ozel-ayricaliklar">
+          <span>İncele</span>
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Kategoriye Tıklanınca Açılan Ürünler Alanı (İlk Başta Gizli) -->
+    <div class="grp-category-products-wrap" id="categoryProductsWrap" style="display: none;">
+      <div class="grp-cat-header-bar">
+        <button type="button" class="grp-back-cat-btn" id="btnBackToCategories">
+          <i class="fas fa-arrow-left"></i>
+          <span>Tüm Kategorilere Dön</span>
+        </button>
+
+        <div class="grp-shop-tabs">
+          <button type="button" class="grp-tab-btn" data-category="donate">
+            <i class="fas fa-hand-holding-dollar"></i> Donate
+          </button>
+          <button type="button" class="grp-tab-btn" data-category="yetkiler">
+            <i class="fas fa-user-shield"></i> Yetkiler
+          </button>
+          <button type="button" class="grp-tab-btn" data-category="ozel-ayricaliklar">
+            <i class="fas fa-crown"></i> Özel Ayrıcalıklar
+          </button>
+        </div>
+      </div>
+
+      <div class="grp-current-cat-indicator">
+        <h2 id="currentCategoryHeading">Kategori</h2>
+        <span id="currentCategoryCount">0 Ürün</span>
+      </div>
+
+      <div class="grp-products-grid" id="productsGrid"></div>
+    </div>
   </main>
 
   <footer class="grp-footer">

@@ -5,7 +5,7 @@ const PRODUCTS = [
     id: 'st-1',
     name: 'Yönetici Personel',
     price: 500,
-    category: 'standart',
+    category: 'yetkiler',
     image: 'yonetici-personel.png',
     icon: 'fa-user-shield',
     desc: 'Türkiyem Adalet Gaming sunucusunda geçerli Yönetici Personel yetkisi ve özel Yetkili Paneli (P Panel) izinleri.',
@@ -30,7 +30,7 @@ const PRODUCTS = [
     ]
   },
   {
-    id: 'st-2', name: 'Yönetim Ekibi', price: 800, category: 'standart', icon: 'fa-users-gear',
+    id: 'st-2', name: 'Yönetim Ekibi', price: 800, category: 'yetkiler', icon: 'fa-users-gear',
     image: 'yonetim-ekibi.png',
     desc: 'Türkiyem Adalet Gaming sunucusunda geçerli Yönetim Ekibi yetkisi ve özel Yetkili Paneli (P Panel) izinleri.',
     features: [
@@ -60,7 +60,7 @@ const PRODUCTS = [
     ]
   },
   {
-    id: 'st-3', name: 'Üst Kademe Yönetim Ekibi', price: 1000, category: 'standart', icon: 'fa-user-tie',
+    id: 'st-3', name: 'Üst Kademe Yönetim Ekibi', price: 1000, category: 'yetkiler', icon: 'fa-user-tie',
     image: 'ust-kademe-yonetim.png',
     desc: 'Türkiyem Adalet Gaming sunucusunda geçerli Üst Kademe Yönetim Ekibi yetkisi ve özel Yetkili Paneli (P Panel) izinleri.',
     features: [
@@ -90,7 +90,7 @@ const PRODUCTS = [
     ]
   },
   {
-    id: 'st-4', name: 'Yönetim Kurulu Üyesi', price: 1500, category: 'standart', icon: 'fa-award',
+    id: 'st-4', name: 'Yönetim Kurulu Üyesi', price: 1500, category: 'yetkiler', icon: 'fa-award',
     image: 'yonetim-kurulu-uyesi.png',
     desc: 'Türkiyem Adalet Gaming sunucusunda geçerli Yönetim Kurulu Üyesi yetkisi ve özel Yetkili Paneli (P Panel) izinleri.',
     features: [
@@ -128,7 +128,7 @@ const PRODUCTS = [
     ]
   },
   {
-    id: 'st-5', name: 'Üst Kademe Yönetim Kurulu Üyesi', price: 2000, category: 'standart', icon: 'fa-crown',
+    id: 'st-5', name: 'Üst Kademe Yönetim Kurulu Üyesi', price: 2000, category: 'yetkiler', icon: 'fa-crown',
     image: 'ust-kademe-yonetim-kurulu.png',
     desc: 'Türkiyem Adalet Gaming sunucusunda geçerli Üst Kademe Yönetim Kurulu Üyesi yetkisi ve özel Yetkili Paneli (P Panel) izinleri.',
     features: [
@@ -168,7 +168,7 @@ const PRODUCTS = [
 
 
   {
-    id: 'oz-1', name: 'Gold Vip', price: 300, category: 'ozel', icon: 'fa-gem',
+    id: 'oz-1', name: 'Gold Vip', price: 300, category: 'ozel-ayricaliklar', icon: 'fa-gem',
     image: 'gold-vip.png',
     desc: 'Gold VIP Yetki Paketi',
     features: [
@@ -181,7 +181,7 @@ const PRODUCTS = [
     ]
   },
   {
-    id: 'oz-2', name: 'Silver Vip', price: 200, category: 'ozel', icon: 'fa-shield',
+    id: 'oz-2', name: 'Silver Vip', price: 200, category: 'ozel-ayricaliklar', icon: 'fa-shield',
     image: 'silver-vip.png',
     desc: 'Silver VIP Yetki Paketi',
     features: [
@@ -193,7 +193,7 @@ const PRODUCTS = [
     ]
   },
   {
-    id: 'oz-3', name: 'Bronz Vip', price: 100, category: 'ozel', icon: 'fa-medal',
+    id: 'oz-3', name: 'Bronz Vip', price: 100, category: 'ozel-ayricaliklar', icon: 'fa-medal',
     image: 'bronz-vip.png',
     desc: 'Bronz VIP Yetki Paketi',
     features: [
@@ -205,7 +205,7 @@ const PRODUCTS = [
     ]
   },
   {
-    id: 'oz-4', name: 'Ek Klan Hakkı', price: 200, category: 'ozel', icon: 'fa-flag',
+    id: 'oz-4', name: 'Ek Klan Hakkı', price: 200, category: 'ozel-ayricaliklar', icon: 'fa-flag',
     image: 'ek-klan-hakki.png',
     desc: 'Ek Klan Hakkı Paketi',
     features: [
@@ -214,7 +214,7 @@ const PRODUCTS = [
     ]
   },
   {
-    id: 'oz-5', name: 'Hesap Kurtarma & Şifre Değiştirme', price: 200, category: 'ozel', icon: 'fa-key',
+    id: 'oz-5', name: 'Hesap Kurtarma & Şifre Değiştirme', price: 200, category: 'ozel-ayricaliklar', icon: 'fa-key',
     image: 'hesap-kurtarma.png',
     desc: 'Hesap Kurtarma & Şifre Değiştirme Hizmeti',
     features: [
@@ -223,7 +223,7 @@ const PRODUCTS = [
     ]
   },
   {
-    id: 'oz-6', name: 'Yetkili Uyarı Sildirme', price: 500, category: 'ozel', icon: 'fa-trash-can',
+    id: 'oz-6', name: 'Yetkili Uyarı Sildirme', price: 500, category: 'ozel-ayricaliklar', icon: 'fa-trash-can',
     image: 'yetkili-uyari-sildirme.png',
     desc: 'Yetkili Uyarı Sildirme Hizmeti',
     features: [
@@ -456,26 +456,91 @@ function updateCartBadge() {
   if (badge) badge.innerText = totalQty;
 }
 
+const CATEGORY_NAMES = {
+  'donate': 'DONATE ÜRÜNLERİ',
+  'yetkiler': 'YETKİ PAKETLERİ',
+  'ozel-ayricaliklar': 'ÖZEL AYRICALIKLAR'
+};
+
 function initShopPage() {
-  renderProducts('all');
+  const showcase = document.getElementById('categoryShowcase');
+  const productsWrap = document.getElementById('categoryProductsWrap');
+  const backBtn = document.getElementById('btnBackToCategories');
   const tabBtns = document.querySelectorAll('.grp-tab-btn');
-  tabBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      tabBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const cat = btn.getAttribute('data-category');
-      renderProducts(cat);
+  const catCards = document.querySelectorAll('.grp-cat-card');
+  const catBtns = document.querySelectorAll('.grp-cat-btn');
+
+  function openCategory(cat) {
+    if (!cat) return;
+    if (showcase) showcase.style.display = 'none';
+    if (productsWrap) productsWrap.style.display = 'block';
+
+    tabBtns.forEach(btn => {
+      if (btn.getAttribute('data-category') === cat) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    const heading = document.getElementById('currentCategoryHeading');
+    const countEl = document.getElementById('currentCategoryCount');
+    if (heading) heading.innerText = CATEGORY_NAMES[cat] || cat.toUpperCase();
+
+    const filtered = PRODUCTS.filter(p => p.category === cat);
+    if (countEl) countEl.innerText = `${filtered.length} Ürün Listeleniyor`;
+
+    renderProducts(cat);
+    window.scrollTo({ top: 120, behavior: 'smooth' });
+  }
+
+  function showAllCategories() {
+    if (showcase) showcase.style.display = 'grid';
+    if (productsWrap) productsWrap.style.display = 'none';
+    window.scrollTo({ top: 100, behavior: 'smooth' });
+  }
+
+  catCards.forEach(card => {
+    card.addEventListener('click', (e) => {
+      const cat = card.getAttribute('data-category');
+      openCategory(cat);
     });
   });
+
+  catBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const cat = btn.getAttribute('data-category');
+      openCategory(cat);
+    });
+  });
+
+  if (backBtn) {
+    backBtn.addEventListener('click', () => {
+      showAllCategories();
+    });
+  }
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const cat = btn.getAttribute('data-category');
+      openCategory(cat);
+    });
+  });
+
+  // URL'de doğrudan kategori belirtilmişse (örneğin: ?cat=donate) doğrudan aç
+  const urlParams = new URLSearchParams(window.location.search);
+  const requestedCat = urlParams.get('cat');
+  if (requestedCat && ['donate', 'yetkiler', 'ozel-ayricaliklar'].includes(requestedCat)) {
+    openCategory(requestedCat);
+  }
 }
 
 function renderProducts(category) {
   const grid = document.getElementById('productsGrid');
   if (!grid) return;
 
-  const filtered = category === 'all'
-    ? PRODUCTS
-    : PRODUCTS.filter(p => p.category === category);
+  const filtered = PRODUCTS.filter(p => p.category === category);
 
   grid.innerHTML = filtered.map(p => {
     const imgHtml = p.image
