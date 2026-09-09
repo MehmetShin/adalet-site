@@ -686,7 +686,7 @@ function renderCartPage() {
       : `<i class="fas ${item.icon}"></i>`;
 
     return `
-      <div class="grp-cart-page-item">
+      <div class="grp-cart-page-item" data-id="${item.id}">
         <div class="grp-cart-item-icon">
           ${imgOrIcon}
         </div>
@@ -695,22 +695,45 @@ function renderCartPage() {
           <span>Birim Fiyat: ${item.price} TL</span>
         </div>
         <div class="grp-cart-item-controls">
-          <button type="button" class="grp-btn-qty" onclick="updateCartPageQty('${item.id}', -1)">-</button>
+          <button type="button" class="grp-btn-qty grp-btn-minus" data-id="${item.id}">-</button>
           <span class="grp-cart-item-qty">${item.qty}</span>
-          <button type="button" class="grp-btn-qty" onclick="updateCartPageQty('${item.id}', 1)">+</button>
+          <button type="button" class="grp-btn-qty grp-btn-plus" data-id="${item.id}">+</button>
         </div>
         <div class="grp-cart-item-total">
           ${item.price * item.qty} TL
         </div>
-        <button type="button" class="grp-btn-remove" onclick="removeCartPageItem('${item.id}')" title="Sil">
+        <button type="button" class="grp-btn-remove grp-btn-del" data-id="${item.id}" title="Sil">
           <i class="fas fa-trash-alt"></i>
         </button>
       </div>
     `;
   }).join('');
+
+  // Event delegation - tüm butonlar için tek listener
+  tableWrap.querySelectorAll('.grp-btn-minus').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const id = this.getAttribute('data-id');
+      updateCartQty(id, -1);
+    });
+  });
+  tableWrap.querySelectorAll('.grp-btn-plus').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const id = this.getAttribute('data-id');
+      updateCartQty(id, 1);
+    });
+  });
+  tableWrap.querySelectorAll('.grp-btn-del').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const id = this.getAttribute('data-id');
+      removeCartItem(id);
+    });
+  });
 }
 
-window.updateCartPageQty = function(productId, delta) {
+function updateCartQty(productId, delta) {
   const item = cart.find(i => i.id === productId);
   if (!item) return;
 
@@ -722,15 +745,19 @@ window.updateCartPageQty = function(productId, delta) {
   saveStoredCart(cart);
   updateCartBadge();
   renderCartPage();
-};
+}
 
-window.removeCartPageItem = function(productId) {
+function removeCartItem(productId) {
   cart = cart.filter(i => i.id !== productId);
   saveStoredCart(cart);
   updateCartBadge();
   renderCartPage();
   showToast('Ürün sepetten çıkarıldı.');
-};
+}
+
+// Geriye dönük uyumluluk için window'a da atıyoruz
+window.updateCartPageQty = updateCartQty;
+window.removeCartPageItem = removeCartItem;
 
 let currentOrderCode = '';
 
