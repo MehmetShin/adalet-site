@@ -24,7 +24,6 @@ const requestCounts = new Map();
 const RATE_LIMIT_WINDOW = 60 * 1000;
 const MAX_REQUESTS_PER_WINDOW = 120;
 
-// Periodic memory cleanup for rate limit map
 setInterval(() => {
   const now = Date.now();
   for (const [ip, data] of requestCounts.entries()) {
@@ -35,7 +34,6 @@ setInterval(() => {
 }, RATE_LIMIT_WINDOW);
 
 const server = http.createServer((req, res) => {
-  // Method Guard (Only ALLOW GET and HEAD)
   if (req.method !== 'GET' && req.method !== 'HEAD') {
     res.writeHead(405, { 'Content-Type': 'text/plain; charset=utf-8' });
     return res.end('405 Method Not Allowed');
@@ -43,7 +41,6 @@ const server = http.createServer((req, res) => {
 
   const clientIp = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress || 'unknown';
 
-  // Rate Limiter
   const now = Date.now();
   const clientData = requestCounts.get(clientIp) || { count: 0, resetTime: now + RATE_LIMIT_WINDOW };
 
@@ -63,14 +60,12 @@ const server = http.createServer((req, res) => {
     return res.end('429 Too Many Requests - Lütfen biraz bekleyin.');
   }
 
-  // Block empty or known malicious scraper user-agents
   const userAgent = req.headers['user-agent'] || '';
   if (!userAgent || /curl|wget|python|nikto|sqlmap|nmap|dirbuster|gobuster/i.test(userAgent)) {
     res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
     return res.end('403 Access Denied');
   }
 
-  // Strict Security & Anti-Frame Headers
   res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -90,13 +85,11 @@ const server = http.createServer((req, res) => {
     return res.end('400 Bad Request');
   }
 
-  // Canonical redirect for index.html
   if (pathname === '/index.html') {
     res.writeHead(301, { 'Location': '/' });
     return res.end();
   }
 
-  // Clean URL mapping
   if (pathname === '/') {
     pathname = '/index.html';
   } else if (!path.extname(pathname)) {
@@ -106,7 +99,6 @@ const server = http.createServer((req, res) => {
     }
   }
 
-  // Strict Path Traversal Protection
   const safeFilePath = path.normalize(path.join(PUBLIC_DIR, pathname));
   if (!safeFilePath.startsWith(PUBLIC_DIR)) {
     res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });

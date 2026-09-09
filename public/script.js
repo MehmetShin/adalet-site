@@ -1,6 +1,6 @@
 
 const PRODUCTS = [
- 
+
   {
     id: 'st-1',
     name: 'Yönetici Personel',
@@ -166,7 +166,7 @@ const PRODUCTS = [
     ]
   },
 
- 
+
   {
     id: 'oz-1', name: 'Gold Vip', price: 300, category: 'ozel', icon: 'fa-gem',
     image: 'gold-vip.png',
@@ -231,7 +231,7 @@ const PRODUCTS = [
     ]
   },
 
- 
+
   {
     id: 'dn-1', name: 'McLaren 720S Spider', price: 250, category: 'donate', icon: 'fa-car-side',
     image: 'mclaren-720s.jpg',
@@ -586,13 +586,13 @@ function initDetailPage() {
 const MAX_QTY = 5;
 
 let detailQty = 1;
-window.changeDetailQty = function(delta) {
+window.changeDetailQty = function (delta) {
   detailQty = Math.min(MAX_QTY, Math.max(1, detailQty + delta));
   const qtyElem = document.getElementById('detailQtyVal');
   if (qtyElem) qtyElem.innerText = detailQty;
 };
 
-window.addDetailToCart = function(productId) {
+window.addDetailToCart = function (productId) {
   const product = PRODUCTS.find(p => p.id === productId);
   if (!product) return;
 
@@ -612,12 +612,12 @@ window.addDetailToCart = function(productId) {
   showToast(`"${product.name}" (${detailQty} Adet) Sepete Eklendi!`, true);
 };
 
-window.buyDetailNow = function(productId) {
+window.buyDetailNow = function (productId) {
   window.addDetailToCart(productId);
   window.location.href = '/sepet';
 };
 
-window.addToCart = function(productId) {
+window.addToCart = function (productId) {
   const product = PRODUCTS.find(p => p.id === productId);
   if (!product) return;
 
@@ -719,23 +719,22 @@ function renderCartPage() {
     `;
   }).join('');
 
-  // Event delegation - tüm butonlar için tek listener
   tableWrap.querySelectorAll('.grp-btn-minus').forEach(btn => {
-    btn.addEventListener('click', function(e) {
+    btn.addEventListener('click', function (e) {
       e.stopPropagation();
       const id = this.getAttribute('data-id');
       updateCartQty(id, -1);
     });
   });
   tableWrap.querySelectorAll('.grp-btn-plus').forEach(btn => {
-    btn.addEventListener('click', function(e) {
+    btn.addEventListener('click', function (e) {
       e.stopPropagation();
       const id = this.getAttribute('data-id');
       updateCartQty(id, 1);
     });
   });
   tableWrap.querySelectorAll('.grp-btn-del').forEach(btn => {
-    btn.addEventListener('click', function(e) {
+    btn.addEventListener('click', function (e) {
       e.stopPropagation();
       const id = this.getAttribute('data-id');
       removeCartItem(id);
@@ -770,7 +769,6 @@ function removeCartItem(productId) {
   showToast('Ürün sepetten çıkarıldı.');
 }
 
-// Geriye dönük uyumluluk için window'a da atıyoruz
 window.updateCartPageQty = updateCartQty;
 window.removeCartPageItem = removeCartItem;
 
@@ -791,19 +789,17 @@ function initCheckoutModal() {
   if (closeCheckoutBtn) closeCheckoutBtn.addEventListener('click', () => closeModal(checkoutModal));
 
   if (checkoutForm) {
-    // --- Validasyon Yardımcıları ---
     function setError(id, msg) {
       const el = document.getElementById(id);
       if (el) { el.textContent = msg; el.style.display = msg ? 'block' : 'none'; }
       const input = document.getElementById(id.replace('err', 'buyer').toLowerCase()) ||
-                    document.getElementById({ errName:'buyerName', errDiscord:'buyerDiscord', errEmail:'buyerEmail', errPhone:'buyerPhone' }[id]);
+        document.getElementById({ errName: 'buyerName', errDiscord: 'buyerDiscord', errEmail: 'buyerEmail', errPhone: 'buyerPhone' }[id]);
       if (input) input.classList.toggle('grp-input-error', !!msg);
     }
     function clearErrors() {
-      ['errName','errDiscord','errEmail','errPhone'].forEach(id => setError(id, ''));
+      ['errName', 'errDiscord', 'errEmail', 'errPhone'].forEach(id => setError(id, ''));
     }
 
-    // Ad Soyad: en az 2 kelime, sadece harf (Türkçe dahil), her kelime min 2 karakter
     function validateName(val) {
       const trimmed = val.trim();
       if (!trimmed) return 'Ad Soyad boş bırakılamaz.';
@@ -811,12 +807,10 @@ function initCheckoutModal() {
       const words = trimmed.split(/\s+/).filter(w => w.length > 0);
       if (words.length < 2) return 'Lütfen hem adınızı hem soyadınızı girin.';
       if (words.some(w => w.length < 2)) return 'Her kelime en az 2 harf olmalıdır.';
-      // Spam kontrolü: tekrar eden harfler (aaaaa gibi)
       if (/(.)\1{3,}/.test(trimmed)) return 'Geçersiz isim formatı.';
       return '';
     }
 
-    // Discord: 2-32 karakter, harf/rakam/alt çizgi/nokta/tire, boşluk yok
     function validateDiscord(val) {
       const trimmed = val.trim();
       if (!trimmed) return 'Discord kullanıcı adı boş bırakılamaz.';
@@ -828,82 +822,75 @@ function initCheckoutModal() {
       return '';
     }
 
-    // E-posta: gerçek format kontrolü + sahte alan adı engelleme
     function validateEmail(val) {
       const trimmed = val.trim().toLowerCase();
       if (!trimmed) return 'E-posta adresi boş bırakılamaz.';
-      // Genel format
       if (!/^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$/.test(trimmed)) return 'Geçerli bir e-posta adresi girin.';
       const [local, domain] = trimmed.split('@');
-      // Yerel kısım spam kontrolü
       if (local.length < 2) return 'E-posta adresi çok kısa.';
       if (/(.)\1{4,}/.test(local)) return 'Geçersiz e-posta (spam algılandı).';
-      // Sahte/geçici domain kontrolü
-      const fakeDomains = ['mailinator.com','guerrillamail.com','10minutemail.com','tempmail.com',
-        'throwam.com','fakeinbox.com','yopmail.com','maildrop.cc','sharklasers.com','spam4.me','trashmail.com'];
+      const fakeDomains = ['mailinator.com', 'guerrillamail.com', '10minutemail.com', 'tempmail.com',
+        'throwam.com', 'fakeinbox.com', 'yopmail.com', 'maildrop.cc', 'sharklasers.com', 'spam4.me', 'trashmail.com'];
       if (fakeDomains.some(d => domain.endsWith(d))) return 'Geçici e-posta adresleri kabul edilmemektedir.';
-      // Domain en az bir nokta içermeli
       if (!domain.includes('.')) return 'Geçerli bir e-posta adresi girin.';
       return '';
     }
 
-    // Türk telefon numarası: 05xx xxxxxxx veya +90 ile başlayan, 11 hane
     function validatePhone(val) {
       const trimmed = val.trim().replace(/\s|-/g, '');
       if (!trimmed) return 'Telefon numarası boş bırakılamaz.';
-      // +90 ile başlıyorsa normalize et
       const normalized = trimmed.startsWith('+90') ? '0' + trimmed.slice(3) : trimmed;
       if (!/^\d+$/.test(normalized)) return 'Telefon numarası yalnızca rakam içermelidir.';
       if (normalized.length !== 11) return 'Telefon numarası 11 hane olmalıdır (Örn: 05551112233).';
       if (!normalized.startsWith('05')) return 'Türk cep numarası 05 ile başlamalıdır.';
-      // Spam: tümü aynı rakam
       if (/^(.)\1+$/.test(normalized)) return 'Geçersiz telefon numarası.';
       return '';
     }
 
-    // Gerçek zamanlı hata temizleme (kullanıcı yazmaya başlayınca)
-    [['buyerName','errName'],['buyerDiscord','errDiscord'],['buyerEmail','errEmail'],['buyerPhone','errPhone']]
-      .forEach(([inputId, errId]) => {
-        const inp = document.getElementById(inputId);
-        if (inp) inp.addEventListener('input', () => setError(errId, ''));
-      });
+    [
+      ['buyerName', 'errName', validateName],
+      ['buyerDiscord', 'errDiscord', validateDiscord],
+      ['buyerEmail', 'errEmail', validateEmail],
+      ['buyerPhone', 'errPhone', validatePhone]
+    ].forEach(([inputId, errId, validator]) => {
+      const inp = document.getElementById(inputId);
+      if (inp) {
+        inp.addEventListener('input', () => {
+          if (!inp.value.trim()) {
+            setError(errId, '');
+          } else {
+            setError(errId, validator(inp.value));
+          }
+        });
+        inp.addEventListener('blur', () => {
+          setError(errId, validator(inp.value));
+        });
+      }
+    });
 
     checkoutForm.addEventListener('submit', (e) => {
       e.preventDefault();
       clearErrors();
 
-      const name    = document.getElementById('buyerName')?.value || '';
+      const name = document.getElementById('buyerName')?.value || '';
       const discord = document.getElementById('buyerDiscord')?.value || '';
-      const email   = document.getElementById('buyerEmail')?.value || '';
-      const phone   = document.getElementById('buyerPhone')?.value || '';
+      const email = document.getElementById('buyerEmail')?.value || '';
+      const phone = document.getElementById('buyerPhone')?.value || '';
 
-      const errName    = validateName(name);
+      const errName = validateName(name);
       const errDiscord = validateDiscord(discord);
-      const errEmail   = validateEmail(email);
-      const errPhone   = validatePhone(phone);
+      const errEmail = validateEmail(email);
+      const errPhone = validatePhone(phone);
 
-      setError('errName',    errName);
+      setError('errName', errName);
       setError('errDiscord', errDiscord);
-      setError('errEmail',   errEmail);
-      setError('errPhone',   errPhone);
+      setError('errEmail', errEmail);
+      setError('errPhone', errPhone);
 
-      if (errName || errDiscord || errEmail || errPhone) return; // Hata varsa dur
+      if (errName || errDiscord || errEmail || errPhone) return;
 
       closeModal(checkoutModal);
-
-      const randPart = Math.random().toString(36).substring(2, 6).toUpperCase();
-      currentOrderCode = `TAG-2026-${randPart}`;
-
-      const codeDisplay = document.getElementById('orderCodeDisplay');
-      if (codeDisplay) codeDisplay.innerText = currentOrderCode;
-
-     
-      cart = [];
-      saveStoredCart(cart);
-      updateCartBadge();
-      if (document.getElementById('cartPageTableWrap')) renderCartPage();
-
-      openModal(successModal);
+      showToast('Bilgileriniz alındı! Ödeme sistemi yakında aktif olacak. 🕐');
     });
   }
 
@@ -955,13 +942,13 @@ function initDevToolsProtection() {
     }
   });
 
- 
+
   setInterval(() => {
     if (window.console) {
-      console.log = function() {};
-      console.warn = function() {};
-      console.error = function() {};
-      console.info = function() {};
+      console.log = function () { };
+      console.warn = function () { };
+      console.error = function () { };
+      console.info = function () { };
     }
   }, 1000);
 }
@@ -974,15 +961,13 @@ function showToast(message, showCartBtn = false) {
   if (!toast) return;
 
   if (toastMsg) toastMsg.innerText = message;
-  
+
   if (cartBtn) {
     cartBtn.style.display = showCartBtn ? 'inline-flex' : 'none';
   }
 
-  // Clear pending hide timer and trigger slide-in
   clearTimeout(toastTimeout);
-  
-  // Force a reflow if re-triggering quickly to ensure animation plays smoothly
+
   toast.classList.remove('show');
   void toast.offsetWidth;
   toast.classList.add('show');

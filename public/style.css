@@ -40,7 +40,6 @@ html {
   scrollbar-color: #ff6b00 #0d0703;
 }
 
-/* Custom Scrollbar Styles */
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -2068,6 +2067,18 @@ header.grp-header.scrolled {
 .grp-btn-pay:hover {
   background: #27ae60;
   box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+}
+
+.grp-btn-pay.grp-btn-pay-soon {
+  opacity: 0.6;
+  filter: grayscale(0.35);
+  cursor: pointer;
+}
+
+.grp-btn-pay.grp-btn-pay-soon:hover {
+  opacity: 0.8;
+  filter: grayscale(0.2);
+  box-shadow: 0 6px 20px rgba(46, 204, 113, 0.25);
 }
 
 .grp-btn-pay-fail {
