@@ -2010,6 +2010,24 @@ header.grp-header.scrolled {
   box-shadow: 0 0 12px var(--grp-primary-glow);
 }
 
+.grp-form-group input.grp-input-error {
+  border-color: #e74c3c !important;
+  box-shadow: 0 0 10px rgba(231, 76, 60, 0.35) !important;
+}
+
+.grp-field-error {
+  display: none;
+  font-size: 12px;
+  color: #ff6b6b;
+  margin-top: 5px;
+  font-weight: 600;
+  padding-left: 2px;
+}
+
+.grp-field-error::before {
+  content: '⚠ ';
+}
+
 .grp-checkout-summary {
   display: flex;
   align-items: center;

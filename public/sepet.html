@@ -117,22 +117,26 @@
         <h3>Ödeme & Teslimat Bilgileri</h3>
         <p>Siparişinizin hesabınıza sorunsuz aktarılması için bilgilerinizi eksiksiz girin.</p>
       </div>
-      <form id="checkoutForm">
+      <form id="checkoutForm" novalidate>
         <div class="grp-form-group">
           <label><i class="fas fa-user"></i> Adınız Soyadınız</label>
-          <input type="text" id="buyerName" placeholder="Örn: Ahmet Yılmaz" required>
+          <input type="text" id="buyerName" placeholder="Örn: Ahmet Yılmaz" autocomplete="off">
+          <span class="grp-field-error" id="errName"></span>
         </div>
         <div class="grp-form-group">
-          <label><i class="fab fa-discord"></i> Discord Kullanıcı Adınız / ID</label>
-          <input type="text" id="buyerDiscord" placeholder="Örn: adaletmta" required>
+          <label><i class="fab fa-discord"></i> Discord Kullanıcı Adınız</label>
+          <input type="text" id="buyerDiscord" placeholder="Örn: adaletmta" autocomplete="off">
+          <span class="grp-field-error" id="errDiscord"></span>
         </div>
         <div class="grp-form-group">
           <label><i class="fas fa-envelope"></i> E-Posta Adresi</label>
-          <input type="email" id="buyerEmail" placeholder="Örn: test@gmail.com" required>
+          <input type="email" id="buyerEmail" placeholder="Örn: test@gmail.com" autocomplete="off">
+          <span class="grp-field-error" id="errEmail"></span>
         </div>
         <div class="grp-form-group">
           <label><i class="fas fa-phone"></i> Telefon Numarası</label>
-          <input type="tel" id="buyerPhone" placeholder="Örn: 05551112233" required>
+          <input type="tel" id="buyerPhone" placeholder="Örn: 05551112233" autocomplete="off">
+          <span class="grp-field-error" id="errPhone"></span>
         </div>
         <div class="grp-checkout-summary">
           <span>Ödenecek Tutar:</span>

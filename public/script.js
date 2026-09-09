@@ -791,8 +791,104 @@ function initCheckoutModal() {
   if (closeCheckoutBtn) closeCheckoutBtn.addEventListener('click', () => closeModal(checkoutModal));
 
   if (checkoutForm) {
+    // --- Validasyon Yardımcıları ---
+    function setError(id, msg) {
+      const el = document.getElementById(id);
+      if (el) { el.textContent = msg; el.style.display = msg ? 'block' : 'none'; }
+      const input = document.getElementById(id.replace('err', 'buyer').toLowerCase()) ||
+                    document.getElementById({ errName:'buyerName', errDiscord:'buyerDiscord', errEmail:'buyerEmail', errPhone:'buyerPhone' }[id]);
+      if (input) input.classList.toggle('grp-input-error', !!msg);
+    }
+    function clearErrors() {
+      ['errName','errDiscord','errEmail','errPhone'].forEach(id => setError(id, ''));
+    }
+
+    // Ad Soyad: en az 2 kelime, sadece harf (Türkçe dahil), her kelime min 2 karakter
+    function validateName(val) {
+      const trimmed = val.trim();
+      if (!trimmed) return 'Ad Soyad boş bırakılamaz.';
+      if (!/^[a-zA-ZğüşıöçĞÜŞİÖÇ\s]+$/.test(trimmed)) return 'Ad Soyad yalnızca harf içerebilir.';
+      const words = trimmed.split(/\s+/).filter(w => w.length > 0);
+      if (words.length < 2) return 'Lütfen hem adınızı hem soyadınızı girin.';
+      if (words.some(w => w.length < 2)) return 'Her kelime en az 2 harf olmalıdır.';
+      // Spam kontrolü: tekrar eden harfler (aaaaa gibi)
+      if (/(.)\1{3,}/.test(trimmed)) return 'Geçersiz isim formatı.';
+      return '';
+    }
+
+    // Discord: 2-32 karakter, harf/rakam/alt çizgi/nokta/tire, boşluk yok
+    function validateDiscord(val) {
+      const trimmed = val.trim();
+      if (!trimmed) return 'Discord kullanıcı adı boş bırakılamaz.';
+      if (trimmed.length < 2) return 'Discord kullanıcı adı en az 2 karakter olmalıdır.';
+      if (trimmed.length > 32) return 'Discord kullanıcı adı en fazla 32 karakter olabilir.';
+      if (/\s/.test(trimmed)) return 'Discord kullanıcı adında boşluk olamaz.';
+      if (!/^[a-zA-Z0-9_.#-]+$/.test(trimmed)) return 'Geçersiz Discord kullanıcı adı formatı.';
+      if (/(.)\1{4,}/.test(trimmed)) return 'Geçersiz Discord kullanıcı adı (spam algılandı).';
+      return '';
+    }
+
+    // E-posta: gerçek format kontrolü + sahte alan adı engelleme
+    function validateEmail(val) {
+      const trimmed = val.trim().toLowerCase();
+      if (!trimmed) return 'E-posta adresi boş bırakılamaz.';
+      // Genel format
+      if (!/^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$/.test(trimmed)) return 'Geçerli bir e-posta adresi girin.';
+      const [local, domain] = trimmed.split('@');
+      // Yerel kısım spam kontrolü
+      if (local.length < 2) return 'E-posta adresi çok kısa.';
+      if (/(.)\1{4,}/.test(local)) return 'Geçersiz e-posta (spam algılandı).';
+      // Sahte/geçici domain kontrolü
+      const fakeDomains = ['mailinator.com','guerrillamail.com','10minutemail.com','tempmail.com',
+        'throwam.com','fakeinbox.com','yopmail.com','maildrop.cc','sharklasers.com','spam4.me','trashmail.com'];
+      if (fakeDomains.some(d => domain.endsWith(d))) return 'Geçici e-posta adresleri kabul edilmemektedir.';
+      // Domain en az bir nokta içermeli
+      if (!domain.includes('.')) return 'Geçerli bir e-posta adresi girin.';
+      return '';
+    }
+
+    // Türk telefon numarası: 05xx xxxxxxx veya +90 ile başlayan, 11 hane
+    function validatePhone(val) {
+      const trimmed = val.trim().replace(/\s|-/g, '');
+      if (!trimmed) return 'Telefon numarası boş bırakılamaz.';
+      // +90 ile başlıyorsa normalize et
+      const normalized = trimmed.startsWith('+90') ? '0' + trimmed.slice(3) : trimmed;
+      if (!/^\d+$/.test(normalized)) return 'Telefon numarası yalnızca rakam içermelidir.';
+      if (normalized.length !== 11) return 'Telefon numarası 11 hane olmalıdır (Örn: 05551112233).';
+      if (!normalized.startsWith('05')) return 'Türk cep numarası 05 ile başlamalıdır.';
+      // Spam: tümü aynı rakam
+      if (/^(.)\1+$/.test(normalized)) return 'Geçersiz telefon numarası.';
+      return '';
+    }
+
+    // Gerçek zamanlı hata temizleme (kullanıcı yazmaya başlayınca)
+    [['buyerName','errName'],['buyerDiscord','errDiscord'],['buyerEmail','errEmail'],['buyerPhone','errPhone']]
+      .forEach(([inputId, errId]) => {
+        const inp = document.getElementById(inputId);
+        if (inp) inp.addEventListener('input', () => setError(errId, ''));
+      });
+
     checkoutForm.addEventListener('submit', (e) => {
       e.preventDefault();
+      clearErrors();
+
+      const name    = document.getElementById('buyerName')?.value || '';
+      const discord = document.getElementById('buyerDiscord')?.value || '';
+      const email   = document.getElementById('buyerEmail')?.value || '';
+      const phone   = document.getElementById('buyerPhone')?.value || '';
+
+      const errName    = validateName(name);
+      const errDiscord = validateDiscord(discord);
+      const errEmail   = validateEmail(email);
+      const errPhone   = validatePhone(phone);
+
+      setError('errName',    errName);
+      setError('errDiscord', errDiscord);
+      setError('errEmail',   errEmail);
+      setError('errPhone',   errPhone);
+
+      if (errName || errDiscord || errEmail || errPhone) return; // Hata varsa dur
+
       closeModal(checkoutModal);
 
       const randPart = Math.random().toString(36).substring(2, 6).toUpperCase();
