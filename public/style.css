@@ -1290,19 +1290,47 @@ header.grp-header.scrolled {
   color: #fff;
   font-weight: 800;
   font-size: 14px;
-  padding: 12px 24px;
-  border-radius: 12px;
+  padding: 14px 28px;
+  border-radius: 14px;
   border: none;
   cursor: pointer;
   transition: var(--grp-transition);
   box-shadow: 0 4px 15px var(--grp-primary-glow);
-  width: 100%;
+  width: auto;
+  text-decoration: none;
 }
 
 .grp-btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px var(--grp-primary-glow);
   background: linear-gradient(135deg, var(--grp-primary-light), var(--grp-primary));
+}
+
+.grp-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-weight: 800;
+  font-size: 14px;
+  padding: 14px 28px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: var(--grp-transition);
+  text-decoration: none;
+}
+
+.grp-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #fff;
+  transform: translateY(-2px);
+}
+
+.grp-detail-actions .grp-btn-primary {
+  width: 100%;
 }
 
 .grp-cart-btn {
