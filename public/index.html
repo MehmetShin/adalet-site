@@ -7,8 +7,7 @@
   <title>Türkiyem Adalet Gaming - MTA:SA Askerî & Polisiye Roleplay</title>
   <meta name="description"
     content="Türkiyem Adalet Gaming, MTA platformunda kaliteli, disiplinli ve gerçekçi askerî & polisiye rol deneyimi sunan topluluktur.">
-  <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self';">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <link rel="icon" href="logo.png" type="image/png">
@@ -30,21 +29,22 @@
   </div>
 
   <header class="grp-header">
-    <a href="#hero" class="grp-logo-box" aria-label="Türkiyem Adalet Gaming Ana Sayfa">
-      <img src="logo.png" class="grp-logo-img" alt="Türkiyem Adalet Gaming">
+    <a href="/" class="grp-logo-box" aria-label="Türkiyem Adalet Gaming Ana Sayfa">
+      <img src="logo.png" alt="Türkiyem Adalet Gaming Logo" class="grp-logo-img">
     </a>
 
     <nav class="grp-nav" id="grpHeaderNav">
-      <a href="#hero" class="active"><i class="fas fa-house nav-icon"></i> Ana Sayfa</a>
+      <a href="/" class="active"><i class="fas fa-house nav-icon"></i> Ana Sayfa</a>
       <a href="#birimler"><i class="fas fa-user-shield nav-icon"></i> Birimlerimiz</a>
       <a href="#katil"><i class="fas fa-compass nav-icon"></i> Nasıl Katılırım?</a>
-      <a href="#magaza"><i class="fas fa-store nav-icon"></i> Mağaza</a>
+      <a href="/magaza"><i class="fas fa-store nav-icon"></i> Mağaza</a>
     </nav>
 
     <div class="grp-user-area">
-      <a href="https://discord.gg/adaletgaming" target="_blank" class="grp-btn-dc">
-        <i class="fab fa-discord"></i>
-        <span>Discord'a Katıl</span>
+      <a href="/sepet" class="grp-cart-btn" aria-label="Sepeti Aç">
+        <i class="fas fa-shopping-cart"></i>
+        <span>Sepetim</span>
+        <span class="grp-cart-badge" id="cartBadge">0</span>
       </a>
       <a href="mtasa://51.91.91.80:22003" class="grp-login-button">
         <i class="fas fa-play"></i>
@@ -167,8 +167,7 @@
       <div class="grp-shop-badge">RESMİ MAĞAZA</div>
       <div class="grp-shop-content">
         <h2>Ayrıcalıklı Oyun Keyfi: <span>Shopier Mağazamız</span></h2>
-        <p>VIP, özel donate araçlar, özel donate karakterler ve yetki satışları için güvenli Shopier
-          altyapımızla alışverişinizi anında gerçekleştirin.</p>
+        <p>VIP paketler, özel donate zırhlı araçlar, karakter görünümleri ve yetki satın alımları için ayrıntılı mağaza sayfamızı ziyaret edin.</p>
         <div class="grp-shop-features">
           <span><i class="fas fa-check-circle"></i> Anında Otomatik Teslimat</span>
           <span><i class="fas fa-lock"></i> 256-Bit SSL Güvenli Ödeme</span>
@@ -176,8 +175,8 @@
         </div>
       </div>
       <div class="grp-shop-action">
-        <a href="https://www.shopier.com/tagmagaza" target="_blank" class="grp-btn-shop">
-          <i class="fas fa-cart-shopping"></i> Mağazaya Git
+        <a href="/magaza" class="grp-btn-shop">
+          <i class="fas fa-store"></i> Mağazayı İncele & Alışveriş Yap
         </a>
       </div>
     </div>
@@ -216,10 +215,12 @@
           </div>
         </div>
         <div class="grp-footer-links">
-          <a href="#hero">Ana Sayfa</a>
-          <a href="#birimler">Birimler</a>
+          <a href="/">Ana Sayfa</a>
+          <a href="#birimler">Birimlerimiz</a>
           <a href="#katil">Nasıl Katılırım?</a>
-          <a href="#magaza">Mağaza</a>
+          <a href="/magaza">Mağaza</a>
+          <a href="/hizmet-sozlesmesi">Hizmet Sözleşmesi</a>
+          <a href="/gizlilik-politikasi">Gizlilik Politikası</a>
           <a href="https://discord.gg/9NJ9xetUDS" target="_blank">Ban Affı & İtiraz</a>
         </div>
       </div>
@@ -240,8 +241,12 @@
   </footer>
 
   <div class="grp-toast" id="toast">
-    <i class="fas fa-check-circle"></i>
-    <span id="toastMsg">IP Adresi Kopyalandı!</span>
+    <i class="fas fa-circle-check"></i>
+    <span id="toastMsg">İşlem Başarılı!</span>
+    <a href="/sepet" class="grp-toast-cart-btn" id="toastCartBtn" style="display:none;">
+      <span>Sepete Git</span>
+      <i class="fas fa-arrow-right"></i>
+    </a>
   </div>
 
   <script src="script.js"></script>

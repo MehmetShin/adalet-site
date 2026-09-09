@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sepetim - Türkiyem Adalet Gaming</title>
+  <meta name="description" content="Türkiyem Adalet Gaming alışveriş sepetiniz. Seçtiğiniz ürünleri kontrol edin ve Shopier ile güvenle satın alın.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self';">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <link rel="icon" href="logo.png" type="image/png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="grp-bg-effects">
+    <div class="grp-bg-image"></div>
+    <div class="grp-bg-overlay"></div>
+  </div>
+
+  <header class="grp-header">
+    <a href="/" class="grp-logo-box" aria-label="Türkiyem Adalet Gaming Ana Sayfa">
+      <img src="logo.png" class="grp-logo-img" alt="Türkiyem Adalet Gaming">
+    </a>
+
+    <nav class="grp-nav" id="grpHeaderNav">
+      <a href="/"><i class="fas fa-house nav-icon"></i> Ana Sayfa</a>
+      <a href="/#birimler"><i class="fas fa-user-shield nav-icon"></i> Birimlerimiz</a>
+      <a href="/#katil"><i class="fas fa-compass nav-icon"></i> Nasıl Katılırım?</a>
+      <a href="/magaza"><i class="fas fa-store nav-icon"></i> Mağaza</a>
+    </nav>
+
+    <div class="grp-user-area">
+      <a href="/sepet" class="grp-cart-btn active" aria-label="Sepeti Aç">
+        <i class="fas fa-shopping-cart"></i>
+        <span>Sepetim</span>
+        <span class="grp-cart-badge" id="cartBadge">0</span>
+      </a>
+      <a href="mtasa://51.91.91.80:22003" class="grp-login-button">
+        <i class="fas fa-play"></i>
+        <span>Oyuna Bağlan</span>
+      </a>
+    </div>
+
+    <button type="button" class="grp-mobile-toggle" id="grpMobileToggle" aria-label="Menüyü Aç/Kapat">
+      <i class="fas fa-bars"></i>
+    </button>
+  </header>
+
+  <main class="grp-page-main">
+    <div class="grp-page-header">
+      <h1 class="grp-page-title"><i class="fas fa-basket-shopping"></i> ALIŞVERİŞ <span>SEPETİM</span></h1>
+      <p class="grp-page-desc">Sepetinizdeki ürünleri kontrol edin, miktarlarını düzenleyin ve Shopier ile güvenli ödemeyi tamamlayın.</p>
+    </div>
+
+    <div class="grp-cart-page-layout">
+      
+      <div class="grp-cart-table-wrap" id="cartPageTableWrap">
+        
+      </div>
+
+      
+      <div class="grp-cart-summary-card">
+        <h3><i class="fas fa-receipt"></i> Sipariş Özeti</h3>
+        <div class="grp-summary-row">
+          <span>Ürünler Toplamı</span>
+          <strong id="cartPageSubtotal">0 TL</strong>
+        </div>
+        <div class="grp-summary-row">
+          <span>KDV & Hizmet Bedeli</span>
+          <strong class="free">DÂHİL (0 TL)</strong>
+        </div>
+        <div class="grp-summary-divider"></div>
+        <div class="grp-summary-row total">
+          <span>Ödenecek Tutar</span>
+          <strong id="cartPageTotal">0 TL</strong>
+        </div>
+
+        <div class="grp-terms-checkbox-wrap">
+          <label class="grp-custom-checkbox-label">
+            <input type="checkbox" id="cartTermsCheckbox">
+            <span class="grp-custom-checkbox"></span>
+            <span class="grp-checkbox-text">
+              <a href="/hizmet-sozlesmesi" target="_blank">Hizmet Sözleşmesi</a> ve 
+              <a href="/gizlilik-politikasi" target="_blank">Gizlilik Politikası</a>'nı okudum, kabul ediyorum.
+            </span>
+          </label>
+        </div>
+
+        <button type="button" class="grp-btn-checkout-page" id="cartPageCheckoutBtn" disabled>
+          <i class="fas fa-lock"></i>
+          <span>Ödemeye Geç & Satın Al</span>
+        </button>
+
+        <div class="grp-cart-guarantee">
+          <p><i class="fas fa-shield-alt"></i> 256-Bit SSL Şifreli Güvenli Ödeme Altyapısı</p>
+          <p><i class="fas fa-bolt"></i> Ödeme Sonrası Anında Kod & Ticket Desteği</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  
+  <div class="grp-modal-overlay" id="checkoutModal">
+    <div class="grp-modal-content">
+      <button type="button" class="grp-modal-close" id="closeCheckoutBtn">&times;</button>
+      <div class="grp-modal-header">
+        <div class="grp-modal-icon"><i class="fas fa-shield-halved"></i></div>
+        <h3>Ödeme & Teslimat Bilgileri</h3>
+        <p>Siparişinizin hesabınıza sorunsuz aktarılması için bilgilerinizi eksiksiz girin.</p>
+      </div>
+      <form id="checkoutForm">
+        <div class="grp-form-group">
+          <label><i class="fas fa-user"></i> Adınız Soyadınız</label>
+          <input type="text" id="buyerName" placeholder="Örn: Ahmet Yılmaz" required>
+        </div>
+        <div class="grp-form-group">
+          <label><i class="fab fa-discord"></i> Discord Kullanıcı Adınız / ID</label>
+          <input type="text" id="buyerDiscord" placeholder="Örn: ahmet#1234 veya ahmet_mta" required>
+        </div>
+        <div class="grp-form-group">
+          <label><i class="fas fa-envelope"></i> E-Posta Adresi</label>
+          <input type="email" id="buyerEmail" placeholder="Örn: ahmet@gmail.com" required>
+        </div>
+        <div class="grp-form-group">
+          <label><i class="fas fa-phone"></i> Telefon Numarası</label>
+          <input type="tel" id="buyerPhone" placeholder="Örn: 05551112233" required>
+        </div>
+        <div class="grp-checkout-summary">
+          <span>Ödenecek Tutar:</span>
+          <strong id="checkoutTotalPrice">0 TL</strong>
+        </div>
+        <div class="grp-checkout-actions">
+          <button type="submit" class="grp-btn-pay" id="paySuccessBtn">
+            <i class="fas fa-lock"></i> Shopier ile Güvenli Öde
+          </button>
+          <button type="button" class="grp-btn-pay-fail" id="payFailBtn">
+            <i class="fas fa-triangle-exclamation"></i> (Test: Reddedilen Ödeme)
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  
+  <div class="grp-modal-overlay" id="successModal">
+    <div class="grp-modal-content grp-modal-success">
+      <div class="grp-modal-status-icon success">
+        <i class="fas fa-circle-check"></i>
+      </div>
+      <h2>Ödemeniz Başarıyla Alındı!</h2>
+      <p class="grp-modal-subtext">Siparişiniz sisteme kaydedildi. Lütfen aşağıdaki sipariş kodunu kopyalayın:</p>
+      
+      <div class="grp-order-code-box">
+        <span class="grp-code-label">SİPARİŞ NUMARANIZ:</span>
+        <div class="grp-code-val-row">
+          <code id="orderCodeDisplay">TAG-2026-XXXX</code>
+          <button type="button" class="grp-btn-copy-code" id="copyOrderCodeBtn">
+            <i class="fas fa-copy"></i> Kopyala
+          </button>
+        </div>
+      </div>
+
+      <div class="grp-instruction-box">
+        <i class="fas fa-info-circle"></i>
+        <p><strong>Nasıl Teslim Alırım?</strong><br>Kopyaladığınız sipariş numarası ile Discord sunucumuzda <strong>Ticket</strong> açarak yetkililerimize iletin. Ürününüz anında verilecektir.</p>
+      </div>
+
+      <div class="grp-modal-footer-btns">
+        <a href="https://discord.gg/adaletgaming" target="_blank" class="grp-btn-primary">
+          <i class="fab fa-discord"></i> Discord'a Git & Ticket Aç
+        </a>
+        <button type="button" class="grp-btn-secondary" id="closeSuccessBtn">Kapat</button>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="grp-modal-overlay" id="failureModal">
+    <div class="grp-modal-content grp-modal-failure">
+      <div class="grp-modal-status-icon failure">
+        <i class="fas fa-circle-xmark"></i>
+      </div>
+      <h2>Ödeme İşlemi Başarısız Oldu!</h2>
+      <p class="grp-modal-subtext">Ödeme işlemi bankanız veya sistem tarafından reddedildi.</p>
+      
+      <div class="grp-error-code-box">
+        <div class="grp-error-code"><strong>Hata Kodu:</strong> <span id="errCodeText">ERR_PAYMENT_DECLINED</span></div>
+        <div class="grp-error-desc"><strong>Açıklama:</strong> <span id="errDescText">Kart bakiyesi yetersiz veya işlem banka güvenlik kriterlerini karşılayamadı.</span></div>
+      </div>
+
+      <div class="grp-modal-footer-btns">
+        <button type="button" class="grp-btn-primary" id="retryPaymentBtn">
+          <i class="fas fa-rotate-right"></i> Tekrar Dene
+        </button>
+        <button type="button" class="grp-btn-secondary" id="closeFailureBtn">Kapat</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="grp-footer">
+    <div class="grp-footer-inner">
+      <div class="grp-footer-top">
+        <div class="grp-footer-brand">
+          <img src="logo.png" alt="Türkiyem Adalet Gaming Logo" class="grp-footer-logo">
+          <div>
+            <h3>TÜRKİYEM ADALET GAMING</h3>
+            <p>Türkiyem Adalet Gaming, hiç şüphesiz MTA askeri piyasasında şimdiye kadar gelmiş geçmiş en iyi sunucu olarak tanımlanabilir.</p>
+          </div>
+        </div>
+        <div class="grp-footer-links">
+          <a href="/">Ana Sayfa</a>
+          <a href="/#birimler">Birimlerimiz</a>
+          <a href="/#katil">Nasıl Katılırım?</a>
+          <a href="/magaza">Mağaza</a>
+          <a href="/hizmet-sozlesmesi">Hizmet Sözleşmesi</a>
+          <a href="/gizlilik-politikasi">Gizlilik Politikası</a>
+          <a href="https://discord.gg/9NJ9xetUDS" target="_blank">Ban Affı & İtiraz</a>
+        </div>
+      </div>
+      <div class="grp-footer-bottom">
+        <p>© 2020 - 2026 <span>Türkiyem Adalet Gaming</span>. Tüm Hakları Saklıdır.</p>
+        <div class="grp-social-links">
+          <a href="https://discord.gg/adaletgaming" target="_blank" aria-label="Discord"><i class="fab fa-discord"></i></a>
+          <a href="https://www.youtube.com/@turkiyemadaletgaming" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+          <a href="https://www.instagram.com/mta.turkiyemadaletgaming/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.tiktok.com/@mtadaletgaming" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="grp-toast" id="toast">
+    <i class="fas fa-circle-check"></i>
+    <span id="toastMsg">İşlem Başarılı!</span>
+    <a href="/sepet" class="grp-toast-cart-btn" id="toastCartBtn" style="display:none;">
+      <span>Sepete Git</span>
+      <i class="fas fa-arrow-right"></i>
+    </a>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
