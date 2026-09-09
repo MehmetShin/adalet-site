@@ -159,8 +159,8 @@ header.grp-header.scrolled {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 52px;
-  padding: 0 6px;
+  height: 64px;
+  padding: 0 4px;
   background: transparent;
   border: none;
   transition: var(--grp-transition);
@@ -174,17 +174,17 @@ header.grp-header.scrolled {
 
 .grp-logo-img {
   display: block;
-  height: 50px;
-  max-height: 50px;
+  height: 68px;
+  max-height: 68px;
   width: auto;
   object-fit: contain;
-  filter: drop-shadow(0 0 12px var(--grp-primary-glow));
+  filter: drop-shadow(0 0 14px var(--grp-primary-glow)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
   transition: var(--grp-transition);
 }
 
 .grp-logo-box:hover .grp-logo-img {
-  transform: scale(1.08);
-  filter: drop-shadow(0 0 22px var(--grp-primary-glow));
+  transform: scale(1.06);
+  filter: drop-shadow(0 0 24px var(--grp-primary-glow)) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.8));
 }
 
 .grp-nav {
@@ -1266,8 +1266,8 @@ header.grp-header.scrolled {
 
 @media (max-width: 480px) {
   .grp-logo-img {
-    height: 40px;
-    max-height: 40px;
+    height: 52px;
+    max-height: 52px;
   }
 
   .grp-hero-title {
