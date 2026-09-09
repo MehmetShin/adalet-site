@@ -470,7 +470,7 @@ function initShopPage() {
   const catCards = document.querySelectorAll('.grp-cat-card');
   const catBtns = document.querySelectorAll('.grp-cat-btn');
 
-  // Her kategorideki ürün sayısını dinamik hesapla ve kartlara yaz
+
   const countDonate = PRODUCTS.filter(p => p.category === 'donate').length;
   const countYetkiler = PRODUCTS.filter(p => p.category === 'yetkiler').length;
   const countOzel = PRODUCTS.filter(p => p.category === 'ozel-ayricaliklar').length;
@@ -541,7 +541,7 @@ function initShopPage() {
     });
   });
 
-  // URL'de doğrudan kategori belirtilmişse (örneğin: ?cat=donate) doğrudan aç
+
   const urlParams = new URLSearchParams(window.location.search);
   const requestedCat = urlParams.get('cat');
   if (requestedCat && ['donate', 'yetkiler', 'ozel-ayricaliklar'].includes(requestedCat)) {

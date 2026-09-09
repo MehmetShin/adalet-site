@@ -1368,9 +1368,7 @@ header.grp-header.scrolled {
 }
 
 
-/* ========================================================
-   KATEGORİ SEÇİM VİTRİNİ (3 BÜYÜK KART)
-======================================================== */
+
 .grp-category-showcase {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1493,9 +1491,7 @@ header.grp-header.scrolled {
   transform: translateX(4px);
 }
 
-/* ========================================================
-   KATEGORİ SEÇİLDİKTEN SONRAKİ ÜRÜN ALANI
-======================================================== */
+
 .grp-category-products-wrap {
   animation: fadeInShop 0.4s ease forwards;
 }
