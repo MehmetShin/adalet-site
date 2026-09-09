@@ -470,6 +470,19 @@ function initShopPage() {
   const catCards = document.querySelectorAll('.grp-cat-card');
   const catBtns = document.querySelectorAll('.grp-cat-btn');
 
+  // Her kategorideki ürün sayısını dinamik hesapla ve kartlara yaz
+  const countDonate = PRODUCTS.filter(p => p.category === 'donate').length;
+  const countYetkiler = PRODUCTS.filter(p => p.category === 'yetkiler').length;
+  const countOzel = PRODUCTS.filter(p => p.category === 'ozel-ayricaliklar').length;
+
+  const bDonate = document.getElementById('catBadgeDonate');
+  const bYetkiler = document.getElementById('catBadgeYetkiler');
+  const bOzel = document.getElementById('catBadgeOzel');
+
+  if (bDonate) bDonate.innerText = `${countDonate} Ürün Mevcut`;
+  if (bYetkiler) bYetkiler.innerText = `${countYetkiler} Ürün Mevcut`;
+  if (bOzel) bOzel.innerText = `${countOzel} Ürün Mevcut`;
+
   function openCategory(cat) {
     if (!cat) return;
     if (showcase) showcase.style.display = 'none';
