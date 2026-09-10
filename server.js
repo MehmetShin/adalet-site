@@ -256,7 +256,16 @@ const requestHandler = async (req, res) => {
 
   let pathname = '';
   try {
-    pathname = decodeURIComponent(new URL(req.url, `http://${req.headers.host || 'localhost'}`).pathname);
+    const rawUrl = req.url || '/';
+    const parsedUrl = new URL(rawUrl, `http://${req.headers.host || 'localhost'}`);
+    pathname = decodeURIComponent(parsedUrl.pathname);
+
+    if ((pathname === '/api' || pathname === '/api/' || pathname.includes('/api/index') || pathname.includes('/api/[...path]'))) {
+      const qPath = parsedUrl.searchParams.get('path');
+      if (qPath) {
+        pathname = '/api/' + Array.isArray(qPath) ? qPath.join('/') : qPath.replace(/^\//, '');
+      }
+    }
   } catch (e) {
     res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8' });
     return res.end('400 Bad Request');
