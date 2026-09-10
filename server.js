@@ -302,10 +302,11 @@ const requestHandler = async (req, res) => {
     const parsedUrl = new URL(rawUrl, `http://${req.headers.host || 'localhost'}`);
     pathname = decodeURIComponent(parsedUrl.pathname);
 
-    if ((pathname === '/api' || pathname === '/api/' || pathname.includes('/api/index') || pathname.includes('/api/[...path]'))) {
-      const qPath = parsedUrl.searchParams.get('path');
+    if (pathname === '/api' || pathname === '/api/' || pathname.includes('/api/index') || pathname.includes('/api/[...path]') || req.query) {
+      const qPath = (req.query && req.query.path) || parsedUrl.searchParams.get('path');
       if (qPath) {
-        pathname = '/api/' + Array.isArray(qPath) ? qPath.join('/') : qPath.replace(/^\//, '');
+        const pathPart = Array.isArray(qPath) ? qPath.join('/') : String(qPath).replace(/^\//, '');
+        pathname = '/api/' + pathPart;
       }
     }
   } catch (e) {
