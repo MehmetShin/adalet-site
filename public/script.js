@@ -1023,7 +1023,7 @@ function initCheckoutModal() {
           const form = tempDiv.querySelector('form');
           if (form) {
             document.body.appendChild(form);
-            form.submit();
+            HTMLFormElement.prototype.submit.call(form);
           } else {
             showToast('Ödeme formu bulunamadı.', 'error');
             if (btn) {

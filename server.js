@@ -272,6 +272,10 @@ function parseJsonBody(req) {
     }
   }
 
+  if (req.readableEnded || req.complete) {
+    return Promise.resolve({});
+  }
+
   return new Promise((resolve) => {
     const chunks = [];
     let done = false;
@@ -427,21 +431,53 @@ const requestHandler = async (req, res) => {
           }
 
           const orderId = 'ADL-' + Date.now();
-          const prodNameStr = sanitizeText(itemSummaries.join(', ').substring(0, 100));
+          const prodNameStr = sanitizeText(itemSummaries.join(', ').substring(0, 100)) || 'Adalet Gaming Urunleri';
+          const randomNr = Math.floor(100000 + Math.random() * 900000).toString();
+          const amountStr = totalAmount.toFixed(2);
+          const currencyStr = '0';
+
+          let firstName = buyerName ? buyerName.trim() : 'Musteri';
+          let lastName = 'Musteri';
+          if (firstName.includes(' ')) {
+            const parts = firstName.split(/\s+/);
+            lastName = parts.pop();
+            firstName = parts.join(' ');
+          } else if (firstName) {
+            lastName = firstName;
+          }
+
+          const sigData = randomNr + orderId + amountStr + currencyStr;
+          const signature = crypto.createHmac('sha256', SHOPIER_API_TOKEN)
+            .update(sigData)
+            .digest('base64');
 
           const formHtml = `
-            <form id="shopierPayForm" action="https://www.shopier.com/ShowProductHTML" method="POST">
+            <form id="shopierPayForm" action="https://www.shopier.com/ShowProduct/api_pay4.php" method="POST">
               <input type="hidden" name="API_key" value="${SHOPIER_API_TOKEN}">
               <input type="hidden" name="website_index" value="1">
               <input type="hidden" name="platform_order_id" value="${orderId}">
               <input type="hidden" name="product_name" value="${prodNameStr}">
-              <input type="hidden" name="product_type" value="1">
-              <input type="hidden" name="buyer_name" value="${sanitizeText(buyerName)}">
+              <input type="hidden" name="product_type" value="0">
+              <input type="hidden" name="buyer_name" value="${sanitizeText(firstName)}">
+              <input type="hidden" name="buyer_surname" value="${sanitizeText(lastName)}">
               <input type="hidden" name="buyer_email" value="${sanitizeText(buyerEmail)}">
               <input type="hidden" name="buyer_phone" value="${sanitizeText(buyerPhone)}">
-              <input type="hidden" name="buyer_account_age" value="1">
-              <input type="hidden" name="total_order_value" value="${totalAmount.toFixed(2)}">
-              <input type="hidden" name="currency" value="TRY">
+              <input type="hidden" name="buyer_account_age" value="0">
+              <input type="hidden" name="buyer_id_nr" value="1">
+              <input type="hidden" name="city" value="Istanbul">
+              <input type="hidden" name="country" value="Turkey">
+              <input type="hidden" name="billing_address" value="Turkiye">
+              <input type="hidden" name="billing_city" value="Istanbul">
+              <input type="hidden" name="billing_postcode" value="34000">
+              <input type="hidden" name="shipping_address" value="Turkiye">
+              <input type="hidden" name="shipping_city" value="Istanbul">
+              <input type="hidden" name="shipping_postcode" value="34000">
+              <input type="hidden" name="total_order_value" value="${amountStr}">
+              <input type="hidden" name="currency" value="${currencyStr}">
+              <input type="hidden" name="current_language" value="0">
+              <input type="hidden" name="modul_version" value="1.0.4">
+              <input type="hidden" name="random_nr" value="${randomNr}">
+              <input type="hidden" name="signature" value="${signature}">
               <input type="hidden" name="callback_url" value="https://adaletgaming.com/api/shopier/callback">
               <input type="hidden" name="custom_params" value="${sanitizeText(buyerDiscord)}">
             </form>
