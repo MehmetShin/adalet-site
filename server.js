@@ -164,7 +164,8 @@ function sanitizePayload(obj, clientIp, userAgent) {
 }
 
 function getSessionFromReq(req) {
-  const cookieHeader = req.headers.cookie || '';
+  const cookieHeader = (req.headers && req.headers.cookie) || '';
+  if (!cookieHeader) return null;
   const cookies = Object.fromEntries(
     cookieHeader.split(';').map(c => {
       const parts = c.trim().split('=');
@@ -190,7 +191,7 @@ function checkAdminAuth(req) {
 function verifyCsrfToken(req) {
   const sessObj = getSessionFromReq(req);
   if (!sessObj) return false;
-  const reqCsrf = req.headers['x-csrf-token'] || '';
+  const reqCsrf = (req.headers && req.headers['x-csrf-token']) || '';
   return reqCsrf && reqCsrf === sessObj.session.csrfToken;
 }
 
@@ -250,8 +251,10 @@ function parseJsonBody(req) {
 }
 
 const requestHandler = async (req, res) => {
-  const clientIp = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress || 'unknown';
-  const userAgent = req.headers['user-agent'] || '';
+  const headers = req.headers || {};
+  const rawIp = headers['x-forwarded-for'] || headers['x-real-ip'] || (req.socket ? req.socket.remoteAddress : '') || '127.0.0.1';
+  const clientIp = rawIp.split(',')[0].trim() || '127.0.0.1';
+  const userAgent = headers['user-agent'] || '';
 
   const now = Date.now();
   const bannedUntil = bannedIps.get(clientIp);
