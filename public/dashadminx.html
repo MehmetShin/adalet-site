@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADALET GAMING - Yönetim Paneli</title>
+    <title>TÜRKİYEM ADALET GAMING - Yönetim Paneli</title>
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
     <link rel="icon" href="logo.png" type="image/png">
     <link rel="shortcut icon" href="logo.png">
@@ -390,6 +390,89 @@
             background: rgba(255, 255, 255, 0.15);
         }
 
+        .admin-filter-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .admin-cat-tabs {
+            display: flex;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 5px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .admin-tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .admin-tab-btn:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .admin-tab-btn.active {
+            background: linear-gradient(135deg, #e53e3e 0%, #dd6b20 100%);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
+        }
+
+        .admin-tab-count {
+            background: rgba(0, 0, 0, 0.35);
+            padding: 2px 7px;
+            border-radius: 10px;
+            font-size: 11px;
+        }
+
+        .admin-search-box {
+            position: relative;
+            min-width: 240px;
+            flex: 1;
+            max-width: 320px;
+        }
+
+        .admin-search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .admin-search-input {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: #fff;
+            padding: 9px 14px 9px 38px;
+            border-radius: 10px;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .admin-search-input:focus {
+            border-color: var(--accent-red);
+        }
+
         .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -528,6 +611,83 @@
         .btn-card-delete:hover {
             background: var(--accent-red);
             color: #fff;
+        }
+
+        /* Audit Log Table Styling */
+        .audit-log-section {
+            margin-top: 48px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .audit-table-wrap {
+            overflow-x: auto;
+            margin-top: 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .audit-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        .audit-table th {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-muted);
+            padding: 12px 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 11px;
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        .audit-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            vertical-align: middle;
+        }
+
+        .audit-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .audit-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.SUCCESS, .status-badge.INFO {
+            background: rgba(56, 161, 105, 0.15);
+            color: #48bb78;
+            border: 1px solid rgba(56, 161, 105, 0.3);
+        }
+
+        .status-badge.FAILED, .status-badge.BLOCKED, .status-badge.BANNED_24H {
+            background: rgba(229, 62, 62, 0.15);
+            color: #fc8181;
+            border: 1px solid rgba(229, 62, 62, 0.3);
+        }
+
+        .status-badge.WARN {
+            background: rgba(236, 201, 75, 0.15);
+            color: #ecc94b;
+            border: 1px solid rgba(236, 201, 75, 0.3);
         }
 
         .modal-overlay {
@@ -736,7 +896,7 @@
         <header class="navbar">
             <div class="nav-brand">
                 <img src="logo.png" alt="Adalet Logo">
-                <span>ADALET GAMING PANEL</span>
+                <span>TÜRKİYEM ADALET GAMING YÖNETİCİ PANELİ</span>
             </div>
 
             <div class="nav-user">
@@ -753,16 +913,6 @@
         <main class="main-container">
 
             <div class="metrics-grid">
-                <div class="metric-card earnings">
-                    <div class="metric-info">
-                        <h4>Shopier Toplam Kazanç</h4>
-                        <div class="value gold" id="shopierEarningsVal">₺145,800.00</div>
-                    </div>
-                    <div class="metric-icon">
-                        <i class="fa-solid fa-wallet"></i>
-                    </div>
-                </div>
-
                 <div class="metric-card">
                     <div class="metric-info">
                         <h4>Aktif Mağaza Ürünleri</h4>
@@ -787,12 +937,35 @@
             <div class="content-header">
                 <h3><i class="fa-solid fa-store" style="color: var(--accent-red)"></i> Mağaza Ürün Yönetimi</h3>
                 <div style="display: flex; gap: 10px;">
-                    <button class="btn-secondary" onclick="openEarningsModal()">
-                        <i class="fa-solid fa-pen"></i> Kazancı Düzenle
-                    </button>
                     <button class="btn-action" onclick="openProductModal()">
                         <i class="fa-solid fa-plus"></i> Yeni Ürün Ekle
                     </button>
+                </div>
+            </div>
+
+            <div class="admin-filter-bar">
+                <div class="admin-cat-tabs">
+                    <button type="button" class="admin-tab-btn active" data-cat="all" onclick="filterCategory('all', this)">
+                        <i class="fa-solid fa-layer-group"></i> Tümü
+                        <span class="admin-tab-count" id="countAll">0</span>
+                    </button>
+                    <button type="button" class="admin-tab-btn" data-cat="yetkiler" onclick="filterCategory('yetkiler', this)">
+                        <i class="fa-solid fa-user-shield"></i> Yetkiler
+                        <span class="admin-tab-count" id="countYetkiler">0</span>
+                    </button>
+                    <button type="button" class="admin-tab-btn" data-cat="ozel-ayricaliklar" onclick="filterCategory('ozel-ayricaliklar', this)">
+                        <i class="fa-solid fa-crown"></i> Özel Ayrıcalıklar
+                        <span class="admin-tab-count" id="countOzel">0</span>
+                    </button>
+                    <button type="button" class="admin-tab-btn" data-cat="donate" onclick="filterCategory('donate', this)">
+                        <i class="fa-solid fa-hand-holding-dollar"></i> Donate
+                        <span class="admin-tab-count" id="countDonate">0</span>
+                    </button>
+                </div>
+
+                <div class="admin-search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="adminSearchInput" class="admin-search-input" placeholder="Ürün adı ile ara..." oninput="onSearchInput(this.value)">
                 </div>
             </div>
 
@@ -896,27 +1069,6 @@
 
                 <button type="submit" class="btn-action" style="width:100%; justify-content:center; padding:12px;">
                     <i class="fa-solid fa-floppy-disk"></i> Ürünü Kaydet
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <div id="earningsModal" class="modal-overlay">
-        <div class="modal-box" style="max-width:400px;">
-            <div class="modal-title">
-                <span>Shopier Kazancı Düzenle</span>
-                <i class="fa-solid fa-xmark close-modal" onclick="closeEarningsModal()"></i>
-            </div>
-
-            <form id="earningsForm">
-                <div class="form-group">
-                    <label>Toplam Gösterilecek Kazanç (TL)</label>
-                    <input type="number" id="newEarningsInput" class="form-input" style="padding-left:14px;" required
-                        placeholder="145800">
-                </div>
-
-                <button type="submit" class="btn-action" style="width:100%; justify-content:center; padding:12px;">
-                    <i class="fa-solid fa-check"></i> Güncelle
                 </button>
             </form>
         </div>

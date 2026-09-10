@@ -82,7 +82,6 @@ function loadStoreData() {
     }
   }
   return {
-    shopierEarnings: 145800,
     products: null,
     categories: null,
     auditLogs: []
@@ -191,8 +190,9 @@ function checkAdminAuth(req) {
 function verifyCsrfToken(req) {
   const sessObj = getSessionFromReq(req);
   if (!sessObj) return false;
-  const reqCsrf = (req.headers && req.headers['x-csrf-token']) || '';
-  return reqCsrf && reqCsrf === sessObj.session.csrfToken;
+  const headers = req.headers || {};
+  const reqCsrf = headers['x-admin-csrf-token'] || headers['x-csrf-token'] || '';
+  return !!reqCsrf && reqCsrf === sessObj.session.csrfToken;
 }
 
 function parseJsonBody(req) {
@@ -332,7 +332,7 @@ const requestHandler = async (req, res) => {
 
     if (pathname === '/api/store-data' && req.method === 'GET') {
       const data = loadStoreData();
-      return res.end(JSON.stringify({ success: true, data: { shopierEarnings: data.shopierEarnings, products: data.products, categories: data.categories } }));
+      return res.end(JSON.stringify({ success: true, data: { products: data.products, categories: data.categories } }));
     }
 
     if (pathname === '/api/admin/login' && req.method === 'POST') {
@@ -459,12 +459,11 @@ const requestHandler = async (req, res) => {
         const payload = sanitizePayload(rawPayload, clientIp, userAgent);
 
         const currentData = loadStoreData();
-        if (payload.shopierEarnings !== undefined) currentData.shopierEarnings = payload.shopierEarnings;
         if (payload.products !== undefined) currentData.products = payload.products;
         if (payload.categories !== undefined) currentData.categories = payload.categories;
 
         saveStoreData(currentData);
-        addAuditLog({ type: 'DATA_SAVE', ip: clientIp, userAgent, details: 'Mağaza ürün/kazanç verileri güncellendi', status: 'SUCCESS' });
+        addAuditLog({ type: 'DATA_SAVE', ip: clientIp, userAgent, details: 'Mağaza ürün verileri güncellendi', status: 'SUCCESS' });
         return res.end(JSON.stringify({ success: true, message: 'Değişiklikler başarıyla kaydedildi.' }));
       } catch (e) {
         res.writeHead(500);
