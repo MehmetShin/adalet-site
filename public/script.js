@@ -362,7 +362,17 @@ function saveStoredCart(cartData) {
 
 let cart = getStoredCart();
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  // Sync Products & Store Data from server API if present
+  try {
+    const res = await fetch('/api/store-data');
+    const result = await res.json();
+    if (result.success && result.data && result.data.products && result.data.products.length > 0) {
+      PRODUCTS.length = 0;
+      PRODUCTS.push(...result.data.products);
+    }
+  } catch (e) { }
+
   initNavigation();
   initDevToolsProtection();
   updateCartBadge();

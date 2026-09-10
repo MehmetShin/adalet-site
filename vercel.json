@@ -18,6 +18,10 @@
       "destination": "/hizmet-sozlesmesi.html"
     },
     {
+      "source": "/dashadminx",
+      "destination": "/dashadminx.html"
+    },
+    {
       "source": "/gizlilik-politikasi",
       "destination": "/gizlilik-politikasi.html"
     }
