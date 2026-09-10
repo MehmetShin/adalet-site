@@ -47,6 +47,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username: u, password: p })
                 });
+                if (!res.ok) {
+                    try {
+                        const errData = await res.json();
+                        errText.textContent = errData.message || `Hata kodu: ${res.status}`;
+                    } catch (_) {
+                        errText.textContent = `Sunucu hatası (${res.status})`;
+                    }
+                    errBox.style.display = 'flex';
+                    return;
+                }
+
                 const data = await res.json();
 
                 if (data.success) {
@@ -62,6 +73,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     errBox.style.display = 'flex';
                 }
             } catch (err) {
+                console.error('Login error:', err);
                 errText.textContent = 'Sunucuyla bağlantı kurulamadı!';
                 errBox.style.display = 'flex';
             }
