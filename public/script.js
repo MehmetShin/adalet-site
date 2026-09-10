@@ -363,7 +363,7 @@ let cart = getStoredCart();
 document.addEventListener('DOMContentLoaded', async () => {
 
   try {
-    const res = await fetch('/api/store-data');
+    const res = await fetch('/api/store-data?t=' + Date.now(), { cache: 'no-store' });
     const result = await res.json();
     if (result.success && result.data && result.data.products && result.data.products.length > 0) {
       PRODUCTS.length = 0;

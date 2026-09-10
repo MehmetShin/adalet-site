@@ -7,16 +7,39 @@ const PORT = process.env.PORT || 3000;
 const PUBLIC_DIR = path.resolve(__dirname, 'public');
 const DATA_FILE = path.resolve(__dirname, 'data.json');
 
-const ADMIN_USER = 'Turkadaletadmin423';
-const ADMIN_PASS = 'tIy$C_[{rRIGR-k7Ss!dn6AWx-z4C5uIfrC.{cE3';
+const ADMIN_USER = process.env.ADMIN_USER;
+const ADMIN_PASS = process.env.ADMIN_PASS;
 
-const ADMIN_SALT = 'Adalet_Super_Secret_Salt_2026';
-const ADMIN_PASS_HASH = crypto.pbkdf2Sync(ADMIN_PASS, ADMIN_SALT, 10000, 64, 'sha512').toString('hex');
+if (!ADMIN_USER || !ADMIN_PASS) {
+  console.error('[HATA] ADMIN_USER veya ADMIN_PASS environment variable tanimlanmamis!');
+}
+
+const ADMIN_SALT = process.env.ADMIN_SALT || 'Adalet_Super_Secret_Salt_2026';
+const ADMIN_PASS_HASH = ADMIN_PASS
+  ? crypto.pbkdf2Sync(ADMIN_PASS, ADMIN_SALT, 10000, 64, 'sha512').toString('hex')
+  : '';
 
 const activeSessions = new Map();
 const SESSION_DURATION = 8 * 60 * 60 * 1000;
 
-const bannedIps = new Map();
+if (!global._auditLogs) global._auditLogs = [];
+if (!global._auditLogsLoaded) {
+  try {
+    const tmpLogFile = '/tmp/adalet_audit.json';
+    if (fs.existsSync(tmpLogFile)) {
+      const parsed = JSON.parse(fs.readFileSync(tmpLogFile, 'utf-8'));
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        global._auditLogs = parsed;
+      }
+    }
+  } catch(e) {}
+  global._auditLogsLoaded = true;
+}
+if (!global._bannedIps) global._bannedIps = new Map();
+if (!global._loginAttempts) global._loginAttempts = new Map();
+if (!global._requestCounts) global._requestCounts = new Map();
+
+const bannedIps = global._bannedIps;
 const BAN_DURATION = 24 * 60 * 60 * 1000;
 
 const TRAP_ROUTES = [
@@ -24,7 +47,7 @@ const TRAP_ROUTES = [
   '/admin.php', '/wp-login.php', '/user/login', '/cpanel', '/phpmyadmin'
 ];
 
-const loginAttempts = new Map();
+const loginAttempts = global._loginAttempts;
 const MAX_LOGIN_ATTEMPTS = 5;
 const LOGIN_WINDOW = 15 * 60 * 1000;
 
@@ -43,7 +66,7 @@ const MIME_TYPES = {
   '.ttf': 'font/ttf'
 };
 
-const requestCounts = new Map();
+const requestCounts = global._requestCounts;
 const RATE_LIMIT_WINDOW = 60 * 1000;
 const MAX_REQUESTS_PER_WINDOW = 120;
 
@@ -98,9 +121,7 @@ function saveStoreData(data) {
 
 function addAuditLog({ type, ip, userAgent, details, status }) {
   try {
-    const data = loadStoreData();
-    if (!data.auditLogs) data.auditLogs = [];
-    data.auditLogs.unshift({
+    const logEntry = {
       id: 'log-' + Date.now() + '-' + Math.floor(Math.random() * 10000),
       timestamp: new Date().toISOString(),
       type: type || 'SECURITY_EVENT',
@@ -108,11 +129,14 @@ function addAuditLog({ type, ip, userAgent, details, status }) {
       userAgent: userAgent ? userAgent.substring(0, 100) : 'unknown',
       details: details || '',
       status: status || 'INFO'
-    });
-    if (data.auditLogs.length > 100) {
-      data.auditLogs = data.auditLogs.slice(0, 100);
+    };
+    global._auditLogs.unshift(logEntry);
+    if (global._auditLogs.length > 200) {
+      global._auditLogs = global._auditLogs.slice(0, 200);
     }
-    saveStoreData(data);
+    try {
+      fs.writeFileSync('/tmp/adalet_audit.json', JSON.stringify(global._auditLogs), 'utf-8');
+    } catch(e) {}
   } catch (e) {
     console.error('Audit log write error:', e);
   }
@@ -331,6 +355,9 @@ const requestHandler = async (req, res) => {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
 
     if (pathname === '/api/store-data' && req.method === 'GET') {
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
       const data = loadStoreData();
       return res.end(JSON.stringify({ success: true, data: { products: data.products, categories: data.categories } }));
     }
@@ -419,8 +446,10 @@ const requestHandler = async (req, res) => {
         res.writeHead(403);
         return res.end(JSON.stringify({ success: false, message: 'Erişim engellendi.' }));
       }
-      const data = loadStoreData();
-      return res.end(JSON.stringify({ success: true, logs: data.auditLogs || [] }));
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+      return res.end(JSON.stringify({ success: true, logs: global._auditLogs || [] }));
     }
 
     if (pathname === '/api/admin/clear-logs' && req.method === 'POST') {
@@ -434,10 +463,7 @@ const requestHandler = async (req, res) => {
         return res.end(JSON.stringify({ success: false, message: 'CSRF Güvenlik İhlali' }));
       }
 
-      const currentData = loadStoreData();
-      currentData.auditLogs = [];
-      saveStoreData(currentData);
-
+      global._auditLogs = [];
       addAuditLog({ type: 'CLEAR_LOGS', ip: clientIp, userAgent, details: 'Güvenlik günlükleri temizlendi', status: 'SUCCESS' });
       return res.end(JSON.stringify({ success: true, message: 'Güvenlik logları temizlendi.' }));
     }

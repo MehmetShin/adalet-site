@@ -553,7 +553,7 @@ async function loadAuditLogs() {
     const tbody = document.getElementById('auditLogsBody');
     if (!tbody) return;
     try {
-        const res = await fetch('/api/admin/audit-logs');
+        const res = await fetch('/api/admin/audit-logs?t=' + Date.now(), { cache: 'no-store' });
         const result = await res.json();
         if (result.success && result.logs && result.logs.length > 0) {
             tbody.innerHTML = result.logs.map(function(log) {
