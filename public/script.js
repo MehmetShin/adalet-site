@@ -976,7 +976,7 @@ function initCheckoutModal() {
       }
     });
 
-    checkoutForm.addEventListener('submit', (e) => {
+    checkoutForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       clearErrors();
 
@@ -997,8 +997,46 @@ function initCheckoutModal() {
 
       if (errName || errDiscord || errEmail || errPhone) return;
 
-      closeModal(checkoutModal);
-      showToast('Bilgileriniz alındı! Ödeme sistemi yakında aktif olacak. 🕐');
+      const btn = document.getElementById('paySuccessBtn');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Shopier Sayfasına Yönlendiriliyorsunuz...';
+      }
+
+      try {
+        const res = await fetch('/api/shopier/create-payment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            items: cart,
+            buyerName: name,
+            buyerDiscord: discord,
+            buyerEmail: email,
+            buyerPhone: phone
+          })
+        });
+        const data = await res.json();
+        if (data.success && data.formHtml) {
+          closeModal(checkoutModal);
+          const div = document.createElement('div');
+          div.innerHTML = data.formHtml;
+          document.body.appendChild(div);
+          const form = div.querySelector('form');
+          if (form) form.submit();
+        } else {
+          showToast(data.message || 'Ödeme başlatılamadı.', 'error');
+          if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-lock"></i> Shopier ile Güvenli Öde';
+          }
+        }
+      } catch (err) {
+        showToast('Sunucuyla bağlantı kurulamadı!', 'error');
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fas fa-lock"></i> Shopier ile Güvenli Öde';
+        }
+      }
     });
   }
 
