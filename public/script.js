@@ -934,15 +934,12 @@ function initCheckoutModal() {
     }
 
     function validatePhone(val) {
-      let trimmed = val.trim().replace(/\s|-/g, '');
+      const trimmed = val.trim().replace(/\s|-/g, '');
       if (!trimmed) return 'Telefon numarası boş bırakılamaz.';
-      if (trimmed.startsWith('+90')) trimmed = trimmed.slice(3);
-      if (trimmed.length === 10 && trimmed.startsWith('5')) {
-        trimmed = '0' + trimmed;
-      }
+      if (trimmed.startsWith('0')) return 'Telefon numarasını başında 0 olmadan giriniz (Örn: 5551112233).';
       if (!/^\d+$/.test(trimmed)) return 'Telefon numarası yalnızca rakam içermelidir.';
-      if (trimmed.length !== 11) return 'Telefon numarası 10 veya 11 hane olmalıdır (Örn: 5551112233).';
-      if (!trimmed.startsWith('05')) return 'Türk cep numarası 5 ile başlamalıdır.';
+      if (trimmed.length !== 10) return 'Telefon numarası başında 0 olmadan tam 10 hane olmalıdır (Örn: 5551112233).';
+      if (!trimmed.startsWith('5')) return 'Türk cep numarası 5 ile başlamalıdır (Örn: 5551112233).';
       if (/^(.)\1+$/.test(trimmed)) return 'Geçersiz telefon numarası.';
       return '';
     }
