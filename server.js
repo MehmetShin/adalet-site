@@ -191,6 +191,19 @@ function verifyCsrfToken(req) {
 }
 
 function parseJsonBody(req) {
+  if (req.body !== undefined && req.body !== null) {
+    if (typeof req.body === 'object') {
+      return Promise.resolve(req.body);
+    }
+    if (typeof req.body === 'string') {
+      try {
+        return Promise.resolve(req.body ? JSON.parse(req.body) : {});
+      } catch (e) {
+        return Promise.resolve({});
+      }
+    }
+  }
+
   return new Promise((resolve, reject) => {
     let body = '';
     req.on('data', chunk => {
@@ -204,8 +217,11 @@ function parseJsonBody(req) {
       try {
         resolve(body ? JSON.parse(body) : {});
       } catch (e) {
-        reject(e);
+        resolve({});
       }
+    });
+    req.on('error', () => {
+      resolve({});
     });
   });
 }
