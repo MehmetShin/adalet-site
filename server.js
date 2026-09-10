@@ -348,7 +348,7 @@ const requestHandler = async (req, res) => {
   res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=()');
-  res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self';");
+  res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://www.shopier.com;");
   res.setHeader('X-Download-Options', 'noopen');
   res.setHeader('X-Permitted-Cross-Domain-Policies', 'none');
   res.removeHeader('X-Powered-By');
@@ -395,117 +395,127 @@ const requestHandler = async (req, res) => {
       return res.end(JSON.stringify({ success: true, data: { products: data.products, categories: data.categories } }));
     }
 
-    if (pathname === '/api/shopier/create-payment' && req.method === 'POST') {
-      try {
-        const { items, buyerName, buyerDiscord, buyerEmail, buyerPhone } = await parseJsonBody(req);
-        if (!items || !Array.isArray(items) || items.length === 0) {
-          res.writeHead(400);
-          return res.end(JSON.stringify({ success: false, message: 'Sepetiniz boş!' }));
+    if (pathname === '/api/shopier/create-payment') {
+      if (req.method === 'GET') {
+        return res.end(JSON.stringify({ success: true, status: 'active', message: 'Shopier Ödeme Servisi Aktif (POST İsteği Bekleniyor)' }));
+      }
+      if (req.method === 'POST') {
+        try {
+          const { items, buyerName, buyerDiscord, buyerEmail, buyerPhone } = await parseJsonBody(req);
+          if (!items || !Array.isArray(items) || items.length === 0) {
+            res.writeHead(400);
+            return res.end(JSON.stringify({ success: false, message: 'Sepetiniz boş!' }));
+          }
+
+          const dataStore = await loadStoreData();
+          const serverProducts = dataStore.products || [];
+
+          let totalAmount = 0;
+          const itemSummaries = [];
+
+          for (const item of items) {
+            const match = serverProducts.find(p => p.id === item.id);
+            const price = match ? (match.price || 0) : (parseFloat(item.price) || 0);
+            const qty = Math.max(1, Math.min(10, parseInt(item.qty) || 1));
+            totalAmount += price * qty;
+            itemSummaries.push((match ? match.name : item.name) + ` (x${qty})`);
+          }
+
+          if (totalAmount <= 0) {
+            res.writeHead(400);
+            return res.end(JSON.stringify({ success: false, message: 'Geçersiz sipariş tutarı!' }));
+          }
+
+          const orderId = 'ADL-' + Date.now();
+          const prodNameStr = sanitizeText(itemSummaries.join(', ').substring(0, 100));
+
+          const formHtml = `
+            <form id="shopierPayForm" action="https://www.shopier.com/ShowProductHTML" method="POST">
+              <input type="hidden" name="API_key" value="${SHOPIER_API_TOKEN}">
+              <input type="hidden" name="website_index" value="1">
+              <input type="hidden" name="platform_order_id" value="${orderId}">
+              <input type="hidden" name="product_name" value="${prodNameStr}">
+              <input type="hidden" name="product_type" value="1">
+              <input type="hidden" name="buyer_name" value="${sanitizeText(buyerName)}">
+              <input type="hidden" name="buyer_email" value="${sanitizeText(buyerEmail)}">
+              <input type="hidden" name="buyer_phone" value="${sanitizeText(buyerPhone)}">
+              <input type="hidden" name="buyer_account_age" value="1">
+              <input type="hidden" name="total_order_value" value="${totalAmount.toFixed(2)}">
+              <input type="hidden" name="currency" value="TRY">
+              <input type="hidden" name="callback_url" value="https://adaletgaming.com/api/shopier/callback">
+              <input type="hidden" name="custom_params" value="${sanitizeText(buyerDiscord)}">
+            </form>
+          `;
+
+          addAuditLog({
+            type: 'SHOPIER_PAYMENT_INIT',
+            ip: clientIp,
+            userAgent: userAgent,
+            details: `Shopier ödemesi başlatıldı: Sipariş ${orderId}, Tutar ₺${totalAmount.toFixed(2)}, Alıcı: ${buyerName} (Discord: ${buyerDiscord})`,
+            status: 'INFO'
+          });
+
+          return res.end(JSON.stringify({ success: true, formHtml, orderId }));
+        } catch (e) {
+          res.writeHead(500);
+          return res.end(JSON.stringify({ success: false, message: 'Ödeme formu oluşturulurken hata oluştu.' }));
         }
-
-        const dataStore = await loadStoreData();
-        const serverProducts = dataStore.products || [];
-
-        let totalAmount = 0;
-        const itemSummaries = [];
-
-        for (const item of items) {
-          const match = serverProducts.find(p => p.id === item.id);
-          const price = match ? (match.price || 0) : (parseFloat(item.price) || 0);
-          const qty = Math.max(1, Math.min(10, parseInt(item.qty) || 1));
-          totalAmount += price * qty;
-          itemSummaries.push((match ? match.name : item.name) + ` (x${qty})`);
-        }
-
-        if (totalAmount <= 0) {
-          res.writeHead(400);
-          return res.end(JSON.stringify({ success: false, message: 'Geçersiz sipariş tutarı!' }));
-        }
-
-        const orderId = 'ADL-' + Date.now();
-        const prodNameStr = sanitizeText(itemSummaries.join(', ').substring(0, 100));
-
-        const formHtml = `
-          <form id="shopierPayForm" action="https://www.shopier.com/ShowProductHTML" method="POST">
-            <input type="hidden" name="API_key" value="${SHOPIER_API_TOKEN}">
-            <input type="hidden" name="website_index" value="1">
-            <input type="hidden" name="platform_order_id" value="${orderId}">
-            <input type="hidden" name="product_name" value="${prodNameStr}">
-            <input type="hidden" name="product_type" value="1">
-            <input type="hidden" name="buyer_name" value="${sanitizeText(buyerName)}">
-            <input type="hidden" name="buyer_email" value="${sanitizeText(buyerEmail)}">
-            <input type="hidden" name="buyer_phone" value="${sanitizeText(buyerPhone)}">
-            <input type="hidden" name="buyer_account_age" value="1">
-            <input type="hidden" name="total_order_value" value="${totalAmount.toFixed(2)}">
-            <input type="hidden" name="currency" value="TRY">
-            <input type="hidden" name="callback_url" value="https://adaletgaming.com/api/shopier/callback">
-            <input type="hidden" name="custom_params" value="${sanitizeText(buyerDiscord)}">
-          </form>
-        `;
-
-        addAuditLog({
-          type: 'SHOPIER_PAYMENT_INIT',
-          ip: clientIp,
-          userAgent: userAgent,
-          details: `Shopier ödemesi başlatıldı: Sipariş ${orderId}, Tutar ₺${totalAmount.toFixed(2)}, Alıcı: ${buyerName} (Discord: ${buyerDiscord})`,
-          status: 'INFO'
-        });
-
-        return res.end(JSON.stringify({ success: true, formHtml, orderId }));
-      } catch (e) {
-        res.writeHead(500);
-        return res.end(JSON.stringify({ success: false, message: 'Ödeme formu oluşturulurken hata oluştu.' }));
       }
     }
 
-    if (pathname === '/api/shopier/callback' && req.method === 'POST') {
-      try {
-        const payload = await parseJsonBody(req);
-        const orderId = payload.platform_order_id || payload.order_id || 'ADL-UNK';
-        const status = payload.status || 'success';
-        const amount = parseFloat(payload.total_order_value || payload.price || 0);
+    if (pathname === '/api/shopier/callback') {
+      if (req.method === 'GET') {
+        return res.end(JSON.stringify({ success: true, status: 'active', message: 'Shopier Callback Servisi Aktif (POST İsteği Bekleniyor)' }));
+      }
+      if (req.method === 'POST') {
+        try {
+          const payload = await parseJsonBody(req);
+          const orderId = payload.platform_order_id || payload.order_id || 'ADL-UNK';
+          const status = payload.status || 'success';
+          const amount = parseFloat(payload.total_order_value || payload.price || 0);
 
-        const randomNr = payload.random_nr || '';
-        const signature = payload.signature || '';
+          const randomNr = payload.random_nr || '';
+          const signature = payload.signature || '';
 
-        let isValidSignature = true;
-        if (signature && randomNr && SHOPIER_API_TOKEN) {
-          const expectedSig = crypto.createHmac('sha256', SHOPIER_API_TOKEN)
-            .update(randomNr + orderId + (payload.total_order_value || payload.price || ''))
-            .digest('base64');
-          if (signature !== expectedSig && signature !== crypto.createHmac('sha256', SHOPIER_API_TOKEN).update(randomNr + orderId).digest('base64')) {
-            isValidSignature = false;
+          let isValidSignature = true;
+          if (signature && randomNr && SHOPIER_API_TOKEN) {
+            const expectedSig = crypto.createHmac('sha256', SHOPIER_API_TOKEN)
+              .update(randomNr + orderId + (payload.total_order_value || payload.price || ''))
+              .digest('base64');
+            if (signature !== expectedSig && signature !== crypto.createHmac('sha256', SHOPIER_API_TOKEN).update(randomNr + orderId).digest('base64')) {
+              isValidSignature = false;
+            }
           }
-        }
 
-        if ((status === 'success' || payload.res === 'success') && isValidSignature) {
-          const dataStore = await loadStoreData();
-          if (amount > 0) {
-            dataStore.shopierEarnings = (dataStore.shopierEarnings || 0) + amount;
-            saveStoreData(dataStore);
+          if ((status === 'success' || payload.res === 'success') && isValidSignature) {
+            const dataStore = await loadStoreData();
+            if (amount > 0) {
+              dataStore.shopierEarnings = (dataStore.shopierEarnings || 0) + amount;
+              saveStoreData(dataStore);
+            }
+            addAuditLog({
+              type: 'SHOPIER_PAYMENT_SUCCESS',
+              ip: clientIp,
+              userAgent: userAgent,
+              details: `ÖDEME BAŞARILI! Sipariş: ${orderId}, Tutar: ₺${amount.toFixed(2)}`,
+              status: 'SUCCESS'
+            });
+          } else {
+            addAuditLog({
+              type: 'SHOPIER_PAYMENT_FAILED',
+              ip: clientIp,
+              userAgent: userAgent,
+              details: `Ödeme Geçersiz veya Başarısız! Sipariş: ${orderId} (İmza Geçerli: ${isValidSignature})`,
+              status: 'FAILED'
+            });
           }
-          addAuditLog({
-            type: 'SHOPIER_PAYMENT_SUCCESS',
-            ip: clientIp,
-            userAgent: userAgent,
-            details: `ÖDEME BAŞARILI! Sipariş: ${orderId}, Tutar: ₺${amount.toFixed(2)}`,
-            status: 'SUCCESS'
-          });
-        } else {
-          addAuditLog({
-            type: 'SHOPIER_PAYMENT_FAILED',
-            ip: clientIp,
-            userAgent: userAgent,
-            details: `Ödeme Geçersiz veya Başarısız! Sipariş: ${orderId} (İmza Geçerli: ${isValidSignature})`,
-            status: 'FAILED'
-          });
-        }
 
-        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-        return res.end('<!DOCTYPE html><html><head><title>Ödeme Tamamlandı</title></head><body style="background:#07090e;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;"><div style="text-align:center;"><h2>Ödemeniz Alındı!</h2><p>Sitemize yönlendiriliyorsunuz...</p><script>setTimeout(function(){ window.location.href="/sepet?status=success&orderId=' + orderId + '"; }, 1500);</script></div></body></html>');
-      } catch (e) {
-        res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
-        return res.end('OK');
+          res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+          return res.end('<!DOCTYPE html><html><head><title>Ödeme Tamamlandı</title></head><body style="background:#07090e;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;"><div style="text-align:center;"><h2>Ödemeniz Alındı!</h2><p>Sitemize yönlendiriliyorsunuz...</p><script>setTimeout(function(){ window.location.href="/sepet?status=success&orderId=' + orderId + '"; }, 1500);</script></div></body></html>');
+        } catch (e) {
+          res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
+          return res.end('OK');
+        }
       }
     }
 
@@ -647,8 +657,8 @@ const requestHandler = async (req, res) => {
       }
     }
 
-    res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
-    return res.end('404 Not Found');
+    res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
+    return res.end(JSON.stringify({ success: false, message: `Cannot ${req.method || 'GET'} ${pathname}` }));
   }
 
   if (pathname === '/index.html') {

@@ -1018,13 +1018,12 @@ function initCheckoutModal() {
         const data = await res.json();
         if (data.success && data.formHtml) {
           closeModal(checkoutModal);
-          const div = document.createElement('div');
-          div.style.display = 'none';
-          div.innerHTML = data.formHtml;
-          document.body.appendChild(div);
-          const form = div.querySelector('form');
+          const tempDiv = document.createElement('div');
+          tempDiv.innerHTML = data.formHtml;
+          const form = tempDiv.querySelector('form');
           if (form) {
-            setTimeout(() => { form.submit(); }, 50);
+            document.body.appendChild(form);
+            form.submit();
           } else {
             showToast('Ödeme formu bulunamadı.', 'error');
             if (btn) {
