@@ -371,6 +371,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   } catch (e) { }
 
+  initDevToolsProtection();
   initNavigation();
   updateCartBadge();
 
@@ -1093,13 +1094,15 @@ function initDevToolsProtection() {
   document.addEventListener('keydown', (e) => {
     if (
       e.key === 'F12' ||
+      e.keyCode === 123 ||
       (e.ctrlKey && e.shiftKey && ['I', 'i', 'J', 'j', 'C', 'c', 'K', 'k', 'E', 'e'].includes(e.key)) ||
       (e.ctrlKey && ['u', 'U', 's', 'S', 'p', 'P'].includes(e.key))
     ) {
       e.preventDefault();
+      e.stopPropagation();
       return false;
     }
-  });
+  }, true);
 
   setInterval(() => {
     if (window.console) {
@@ -1107,8 +1110,10 @@ function initDevToolsProtection() {
       console.warn = function () { };
       console.error = function () { };
       console.info = function () { };
+      console.dir = function () { };
+      console.table = function () { };
     }
-  }, 1000);
+  }, 300);
 }
 
 let toastTimeout;

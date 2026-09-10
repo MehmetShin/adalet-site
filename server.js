@@ -452,7 +452,7 @@ const requestHandler = async (req, res) => {
           }
 
           const sigData = randomNr + orderId + amountStr + currencyStr;
-          const signature = crypto.createHmac('sha256', SHOPIER_API_TOKEN)
+          const signature = crypto.createHmac('sha256', SHOPIER_API_SECRET)
             .update(sigData)
             .digest('base64');
 
