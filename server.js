@@ -273,6 +273,15 @@ function parseJsonBody(req) {
     }
   }
 
+  if (req.rawBody !== undefined && req.rawBody !== null) {
+    try {
+      const str = Buffer.isBuffer(req.rawBody) ? req.rawBody.toString('utf-8') : String(req.rawBody);
+      return Promise.resolve(str ? JSON.parse(str) : {});
+    } catch (e) {
+      return Promise.resolve({});
+    }
+  }
+
   if (req.readableEnded || req.complete) {
     return Promise.resolve({});
   }
@@ -281,33 +290,28 @@ function parseJsonBody(req) {
     const chunks = [];
     let done = false;
 
-    const timer = setTimeout(() => {
+    const finish = () => {
       if (!done) {
         done = true;
         const body = Buffer.concat(chunks).toString('utf-8');
         try { resolve(body ? JSON.parse(body) : {}); } catch (e) { resolve({}); }
       }
-    }, 1500);
+    };
+
+    const timer = setTimeout(finish, 200);
 
     req.on('data', chunk => {
       chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
     });
 
     req.on('end', () => {
-      if (!done) {
-        done = true;
-        clearTimeout(timer);
-        const body = Buffer.concat(chunks).toString('utf-8');
-        try { resolve(body ? JSON.parse(body) : {}); } catch (e) { resolve({}); }
-      }
+      clearTimeout(timer);
+      finish();
     });
 
     req.on('error', () => {
-      if (!done) {
-        done = true;
-        clearTimeout(timer);
-        resolve({});
-      }
+      clearTimeout(timer);
+      finish();
     });
   });
 }
