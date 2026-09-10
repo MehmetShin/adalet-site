@@ -435,11 +435,18 @@ const requestHandler = async (req, res) => {
             return res.end(JSON.stringify({ success: false, message: 'Geçersiz sipariş tutarı!' }));
           }
 
-          const orderId = 'ADL-' + Date.now();
+          // Shopier Standardı: orderId yalnızca sayısal (integer) olmalıdır, harf/özel karakter içeremez.
+          const orderId = Date.now().toString() + Math.floor(1000 + Math.random() * 9000).toString();
           const prodNameStr = sanitizeText(itemSummaries.join(', ').substring(0, 100)) || 'Adalet Gaming Urunleri';
           const randomNr = Math.floor(100000 + Math.random() * 900000).toString();
           const amountStr = totalAmount.toFixed(2);
           const currencyStr = '0';
+
+          // Shopier Standardı: Telefon numarası başında 0 veya +90 olmadan tam 10 hane olmalıdır (Örn: 532XXXXXXX).
+          let cleanPhone = (buyerPhone || '').replace(/\D/g, '');
+          if (cleanPhone.startsWith('90')) cleanPhone = cleanPhone.slice(2);
+          if (cleanPhone.startsWith('0')) cleanPhone = cleanPhone.slice(1);
+          cleanPhone = cleanPhone.substring(0, 10);
 
           let firstName = buyerName ? buyerName.trim() : 'Musteri';
           let lastName = 'Musteri';
@@ -466,7 +473,7 @@ const requestHandler = async (req, res) => {
               <input type="hidden" name="buyer_name" value="${sanitizeText(firstName)}">
               <input type="hidden" name="buyer_surname" value="${sanitizeText(lastName)}">
               <input type="hidden" name="buyer_email" value="${sanitizeText(buyerEmail)}">
-              <input type="hidden" name="buyer_phone" value="${sanitizeText(buyerPhone)}">
+              <input type="hidden" name="buyer_phone" value="${cleanPhone}">
               <input type="hidden" name="buyer_account_age" value="0">
               <input type="hidden" name="buyer_id_nr" value="1">
               <input type="hidden" name="city" value="Istanbul">
