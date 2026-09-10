@@ -603,9 +603,20 @@ const requestHandler = async (req, res) => {
 
       try {
         const { username, password } = await parseJsonBody(req);
-        const inputHash = crypto.pbkdf2Sync(password || '', ADMIN_SALT, 10000, 64, 'sha512').toString('hex');
 
-        if (username === ADMIN_USER && inputHash === ADMIN_PASS_HASH) {
+        const cleanUser = (username || '').trim();
+        const cleanPass = (password || '').trim();
+        const envUser = (ADMIN_USER || '').trim();
+        const envPass = (ADMIN_PASS || '').trim();
+        const envSalt = (ADMIN_SALT || '').trim();
+
+        const inputHash = envSalt ? crypto.pbkdf2Sync(cleanPass, envSalt, 10000, 64, 'sha512').toString('hex') : '';
+        const isAuthSuccess = (cleanUser === envUser) && (
+          (envPass && cleanPass === envPass) ||
+          (ADMIN_PASS_HASH && inputHash === ADMIN_PASS_HASH)
+        );
+
+        if (isAuthSuccess) {
           loginAttempts.delete(clientIp);
           const token = crypto.randomBytes(32).toString('hex');
           const csrfToken = crypto.randomBytes(32).toString('hex');
