@@ -1024,7 +1024,7 @@ function initCheckoutModal() {
           document.body.appendChild(div);
           const form = div.querySelector('form');
           if (form) {
-            form.submit();
+            setTimeout(() => { form.submit(); }, 50);
           } else {
             showToast('Ödeme formu bulunamadı.', 'error');
             if (btn) {

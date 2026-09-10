@@ -260,9 +260,6 @@ function parseJsonBody(req) {
         return Promise.resolve({});
       }
     }
-    if (typeof req.body === 'object') {
-      return Promise.resolve(req.body);
-    }
     if (typeof req.body === 'string') {
       try {
         return Promise.resolve(req.body ? JSON.parse(req.body) : {});
@@ -270,27 +267,32 @@ function parseJsonBody(req) {
         return Promise.resolve({});
       }
     }
+    if (typeof req.body === 'object') {
+      return Promise.resolve(req.body);
+    }
   }
 
   return new Promise((resolve) => {
-    let body = '';
+    const chunks = [];
     let done = false;
 
     const timer = setTimeout(() => {
       if (!done) {
         done = true;
+        const body = Buffer.concat(chunks).toString('utf-8');
         try { resolve(body ? JSON.parse(body) : {}); } catch (e) { resolve({}); }
       }
-    }, 4000);
+    }, 1500);
 
     req.on('data', chunk => {
-      body += chunk.toString();
+      chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
     });
 
     req.on('end', () => {
       if (!done) {
         done = true;
         clearTimeout(timer);
+        const body = Buffer.concat(chunks).toString('utf-8');
         try { resolve(body ? JSON.parse(body) : {}); } catch (e) { resolve({}); }
       }
     });
