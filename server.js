@@ -93,30 +93,47 @@ if (cleanupTimer && typeof cleanupTimer.unref === 'function') {
   cleanupTimer.unref();
 }
 
-function loadStoreData() {
-  if (fs.existsSync(DATA_FILE)) {
-    try {
-      const raw = fs.readFileSync(DATA_FILE, 'utf-8');
-      const parsed = JSON.parse(raw);
-      if (!parsed.auditLogs) parsed.auditLogs = [];
-      return parsed;
-    } catch (e) {
-      console.error('Error loading data.json:', e);
-    }
-  }
-  return {
-    products: null,
-    categories: null,
-    auditLogs: []
-  };
+const KVA_URL = process.env.KVA_KV_REST_API_URL;
+const KVA_TOKEN = process.env.KVA_KV_REST_API_TOKEN;
+
+async function kvGet(key) {
+  if (!KVA_URL || !KVA_TOKEN) return null;
+  try {
+    const res = await fetch(`${KVA_URL}/get/${key}`, {
+      headers: { Authorization: `Bearer ${KVA_TOKEN}` }
+    });
+    const data = await res.json();
+    return data.result ? JSON.parse(data.result) : null;
+  } catch(e) { return null; }
 }
 
-function saveStoreData(data) {
+async function kvSet(key, value) {
+  if (!KVA_URL || !KVA_TOKEN) return;
   try {
-    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
-  } catch (e) {
-    console.error('Error saving data.json:', e);
-  }
+    await fetch(`${KVA_URL}/pipeline`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${KVA_TOKEN}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify([['SET', key, JSON.stringify(value)]])
+    });
+  } catch(e) {}
+}
+
+async function loadStoreData() {
+  let base = { products: null, categories: null };
+  try {
+    const raw = fs.readFileSync(DATA_FILE, 'utf-8');
+    base = JSON.parse(raw);
+  } catch(e) {}
+  const kvProducts = await kvGet('adalet:products');
+  const kvCategories = await kvGet('adalet:categories');
+  if (kvProducts) base.products = kvProducts;
+  if (kvCategories) base.categories = kvCategories;
+  return base;
+}
+
+async function saveStoreData(data) {
+  if (data.products !== undefined) await kvSet('adalet:products', data.products);
+  if (data.categories !== undefined) await kvSet('adalet:categories', data.categories);
 }
 
 function addAuditLog({ type, ip, userAgent, details, status }) {
@@ -358,7 +375,7 @@ const requestHandler = async (req, res) => {
       res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
       res.setHeader('Pragma', 'no-cache');
       res.setHeader('Expires', '0');
-      const data = loadStoreData();
+      const data = await loadStoreData();
       return res.end(JSON.stringify({ success: true, data: { products: data.products, categories: data.categories } }));
     }
 
@@ -484,11 +501,11 @@ const requestHandler = async (req, res) => {
 
         const payload = sanitizePayload(rawPayload, clientIp, userAgent);
 
-        const currentData = loadStoreData();
+        const currentData = await loadStoreData();
         if (payload.products !== undefined) currentData.products = payload.products;
         if (payload.categories !== undefined) currentData.categories = payload.categories;
 
-        saveStoreData(currentData);
+        await saveStoreData(currentData);
         addAuditLog({ type: 'DATA_SAVE', ip: clientIp, userAgent, details: 'Mağaza ürün verileri güncellendi', status: 'SUCCESS' });
         return res.end(JSON.stringify({ success: true, message: 'Değişiklikler başarıyla kaydedildi.' }));
       } catch (e) {

@@ -672,13 +672,16 @@
             letter-spacing: 0.5px;
         }
 
-        .status-badge.SUCCESS, .status-badge.INFO {
+        .status-badge.SUCCESS,
+        .status-badge.INFO {
             background: rgba(56, 161, 105, 0.15);
             color: #48bb78;
             border: 1px solid rgba(56, 161, 105, 0.3);
         }
 
-        .status-badge.FAILED, .status-badge.BLOCKED, .status-badge.BANNED_24H {
+        .status-badge.FAILED,
+        .status-badge.BLOCKED,
+        .status-badge.BANNED_24H {
             background: rgba(229, 62, 62, 0.15);
             color: #fc8181;
             border: 1px solid rgba(229, 62, 62, 0.3);
@@ -896,7 +899,7 @@
         <header class="navbar">
             <div class="nav-brand">
                 <img src="logo.png" alt="Adalet Logo">
-                <span>TÜRKİYEM ADALET GAMING YÖNETİCİ PANELİ</span>
+                <span>TÜRKİYEM ADALET GAMING YÖNETİM PANELİ</span>
             </div>
 
             <div class="nav-user">
@@ -945,19 +948,23 @@
 
             <div class="admin-filter-bar">
                 <div class="admin-cat-tabs">
-                    <button type="button" class="admin-tab-btn active" data-cat="all" onclick="filterCategory('all', this)">
+                    <button type="button" class="admin-tab-btn active" data-cat="all"
+                        onclick="filterCategory('all', this)">
                         <i class="fa-solid fa-layer-group"></i> Tümü
                         <span class="admin-tab-count" id="countAll">0</span>
                     </button>
-                    <button type="button" class="admin-tab-btn" data-cat="yetkiler" onclick="filterCategory('yetkiler', this)">
+                    <button type="button" class="admin-tab-btn" data-cat="yetkiler"
+                        onclick="filterCategory('yetkiler', this)">
                         <i class="fa-solid fa-user-shield"></i> Yetkiler
                         <span class="admin-tab-count" id="countYetkiler">0</span>
                     </button>
-                    <button type="button" class="admin-tab-btn" data-cat="ozel-ayricaliklar" onclick="filterCategory('ozel-ayricaliklar', this)">
+                    <button type="button" class="admin-tab-btn" data-cat="ozel-ayricaliklar"
+                        onclick="filterCategory('ozel-ayricaliklar', this)">
                         <i class="fa-solid fa-crown"></i> Özel Ayrıcalıklar
                         <span class="admin-tab-count" id="countOzel">0</span>
                     </button>
-                    <button type="button" class="admin-tab-btn" data-cat="donate" onclick="filterCategory('donate', this)">
+                    <button type="button" class="admin-tab-btn" data-cat="donate"
+                        onclick="filterCategory('donate', this)">
                         <i class="fa-solid fa-hand-holding-dollar"></i> Donate
                         <span class="admin-tab-count" id="countDonate">0</span>
                     </button>
@@ -965,7 +972,8 @@
 
                 <div class="admin-search-box">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="adminSearchInput" class="admin-search-input" placeholder="Ürün adı ile ara..." oninput="onSearchInput(this.value)">
+                    <input type="text" id="adminSearchInput" class="admin-search-input"
+                        placeholder="Ürün adı ile ara..." oninput="onSearchInput(this.value)">
                 </div>
             </div>
 
