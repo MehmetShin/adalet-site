@@ -4,7 +4,6 @@ module.exports = async (req, res) => {
     try {
         await requestHandler(req, res);
     } catch (err) {
-        console.error('Vercel API Path Error:', err);
         if (!res.headersSent) {
             res.statusCode = 500;
             res.setHeader('Content-Type', 'application/json; charset=utf-8');
