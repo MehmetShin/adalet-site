@@ -267,7 +267,7 @@ function parseJsonBody(req) {
         done = true;
         try { resolve(body ? JSON.parse(body) : {}); } catch (e) { resolve({}); }
       }
-    }, 1000);
+    }, 4000);
 
     req.on('data', chunk => {
       body += chunk.toString();

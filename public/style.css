@@ -2940,3 +2940,58 @@ body {
   color: #e74c3c;
   font-size: 12px;
 }
+
+/* Discount styles */
+.grp-product-price-wrap {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.grp-product-old-price {
+  font-size: 13.5px;
+  color: var(--grp-muted);
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.grp-product-discount-badge {
+  background: rgba(231, 76, 60, 0.15);
+  border: 1px solid rgba(231, 76, 60, 0.4);
+  color: #ff6b6b;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 6px;
+  letter-spacing: 0.3px;
+}
+
+.grp-detail-price-wrap {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.grp-detail-old-price {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--grp-muted);
+  text-decoration: line-through;
+  opacity: 0.65;
+}
+
+.grp-detail-discount-badge {
+  background: linear-gradient(135deg, rgba(231, 76, 60, 0.25), rgba(255, 107, 0, 0.25));
+  border: 1px solid rgba(231, 76, 60, 0.5);
+  color: #ff6b6b;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 8px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.2);
+}

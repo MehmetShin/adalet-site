@@ -566,13 +566,25 @@ function renderProducts(category) {
       ? `<img src="${p.image}" alt="${p.name}" class="grp-product-card-img">`
       : `<i class="fas ${p.icon}"></i>`;
 
+    let priceHtml = `<div class="grp-product-price">${p.price} TL</div>`;
+    if (p.oldPrice && p.oldPrice > p.price) {
+      const pct = Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100);
+      priceHtml = `
+        <div class="grp-product-price-wrap">
+          <span class="grp-product-price">${p.price} TL</span>
+          <span class="grp-product-old-price">${p.oldPrice} TL</span>
+          <span class="grp-product-discount-badge">-%${pct}</span>
+        </div>
+      `;
+    }
+
     return `
       <div class="grp-product-card" data-category="${p.category}">
         <div class="grp-product-icon-wrap">
           ${imgHtml}
         </div>
         <h3 class="grp-product-title">${p.name}</h3>
-        <div class="grp-product-price">${p.price} TL</div>
+        ${priceHtml}
         <div class="grp-product-divider"></div>
         <div class="grp-product-footer">
           <a href="/urun-detay?id=${p.id}" class="grp-btn-card-action btn-filled">
@@ -608,6 +620,18 @@ function initDetailPage() {
       </ul>
     </div>
   ` : '';
+
+  let detailPriceHtml = `<div class="grp-detail-price">${product.price} TL</div>`;
+  if (product.oldPrice && product.oldPrice > product.price) {
+    const pct = Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100);
+    detailPriceHtml = `
+      <div class="grp-detail-price-wrap">
+        <span class="grp-detail-price">${product.price} TL</span>
+        <span class="grp-detail-old-price">${product.oldPrice} TL</span>
+        <span class="grp-detail-discount-badge">-%${pct} İNDİRİM</span>
+      </div>
+    `;
+  }
 
   container.innerHTML = `
     <div class="grp-detail-left-column">
@@ -646,7 +670,7 @@ function initDetailPage() {
     </div>
     <div class="grp-detail-info-box">
       <h1 class="grp-detail-title">${product.name}</h1>
-      <div class="grp-detail-price">${product.price} TL</div>
+      ${detailPriceHtml}
       <p class="grp-detail-desc">${product.desc}</p>
       
       <h4 style="color:#fff; font-weight:800; margin-bottom:10px;"><i class="fas fa-list-check" style="color:var(--grp-primary);"></i> Paket İzinleri & Özellikleri:</h4>

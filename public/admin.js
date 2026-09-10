@@ -502,6 +502,49 @@ document.addEventListener('DOMContentLoaded', async () => {
             await saveProductFromForm();
         });
     }
+
+    const pImageFileInput = document.getElementById('pImageFile');
+    if (pImageFileInput) {
+        pImageFileInput.addEventListener('change', async (e) => {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+            if (!file.type.startsWith('image/')) {
+                showToast('Lütfen geçerli bir resim dosyası seçin.', 'error');
+                return;
+            }
+            try {
+                showToast('Görsel işleniyor...', 'info');
+                const compressedBase64 = await resizeImageFile(file, 800, 800, 0.82);
+                document.getElementById('pImage').value = compressedBase64;
+                const sizeKb = Math.round(compressedBase64.length * 0.75 / 1024);
+                updateImagePreview(compressedBase64, file.name, sizeKb + ' KB (Optimize Edildi)');
+                showToast('Görsel başarıyla seçildi!');
+            } catch(err) {
+                showToast('Görsel yüklenirken hata oluştu.', 'error');
+            }
+        });
+    }
+
+    const btnRemoveImg = document.getElementById('btnRemoveImage');
+    if (btnRemoveImg) {
+        btnRemoveImg.addEventListener('click', () => {
+            document.getElementById('pImage').value = '';
+            if (pImageFileInput) pImageFileInput.value = '';
+            updateImagePreview('', '', '');
+        });
+    }
+
+    const pImageTextInput = document.getElementById('pImage');
+    if (pImageTextInput) {
+        pImageTextInput.addEventListener('input', (e) => {
+            const val = e.target.value.trim();
+            if (val) {
+                updateImagePreview(val, val.startsWith('data:') ? 'Özel Görsel' : val, '');
+            } else {
+                updateImagePreview('', '', '');
+            }
+        });
+    }
 });
 
 async function checkAuthStatus() {
@@ -649,7 +692,12 @@ function renderAdminProducts() {
     }
     container.innerHTML = prods.map(function(p) {
         const pid = escapeHtml(p.id);
-        const oldPH = p.oldPrice ? '<span class="old-price">₺' + p.oldPrice + '</span>' : '';
+        let oldPH = '';
+        if (p.oldPrice && p.oldPrice > p.price) {
+            const pct = Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100);
+            oldPH = '<span class="old-price">₺' + p.oldPrice + '</span>' +
+                    '<span class="discount-badge">-%' + pct + '</span>';
+        }
         return '<div class="product-admin-card" id="prod-card-' + pid + '">' +
             '<div class="prod-img-box">' +
             '<span class="badge-cat">' + escapeHtml(p.category || 'genel') + '</span>' +
@@ -665,10 +713,61 @@ function renderAdminProducts() {
     }).join('');
 }
 
+function updateImagePreview(src, name, sizeText) {
+    const wrap = document.getElementById('imagePreviewWrap');
+    const img = document.getElementById('imagePreviewImg');
+    const nameEl = document.getElementById('imagePreviewName');
+    const sizeEl = document.getElementById('imagePreviewSize');
+    if (!wrap || !img) return;
+    if (src) {
+        img.src = src;
+        if (nameEl) nameEl.textContent = name || 'Seçilen Görsel';
+        if (sizeEl) sizeEl.textContent = sizeText || '';
+        wrap.style.display = 'flex';
+    } else {
+        wrap.style.display = 'none';
+        img.src = '';
+    }
+}
+
+function resizeImageFile(file, maxWidth, maxHeight, quality) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                let w = img.width;
+                let h = img.height;
+                if (w > maxWidth || h > maxHeight) {
+                    if (w / h > maxWidth / maxHeight) {
+                        h = Math.round((h * maxWidth) / w);
+                        w = maxWidth;
+                    } else {
+                        w = Math.round((w * maxHeight) / h);
+                        h = maxHeight;
+                    }
+                }
+                const canvas = document.createElement('canvas');
+                canvas.width = w;
+                canvas.height = h;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, w, h);
+                const dataUrl = canvas.toDataURL('image/jpeg', quality || 0.85);
+                resolve(dataUrl);
+            };
+            img.onerror = reject;
+            img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
 function openProductModal() {
     document.getElementById('modalHeaderTitle').textContent = 'Yeni Ürün Ekle';
     document.getElementById('prodEditId').value = '';
     document.getElementById('productForm').reset();
+    updateImagePreview('', '', '');
     document.getElementById('productModal').style.display = 'flex';
 }
 
@@ -688,6 +787,13 @@ function editProduct(id) {
     document.getElementById('pImage').value = prod.image || '';
     document.getElementById('pDesc').value = prod.desc || '';
     document.getElementById('pFeatures').value = (prod.features || []).join('\n');
+    
+    if (prod.image) {
+        updateImagePreview(prod.image, prod.image.startsWith('data:') ? 'Özel Yüklenmiş Görsel' : prod.image, '');
+    } else {
+        updateImagePreview('', '', '');
+    }
+    
     document.getElementById('productModal').style.display = 'flex';
 }
 
