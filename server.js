@@ -512,7 +512,8 @@ const requestHandler = async (req, res) => {
 
     if (pathname === '/api/shopier/callback') {
       if (req.method === 'GET') {
-        return res.end(JSON.stringify({ success: true, status: 'active', message: 'Shopier Callback Servisi Aktif (POST İsteği Bekleniyor)' }));
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+        return res.end(`<!DOCTYPE html><html lang="tr"><head><meta charset="UTF-8"><title>Servis Aktif</title><script>document.addEventListener('contextmenu',e=>e.preventDefault());document.addEventListener('keydown',e=>{if(e.key==='F12'||e.keyCode===123||(e.ctrlKey&&e.shiftKey&&['I','i','J','j','C','c'].includes(e.key))||(e.ctrlKey&&['u','U','s','S'].includes(e.key))){e.preventDefault();return false;}},true);setInterval(()=>{if(window.console){console.log=function(){};console.warn=function(){};console.error=function(){};}},100);</script></head><body style="background:#07090e;color:#00ff88;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;"><h2>Shopier Callback Servisi Aktif</h2></body></html>`);
       }
       if (req.method === 'POST') {
         try {
