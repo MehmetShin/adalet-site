@@ -136,6 +136,16 @@ async function saveStoreData(data) {
   if (data.categories !== undefined) await kvSet('adalet:categories', data.categories);
 }
 
+async function getAuditLogs() {
+  if (global._auditLogs && global._auditLogs.length > 0) return global._auditLogs;
+  const kvLogs = await kvGet('adalet:audit_logs');
+  if (Array.isArray(kvLogs) && kvLogs.length > 0) {
+    global._auditLogs = kvLogs;
+    return kvLogs;
+  }
+  return global._auditLogs || [];
+}
+
 function addAuditLog({ type, ip, userAgent, details, status }) {
   try {
     const logEntry = {
@@ -147,13 +157,15 @@ function addAuditLog({ type, ip, userAgent, details, status }) {
       details: details || '',
       status: status || 'INFO'
     };
+    if (!global._auditLogs) global._auditLogs = [];
     global._auditLogs.unshift(logEntry);
-    if (global._auditLogs.length > 200) {
-      global._auditLogs = global._auditLogs.slice(0, 200);
+    if (global._auditLogs.length > 300) {
+      global._auditLogs = global._auditLogs.slice(0, 300);
     }
     try {
       fs.writeFileSync('/tmp/adalet_audit.json', JSON.stringify(global._auditLogs), 'utf-8');
     } catch(e) {}
+    kvSet('adalet:audit_logs', global._auditLogs).catch(() => {});
   } catch (e) {
     console.error('Audit log write error:', e);
   }
@@ -467,7 +479,8 @@ const requestHandler = async (req, res) => {
       res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
       res.setHeader('Pragma', 'no-cache');
       res.setHeader('Expires', '0');
-      return res.end(JSON.stringify({ success: true, logs: global._auditLogs || [] }));
+      const logs = await getAuditLogs();
+      return res.end(JSON.stringify({ success: true, logs: logs || [] }));
     }
 
     if (pathname === '/api/admin/clear-logs' && req.method === 'POST') {
@@ -482,6 +495,7 @@ const requestHandler = async (req, res) => {
       }
 
       global._auditLogs = [];
+      await kvSet('adalet:audit_logs', []);
       addAuditLog({ type: 'CLEAR_LOGS', ip: clientIp, userAgent, details: 'Güvenlik günlükleri temizlendi', status: 'SUCCESS' });
       return res.end(JSON.stringify({ success: true, message: 'Güvenlik logları temizlendi.' }));
     }

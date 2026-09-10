@@ -573,6 +573,10 @@ async function checkAuthStatus() {
 }
 
 function showLoginView() {
+    if (auditPollInterval) {
+        clearInterval(auditPollInterval);
+        auditPollInterval = null;
+    }
     document.getElementById('loginSection').style.display = 'flex';
     document.getElementById('dashboardSection').style.display = 'none';
 }
@@ -580,6 +584,9 @@ function showLoginView() {
 function showDashboardView() {
     document.getElementById('loginSection').style.display = 'none';
     document.getElementById('dashboardSection').style.display = 'flex';
+    if (!auditPollInterval) {
+        auditPollInterval = setInterval(loadAuditLogs, 3000);
+    }
 }
 
 async function loadAdminStoreData() {
@@ -625,8 +632,20 @@ async function loadAuditLogs() {
     }
 }
 
-async function clearAuditLogs() {
-    if (!confirm('Güvenlik denetim günlüklerini temizlemek istediğinize emin misiniz?')) return;
+let auditPollInterval = null;
+
+function openClearLogsModal() {
+    const modal = document.getElementById('clearLogsModal');
+    if (modal) modal.style.display = 'flex';
+}
+
+function closeClearLogsModal() {
+    const modal = document.getElementById('clearLogsModal');
+    if (modal) modal.style.display = 'none';
+}
+
+async function confirmClearAuditLogs() {
+    closeClearLogsModal();
     try {
         const res = await fetch('/api/admin/clear-logs', {
             method: 'POST',
