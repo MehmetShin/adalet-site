@@ -901,11 +901,11 @@ function initCheckoutModal() {
       const el = document.getElementById(id);
       if (el) { el.textContent = msg; el.style.display = msg ? 'block' : 'none'; }
       const input = document.getElementById(id.replace('err', 'buyer').toLowerCase()) ||
-        document.getElementById({ errName: 'buyerName', errDiscord: 'buyerDiscord', errEmail: 'buyerEmail', errPhone: 'buyerPhone' }[id]);
+        document.getElementById({ errName: 'buyerName', errEmail: 'buyerEmail', errPhone: 'buyerPhone' }[id]);
       if (input) input.classList.toggle('grp-input-error', !!msg);
     }
     function clearErrors() {
-      ['errName', 'errDiscord', 'errEmail', 'errPhone'].forEach(id => setError(id, ''));
+      ['errName', 'errEmail', 'errPhone'].forEach(id => setError(id, ''));
     }
 
     function validateName(val) {
@@ -916,17 +916,6 @@ function initCheckoutModal() {
       if (words.length < 2) return 'Lütfen hem adınızı hem soyadınızı girin.';
       if (words.some(w => w.length < 2)) return 'Her kelime en az 2 harf olmalıdır.';
       if (/(.)\1{3,}/.test(trimmed)) return 'Geçersiz isim formatı.';
-      return '';
-    }
-
-    function validateDiscord(val) {
-      const trimmed = val.trim();
-      if (!trimmed) return 'Discord kullanıcı adı boş bırakılamaz.';
-      if (trimmed.length < 2) return 'Discord kullanıcı adı en az 2 karakter olmalıdır.';
-      if (trimmed.length > 32) return 'Discord kullanıcı adı en fazla 32 karakter olabilir.';
-      if (/\s/.test(trimmed)) return 'Discord kullanıcı adında boşluk olamaz.';
-      if (!/^[a-zA-Z0-9_.#-]+$/.test(trimmed)) return 'Geçersiz Discord kullanıcı adı formatı.';
-      if (/(.)\1{4,}/.test(trimmed)) return 'Geçersiz Discord kullanıcı adı (spam algılandı).';
       return '';
     }
 
@@ -945,19 +934,21 @@ function initCheckoutModal() {
     }
 
     function validatePhone(val) {
-      const trimmed = val.trim().replace(/\s|-/g, '');
+      let trimmed = val.trim().replace(/\s|-/g, '');
       if (!trimmed) return 'Telefon numarası boş bırakılamaz.';
-      const normalized = trimmed.startsWith('+90') ? '0' + trimmed.slice(3) : trimmed;
-      if (!/^\d+$/.test(normalized)) return 'Telefon numarası yalnızca rakam içermelidir.';
-      if (normalized.length !== 11) return 'Telefon numarası 11 hane olmalıdır (Örn: 05551112233).';
-      if (!normalized.startsWith('05')) return 'Türk cep numarası 05 ile başlamalıdır.';
-      if (/^(.)\1+$/.test(normalized)) return 'Geçersiz telefon numarası.';
+      if (trimmed.startsWith('+90')) trimmed = trimmed.slice(3);
+      if (trimmed.length === 10 && trimmed.startsWith('5')) {
+        trimmed = '0' + trimmed;
+      }
+      if (!/^\d+$/.test(trimmed)) return 'Telefon numarası yalnızca rakam içermelidir.';
+      if (trimmed.length !== 11) return 'Telefon numarası 10 veya 11 hane olmalıdır (Örn: 5551112233).';
+      if (!trimmed.startsWith('05')) return 'Türk cep numarası 5 ile başlamalıdır.';
+      if (/^(.)\1+$/.test(trimmed)) return 'Geçersiz telefon numarası.';
       return '';
     }
 
     [
       ['buyerName', 'errName', validateName],
-      ['buyerDiscord', 'errDiscord', validateDiscord],
       ['buyerEmail', 'errEmail', validateEmail],
       ['buyerPhone', 'errPhone', validatePhone]
     ].forEach(([inputId, errId, validator]) => {
@@ -981,21 +972,18 @@ function initCheckoutModal() {
       clearErrors();
 
       const name = document.getElementById('buyerName')?.value || '';
-      const discord = document.getElementById('buyerDiscord')?.value || '';
       const email = document.getElementById('buyerEmail')?.value || '';
       const phone = document.getElementById('buyerPhone')?.value || '';
 
       const errName = validateName(name);
-      const errDiscord = validateDiscord(discord);
       const errEmail = validateEmail(email);
       const errPhone = validatePhone(phone);
 
       setError('errName', errName);
-      setError('errDiscord', errDiscord);
       setError('errEmail', errEmail);
       setError('errPhone', errPhone);
 
-      if (errName || errDiscord || errEmail || errPhone) return;
+      if (errName || errEmail || errPhone) return;
 
       const btn = document.getElementById('paySuccessBtn');
       if (btn) {
@@ -1013,7 +1001,6 @@ function initCheckoutModal() {
           body: JSON.stringify({
             items: cart,
             buyerName: name,
-            buyerDiscord: discord,
             buyerEmail: email,
             buyerPhone: phone
           })

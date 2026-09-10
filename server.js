@@ -491,7 +491,6 @@ const requestHandler = async (req, res) => {
               <input type="hidden" name="random_nr" value="${randomNr}">
               <input type="hidden" name="signature" value="${signature}">
               <input type="hidden" name="callback_url" value="https://adaletgaming.com/api/shopier/callback">
-              <input type="hidden" name="custom_params" value="${sanitizeText(buyerDiscord)}">
             </form>
           `;
 
@@ -499,7 +498,7 @@ const requestHandler = async (req, res) => {
             type: 'SHOPIER_PAYMENT_INIT',
             ip: clientIp,
             userAgent: userAgent,
-            details: `Shopier ödemesi başlatıldı: Sipariş ${orderId}, Tutar ₺${totalAmount.toFixed(2)}, Alıcı: ${buyerName} (Discord: ${buyerDiscord})`,
+            details: `Shopier ödemesi başlatıldı: Sipariş ${orderId}, Tutar ₺${totalAmount.toFixed(2)}, Alıcı: ${buyerName}`,
             status: 'INFO'
           });
 
