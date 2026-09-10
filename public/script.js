@@ -672,7 +672,7 @@ function initDetailPage() {
       <h1 class="grp-detail-title">${product.name}</h1>
       ${detailPriceHtml}
       <p class="grp-detail-desc">${product.desc}</p>
-      
+
       <h4 style="color:#fff; font-weight:800; margin-bottom:10px;"><i class="fas fa-list-check" style="color:var(--grp-primary);"></i> Paket İzinleri & Özellikleri:</h4>
       <ul class="grp-detail-features">
         ${(product.features || []).map(f => `<li><i class="fas fa-check-circle"></i> ${f}</li>`).join('')}

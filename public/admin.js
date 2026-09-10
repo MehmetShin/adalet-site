@@ -814,13 +814,13 @@ function editProduct(id) {
     document.getElementById('pImage').value = prod.image || '';
     document.getElementById('pDesc').value = prod.desc || '';
     document.getElementById('pFeatures').value = (prod.features || []).join('\n');
-    
+
     if (prod.image) {
         updateImagePreview(prod.image, prod.image.startsWith('data:') ? 'Özel Yüklenmiş Görsel' : prod.image, '');
     } else {
         updateImagePreview('', '', '');
     }
-    
+
     document.getElementById('productModal').style.display = 'flex';
 }
 
@@ -906,3 +906,122 @@ function showToast(msg, type) {
     container.appendChild(toast);
     setTimeout(function(){ toast.remove(); }, 3000);
 }
+
+(function() {
+    var IDLE_LIMIT_MS   = 10 * 60 * 1000;   
+    var WARN_BEFORE_MS  = 1  * 60 * 1000;   
+    var idleTimer       = null;
+    var warnTimer       = null;
+    var countdownTimer  = null;
+    var warningVisible  = false;
+
+    function createWarningModal() {
+        if (document.getElementById('inactivityModal')) return;
+        var el = document.createElement('div');
+        el.id = 'inactivityModal';
+        el.style.cssText = [
+            'display:none',
+            'position:fixed',
+            'inset:0',
+            'z-index:99999',
+            'background:rgba(0,0,0,0.72)',
+            'backdrop-filter:blur(6px)',
+            'align-items:center',
+            'justify-content:center'
+        ].join(';');
+        el.innerHTML = [
+            '<div style="background:linear-gradient(135deg,#1a0a02,#2a1205);',
+                'border:1px solid rgba(255,107,0,0.35);border-radius:18px;',
+                'padding:40px 36px;max-width:400px;width:90%;text-align:center;',
+                'box-shadow:0 20px 60px rgba(0,0,0,0.7),0 0 40px rgba(255,107,0,0.12);">',
+              '<div style="font-size:52px;margin-bottom:16px;">⏳</div>',
+              '<h3 style="color:#fff;font-size:20px;font-weight:700;margin-bottom:10px;">',
+                'Oturum Zaman Aşımı',
+              '</h3>',
+              '<p style="color:rgba(255,255,255,0.65);font-size:14px;margin-bottom:24px;line-height:1.6;">',
+                'Hareketsizlik nedeniyle oturumunuz <strong id="inactivityCountdown" style="color:#ff6b00;">60</strong> saniye içinde kapatılacak.',
+              '</p>',
+              '<button id="inactivityStayBtn" style="',
+                'background:linear-gradient(90deg,#ff6b00,#ff9a2e);',
+                'color:#fff;border:none;border-radius:12px;',
+                'padding:12px 32px;font-size:15px;font-weight:700;',
+                'cursor:pointer;transition:opacity 0.2s;">',
+                'Oturumda Kal',
+              '</button>',
+            '</div>'
+        ].join('');
+        document.body.appendChild(el);
+
+        document.getElementById('inactivityStayBtn').addEventListener('click', function() {
+            resetIdleTimer();
+        });
+    }
+
+    function showWarning(secsLeft) {
+        warningVisible = true;
+        var modal = document.getElementById('inactivityModal');
+        if (!modal) return;
+        modal.style.display = 'flex';
+        updateCountdown(secsLeft);
+
+        var remaining = secsLeft;
+        clearInterval(countdownTimer);
+        countdownTimer = setInterval(function() {
+            remaining -= 1;
+            updateCountdown(remaining);
+            if (remaining <= 0) clearInterval(countdownTimer);
+        }, 1000);
+    }
+
+    function updateCountdown(secs) {
+        var el = document.getElementById('inactivityCountdown');
+        if (el) el.textContent = Math.max(0, secs);
+    }
+
+    function hideWarning() {
+        warningVisible = false;
+        clearInterval(countdownTimer);
+        var modal = document.getElementById('inactivityModal');
+        if (modal) modal.style.display = 'none';
+    }
+
+    async function doLogout() {
+        clearTimers();
+        hideWarning();
+        try {
+            await fetch('/api/logout', { method: 'POST' });
+        } catch(e) {  }
+        window.location.href = '/admin-login';
+    }
+
+    function clearTimers() {
+        clearTimeout(idleTimer);
+        clearTimeout(warnTimer);
+        clearInterval(countdownTimer);
+    }
+
+    function resetIdleTimer() {
+        clearTimers();
+        hideWarning();
+
+        warnTimer = setTimeout(function() {
+            showWarning(60);
+        }, IDLE_LIMIT_MS - WARN_BEFORE_MS);
+
+        idleTimer = setTimeout(function() {
+            doLogout();
+        }, IDLE_LIMIT_MS);
+    }
+
+    var ACTIVITY_EVENTS = ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll', 'click'];
+    ACTIVITY_EVENTS.forEach(function(evt) {
+        document.addEventListener(evt, function() {
+            if (!warningVisible) resetIdleTimer();
+        }, { passive: true });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        createWarningModal();
+        resetIdleTimer();
+    });
+})();

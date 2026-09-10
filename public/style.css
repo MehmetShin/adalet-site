@@ -159,6 +159,7 @@ header.grp-header.scrolled {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex: 1;
   height: 64px;
   padding: 0 4px;
   background: transparent;
@@ -239,6 +240,8 @@ header.grp-header.scrolled {
 .grp-user-area {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
+  flex: 1;
   gap: 10px;
 }
 
@@ -1367,8 +1370,6 @@ header.grp-header.scrolled {
   box-shadow: 0 0 10px rgba(255, 51, 51, 0.6);
 }
 
-
-
 .grp-category-showcase {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1490,7 +1491,6 @@ header.grp-header.scrolled {
 .grp-cat-card:hover .grp-cat-btn i {
   transform: translateX(4px);
 }
-
 
 .grp-category-products-wrap {
   animation: fadeInShop 0.4s ease forwards;
@@ -1633,7 +1633,6 @@ header.grp-header.scrolled {
     justify-content: center;
   }
 }
-
 
 .grp-products-grid {
   display: grid;
@@ -1822,7 +1821,6 @@ header.grp-header.scrolled {
   background: #e05e00;
   box-shadow: 0 4px 15px var(--grp-primary-glow);
 }
-
 
 .grp-cart-overlay {
   position: fixed;
@@ -2038,7 +2036,6 @@ header.grp-header.scrolled {
   cursor: not-allowed;
 }
 
-
 .grp-terms-checkbox-wrap {
   margin: 18px 0 14px 0;
 }
@@ -2199,7 +2196,6 @@ header.grp-header.scrolled {
   color: var(--grp-muted);
 }
 
-
 .grp-form-group {
   margin-bottom: 16px;
 }
@@ -2317,7 +2313,6 @@ header.grp-header.scrolled {
   font-size: 12px;
   cursor: pointer;
 }
-
 
 .grp-modal-status-icon {
   width: 64px;
@@ -2445,8 +2440,6 @@ header.grp-header.scrolled {
   gap: 10px;
 }
 
-
-
 html,
 body {
   height: 100%;
@@ -2501,7 +2494,6 @@ body {
   line-height: 1.6;
 }
 
-
 .grp-breadcrumb {
   display: flex;
   align-items: center;
@@ -2524,7 +2516,6 @@ body {
   font-size: 10px;
   opacity: 0.5;
 }
-
 
 .grp-detail-container {
   display: grid;
@@ -2718,7 +2709,6 @@ body {
   color: #fff;
 }
 
-
 .grp-cart-page-layout {
   display: grid;
   grid-template-columns: 1fr 360px;
@@ -2883,7 +2873,6 @@ body {
   color: var(--grp-primary);
 }
 
-
 .grp-product-card-img {
   width: 100%;
   height: 100%;
@@ -2941,7 +2930,6 @@ body {
   font-size: 12px;
 }
 
-/* Discount styles */
 .grp-product-price-wrap {
   display: flex;
   align-items: center;

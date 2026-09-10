@@ -358,7 +358,7 @@ const requestHandler = async (req, res) => {
     if (pathname === '/api' || pathname === '/api/' || pathname.includes('/api/index') || pathname.includes('/api/[...path]') || req.query) {
       const qPath = (req.query && req.query.path) || parsedUrl.searchParams.get('path');
       if (qPath) {
-        const pathPart = Array.isArray(qPath) ? qPath.join('/') : String(qPath).replace(/^\//, '');
+        const pathPart = Array.isArray(qPath) ? qPath.join('/') : String(qPath).replace(/^\/+/, '');
         pathname = '/api/' + pathPart;
       }
     }
