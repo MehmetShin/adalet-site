@@ -607,16 +607,27 @@ const requestHandler = async (req, res) => {
         const envSalt = (ADMIN_SALT || '').trim();
 
         let isAuthSuccess = false;
+        let failReason = '';
 
-        if (envUser && (cleanUser === envUser)) {
-          if (envPass && cleanPass === envPass) {
+        if (!envUser || !envPass) {
+          failReason = 'Sunucu Hası: ADMIN_USER veya ADMIN_PASS Vercel üzerinde bulunamadı!';
+        } else if (cleanUser.toLowerCase() !== envUser.toLowerCase()) {
+          failReason = `Kullanıcı adı eşleşmedi! (Gelen: "${cleanUser}", Beklenen: "${envUser}")`;
+        } else {
+          const normPass = cleanPass.normalize('NFC');
+          const normEnvPass = envPass.normalize('NFC');
+          if (normPass === normEnvPass) {
             isAuthSuccess = true;
-          } else if (envPass && envSalt) {
-            const expectedHash = crypto.pbkdf2Sync(envPass, envSalt, 10000, 64, 'sha512').toString('hex');
-            const inputHash = crypto.pbkdf2Sync(cleanPass, envSalt, 10000, 64, 'sha512').toString('hex');
+          } else if (envSalt) {
+            const expectedHash = crypto.pbkdf2Sync(normEnvPass, envSalt, 10000, 64, 'sha512').toString('hex');
+            const inputHash = crypto.pbkdf2Sync(normPass, envSalt, 10000, 64, 'sha512').toString('hex');
             if (inputHash === expectedHash) {
               isAuthSuccess = true;
+            } else {
+              failReason = 'Şifre hatalı!';
             }
+          } else {
+            failReason = 'Şifre hatalı!';
           }
         }
 
@@ -655,16 +666,12 @@ const requestHandler = async (req, res) => {
             type: 'LOGIN_FAILED',
             ip: clientIp,
             userAgent: userAgent,
-            details: `Hatalı kullanıcı adı (${username}) veya şifre denemesi (${attempts.count}/${MAX_LOGIN_ATTEMPTS})`,
+            details: `Hatalı deneme: ${failReason}`,
             status: 'FAILED'
           });
 
           res.writeHead(401);
-          let errDetail = 'Geçersiz kullanıcı adı veya şifre!';
-          if (!envUser || !envPass) {
-            errDetail = 'Sunucu hatası: Vercel üzerinde ADMIN_USER veya ADMIN_PASS tanımlanmamış!';
-          }
-          return res.end(JSON.stringify({ success: false, message: errDetail }));
+          return res.end(JSON.stringify({ success: false, message: failReason || 'Geçersiz kullanıcı adı veya şifre!' }));
         }
       } catch (e) {
         res.writeHead(400);
