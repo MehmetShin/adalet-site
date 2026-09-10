@@ -1003,9 +1003,12 @@ function initCheckoutModal() {
       }
 
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
         const res = await fetch('/api/shopier/create-payment', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          signal: controller.signal,
           body: JSON.stringify({
             items: cart,
             buyerName: name,
@@ -1014,15 +1017,18 @@ function initCheckoutModal() {
             buyerPhone: phone
           })
         });
+        clearTimeout(timeoutId);
         const data = await res.json();
+        showToast(data.success ? 'Form alindi, yonlendiriliyor...' : ('HATA: ' + (data.message || 'Bilinmeyen hata')));
         if (data.success && data.formHtml) {
           closeModal(checkoutModal);
           const tempDiv = document.createElement('div');
           tempDiv.innerHTML = data.formHtml;
           const form = tempDiv.querySelector('form');
           if (form) {
+            form.style.display = 'none';
             document.body.appendChild(form);
-            HTMLFormElement.prototype.submit.call(form);
+            setTimeout(() => { HTMLFormElement.prototype.submit.call(form); }, 500);
           } else {
             showToast('Ödeme formu bulunamadı.', 'error');
             if (btn) {
