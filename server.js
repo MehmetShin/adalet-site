@@ -558,7 +558,33 @@ const requestHandler = async (req, res) => {
           }
 
           res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-          return res.end('<!DOCTYPE html><html><head><title>Ödeme Tamamlandı</title></head><body style="background:#07090e;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;"><div style="text-align:center;"><h2>Ödemeniz Alındı!</h2><p>Sitemize yönlendiriliyorsunuz...</p><script>setTimeout(function(){ window.location.href="/sepet?status=success&orderId=' + orderId + '"; }, 1500);</script></div></body></html>');
+          return res.end(`<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Ödeme Tamamlandı - Türkiyem Adalet Gaming</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+  <script>
+    document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+    document.addEventListener('dragstart', function(e){ e.preventDefault(); });
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'F12' || e.keyCode === 123 || (e.ctrlKey && e.shiftKey && ['I','i','J','j','C','c','K','k'].includes(e.key)) || (e.ctrlKey && ['u','U','s','S'].includes(e.key))){
+        e.preventDefault(); e.stopPropagation(); return false;
+      }
+    }, true);
+    setInterval(function(){ if(window.console){ console.log=function(){}; console.warn=function(){}; console.error=function(){}; } }, 300);
+  </script>
+</head>
+<body style="background:#07090e;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;">
+  <div style="text-align:center;">
+    <h2 style="color:#00ff88;margin-bottom:10px;">Ödemeniz İşlendi!</h2>
+    <p>Sitemize yönlendiriliyorsunuz, lütfen bekleyiniz...</p>
+    <script>
+      setTimeout(function(){ window.location.href="/sepet?status=success&orderId=${orderId}"; }, 1200);
+    </script>
+  </div>
+</body>
+</html>`);
         } catch (e) {
           res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
           return res.end('OK');
