@@ -1019,10 +1019,19 @@ function initCheckoutModal() {
         if (data.success && data.formHtml) {
           closeModal(checkoutModal);
           const div = document.createElement('div');
+          div.style.display = 'none';
           div.innerHTML = data.formHtml;
           document.body.appendChild(div);
           const form = div.querySelector('form');
-          if (form) form.submit();
+          if (form) {
+            form.submit();
+          } else {
+            showToast('Ödeme formu bulunamadı.', 'error');
+            if (btn) {
+              btn.disabled = false;
+              btn.innerHTML = '<i class="fas fa-lock"></i> Shopier ile Güvenli Öde';
+            }
+          }
         } else {
           showToast(data.message || 'Ödeme başlatılamadı.', 'error');
           if (btn) {
