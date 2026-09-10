@@ -372,7 +372,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (e) { }
 
   initNavigation();
-  initDevToolsProtection();
   updateCartBadge();
 
   if (document.getElementById('productsGrid')) {
