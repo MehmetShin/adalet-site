@@ -24,10 +24,6 @@
     {
       "source": "/gizlilik-politikasi",
       "destination": "/gizlilik-politikasi.html"
-    },
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/[...path]"
     }
   ],
   "headers": [
