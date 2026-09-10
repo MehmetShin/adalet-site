@@ -2,7 +2,20 @@
 <html lang="tr">
 
 <head>
-  <script>document.addEventListener('contextmenu', e => e.preventDefault()); document.addEventListener('keydown', e => { if (e.key === 'F12' || e.keyCode === 123 || (e.ctrlKey && e.shiftKey && ['I', 'i', 'J', 'j', 'C', 'c'].includes(e.key)) || (e.ctrlKey && ['u', 'U', 's', 'S'].includes(e.key))) { e.preventDefault(); e.stopPropagation(); return false; } }, true); setInterval(() => { if (window.console) { console.log = function () { }; console.warn = function () { }; console.error = function () { }; } }, 100);</script>
+  <script>
+    (function () {
+      function blockDev(e) {
+        if (e.key === 'F12' || e.keyCode === 123 || (e.ctrlKey && e.shiftKey && ['I', 'i', 'J', 'j', 'C', 'c', 'K', 'k', 'E', 'e'].indexOf(e.key) !== -1) || (e.ctrlKey && ['u', 'U', 's', 'S', 'p', 'P'].indexOf(e.key) !== -1)) {
+          e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); return false;
+        }
+      }
+      window.addEventListener('keydown', blockDev, true);
+      document.addEventListener('keydown', blockDev, true);
+      window.addEventListener('contextmenu', function (e) { e.preventDefault(); e.stopPropagation(); }, true);
+      document.addEventListener('contextmenu', function (e) { e.preventDefault(); e.stopPropagation(); }, true);
+      setInterval(function () { if (window.console) { console.log = function () { }; console.warn = function () { }; console.error = function () { }; console.dir = function () { }; console.table = function () { }; } }, 50);
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Türkiyem Adalet Gaming - MTA:SA Askerî & Polisiye Roleplay</title>
