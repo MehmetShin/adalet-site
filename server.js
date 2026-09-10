@@ -9,15 +9,11 @@ const DATA_FILE = path.resolve(__dirname, 'data.json');
 
 const ADMIN_USER = process.env.ADMIN_USER;
 const ADMIN_PASS = process.env.ADMIN_PASS;
+const ADMIN_SALT = process.env.ADMIN_SALT;
 
 if (!ADMIN_USER || !ADMIN_PASS) {
-  console.error('[HATA] ADMIN_USER veya ADMIN_PASS environment variable tanimlanmamis!');
+  console.error('[GÜVENLİK UYARISI] ADMIN_USER veya ADMIN_PASS environment variable tanımlanmamış!');
 }
-
-const ADMIN_SALT = process.env.ADMIN_SALT;
-const ADMIN_PASS_HASH = ADMIN_PASS
-  ? crypto.pbkdf2Sync(ADMIN_PASS, ADMIN_SALT, 10000, 64, 'sha512').toString('hex')
-  : '';
 
 const SHOPIER_API_TOKEN = process.env.SHOPIER_API_TOKEN;
 const SHOPIER_API_SECRET = process.env.SHOPIER_API_SECRET || SHOPIER_API_TOKEN;
@@ -610,11 +606,19 @@ const requestHandler = async (req, res) => {
         const envPass = (ADMIN_PASS || '').trim();
         const envSalt = (ADMIN_SALT || '').trim();
 
-        const inputHash = envSalt ? crypto.pbkdf2Sync(cleanPass, envSalt, 10000, 64, 'sha512').toString('hex') : '';
-        const isAuthSuccess = (cleanUser === envUser) && (
-          (envPass && cleanPass === envPass) ||
-          (ADMIN_PASS_HASH && inputHash === ADMIN_PASS_HASH)
-        );
+        let isAuthSuccess = false;
+
+        if (envUser && (cleanUser === envUser)) {
+          if (envPass && cleanPass === envPass) {
+            isAuthSuccess = true;
+          } else if (envPass && envSalt) {
+            const expectedHash = crypto.pbkdf2Sync(envPass, envSalt, 10000, 64, 'sha512').toString('hex');
+            const inputHash = crypto.pbkdf2Sync(cleanPass, envSalt, 10000, 64, 'sha512').toString('hex');
+            if (inputHash === expectedHash) {
+              isAuthSuccess = true;
+            }
+          }
+        }
 
         if (isAuthSuccess) {
           loginAttempts.delete(clientIp);
