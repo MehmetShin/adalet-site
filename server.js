@@ -397,6 +397,7 @@ const requestHandler = async (req, res) => {
           const csrfToken = crypto.randomBytes(32).toString('hex');
 
           activeSessions.set(token, {
+            username: username,
             ip: clientIp,
             userAgent: userAgent,
             csrfToken: csrfToken,
@@ -413,7 +414,7 @@ const requestHandler = async (req, res) => {
           });
 
           res.setHeader('Set-Cookie', `adm_sess=${token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=28800`);
-          return res.end(JSON.stringify({ success: true, message: 'Giriş başarılı', csrfToken }));
+          return res.end(JSON.stringify({ success: true, message: 'Giriş başarılı', csrfToken, username }));
         } else {
           attempts.count++;
           if (attempts.count >= MAX_LOGIN_ATTEMPTS) {
@@ -452,7 +453,7 @@ const requestHandler = async (req, res) => {
     if (pathname === '/api/admin/check-auth' && req.method === 'GET') {
       const sessObj = getSessionFromReq(req);
       if (sessObj) {
-        return res.end(JSON.stringify({ authenticated: true, csrfToken: sessObj.session.csrfToken }));
+        return res.end(JSON.stringify({ authenticated: true, csrfToken: sessObj.session.csrfToken, username: sessObj.session.username || '' }));
       } else {
         return res.end(JSON.stringify({ authenticated: false }));
       }

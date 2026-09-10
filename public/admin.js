@@ -464,6 +464,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 if (data.success) {
                     csrfToken = data.csrfToken || '';
+                    const badgeEl = document.getElementById('userBadgeText');
+                    if (badgeEl && data.username) {
+                        badgeEl.textContent = 'Hesap: ' + data.username;
+                    }
                     showToast('Giriş Başarılı! Yönlendiriliyorsunuz...', 'success');
                     setTimeout(() => {
                         showDashboardView();
@@ -553,6 +557,10 @@ async function checkAuthStatus() {
         const data = await res.json();
         if (data.authenticated) {
             csrfToken = data.csrfToken || '';
+            const badgeEl = document.getElementById('userBadgeText');
+            if (badgeEl && data.username) {
+                badgeEl.textContent = 'Hesap: ' + data.username;
+            }
             showDashboardView();
             await loadAdminStoreData();
             await loadAuditLogs();
