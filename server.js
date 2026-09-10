@@ -47,7 +47,7 @@ const requestCounts = new Map();
 const RATE_LIMIT_WINDOW = 60 * 1000;
 const MAX_REQUESTS_PER_WINDOW = 120;
 
-setInterval(() => {
+const cleanupTimer = setInterval(() => {
   const now = Date.now();
   for (const [ip, data] of requestCounts.entries()) {
     if (now > data.resetTime) {
@@ -65,6 +65,10 @@ setInterval(() => {
     }
   }
 }, RATE_LIMIT_WINDOW);
+
+if (cleanupTimer && typeof cleanupTimer.unref === 'function') {
+  cleanupTimer.unref();
+}
 
 function loadStoreData() {
   if (fs.existsSync(DATA_FILE)) {
@@ -192,6 +196,14 @@ function verifyCsrfToken(req) {
 
 function parseJsonBody(req) {
   if (req.body !== undefined && req.body !== null) {
+    if (Buffer.isBuffer(req.body)) {
+      try {
+        const str = req.body.toString('utf-8');
+        return Promise.resolve(str ? JSON.parse(str) : {});
+      } catch (e) {
+        return Promise.resolve({});
+      }
+    }
     if (typeof req.body === 'object') {
       return Promise.resolve(req.body);
     }
@@ -204,24 +216,35 @@ function parseJsonBody(req) {
     }
   }
 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     let body = '';
+    let done = false;
+
+    const timer = setTimeout(() => {
+      if (!done) {
+        done = true;
+        try { resolve(body ? JSON.parse(body) : {}); } catch (e) { resolve({}); }
+      }
+    }, 1000);
+
     req.on('data', chunk => {
       body += chunk.toString();
-      if (body.length > 5 * 1024 * 1024) {
-        req.destroy();
-        reject(new Error('Body too large'));
+    });
+
+    req.on('end', () => {
+      if (!done) {
+        done = true;
+        clearTimeout(timer);
+        try { resolve(body ? JSON.parse(body) : {}); } catch (e) { resolve({}); }
       }
     });
-    req.on('end', () => {
-      try {
-        resolve(body ? JSON.parse(body) : {});
-      } catch (e) {
+
+    req.on('error', () => {
+      if (!done) {
+        done = true;
+        clearTimeout(timer);
         resolve({});
       }
-    });
-    req.on('error', () => {
-      resolve({});
     });
   });
 }
