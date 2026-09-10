@@ -4,7 +4,8 @@ let currentStoreData = {
     products: []
 };
 
-// Fallback initial products from script.js if server returns default
+let csrfToken = '';
+
 const DEFAULT_PRODUCTS = [
     {
         id: 'st-1', name: 'Yönetici Personel', price: 500, category: 'yetkiler', image: 'yonetici-personel.png',
@@ -29,7 +30,6 @@ const DEFAULT_PRODUCTS = [
 document.addEventListener('DOMContentLoaded', async () => {
     await checkAuthStatus();
 
-    // Login Form Submit
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
@@ -50,10 +50,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const data = await res.json();
 
                 if (data.success) {
+                    csrfToken = data.csrfToken || '';
                     showToast('Giriş Başarılı! Yönlendiriliyorsunuz...', 'success');
                     setTimeout(() => {
                         showDashboardView();
                         loadAdminStoreData();
+                        loadAuditLogs();
                     }, 600);
                 } else {
                     errText.textContent = data.message || 'Giriş Başarısız!';
@@ -66,17 +68,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Logout Button
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async () => {
-            await fetch('/api/admin/logout', { method: 'POST' });
+            await fetch('/api/admin/logout', {
+                method: 'POST',
+                headers: { 'X-Admin-CSRF-Token': csrfToken }
+            });
+            csrfToken = '';
             showLoginView();
             showToast('Oturum sonlandırıldı.');
         });
     }
 
-    // Product Form Save
     const productForm = document.getElementById('productForm');
     if (productForm) {
         productForm.addEventListener('submit', async (e) => {
@@ -85,7 +89,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Earnings Form Save
     const earningsForm = document.getElementById('earningsForm');
     if (earningsForm) {
         earningsForm.addEventListener('submit', async (e) => {
@@ -105,8 +108,10 @@ async function checkAuthStatus() {
         const res = await fetch('/api/admin/check-auth');
         const data = await res.json();
         if (data.authenticated) {
+            csrfToken = data.csrfToken || '';
             showDashboardView();
             await loadAdminStoreData();
+            await loadAuditLogs();
         } else {
             showLoginView();
         }
@@ -144,6 +149,66 @@ async function loadAdminStoreData() {
     updateMetrics();
 }
 
+async function loadAuditLogs() {
+    const tbody = document.getElementById('auditLogsBody');
+    if (!tbody) return;
+
+    try {
+        const res = await fetch('/api/admin/audit-logs');
+        const result = await res.json();
+        if (result.success && result.logs && result.logs.length > 0) {
+            tbody.innerHTML = result.logs.map(log => {
+                const dateStr = new Date(log.timestamp).toLocaleString('tr-TR');
+                const safeDetails = escapeHtml(log.details || '');
+                const safeType = escapeHtml(log.type || '');
+                const safeIp = escapeHtml(log.ip || '');
+
+                return `
+          <tr>
+            <td style="white-space:nowrap; color:var(--text-muted); font-size:12px;">${dateStr}</td>
+            <td><strong>${safeType}</strong></td>
+            <td><code style="background:rgba(255,255,255,0.06); padding:2px 6px; border-radius:4px;">${safeIp}</code></td>
+            <td><span class="status-badge ${log.status}">${log.status}</span></td>
+            <td style="color:#d69e2e;">${safeDetails}</td>
+          </tr>
+        `;
+            }).join('');
+        } else {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:20px;">Henüz kaydedilmiş güvenlik günlüğü yok.</td></tr>`;
+        }
+    } catch (e) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--accent-red); padding:20px;">Loglar çekilirken hata oluştu.</td></tr>`;
+    }
+}
+
+async function clearAuditLogs() {
+    if (!confirm('Güvenlik denetim günlüklerini temizlemek istediğinize emin misiniz?')) return;
+    try {
+        const res = await fetch('/api/admin/clear-logs', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Admin-CSRF-Token': csrfToken
+            }
+        });
+        const data = await res.json();
+        if (data.success) {
+            showToast('Güvenlik logları temizlendi.');
+            loadAuditLogs();
+        } else {
+            showToast(data.message || 'Loglar temizlenemedi.', 'error');
+        }
+    } catch (e) {
+        showToast('Sunucu hatası!', 'error');
+    }
+}
+
+function escapeHtml(str) {
+    return str.replace(/[&<>"']/g, function (m) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+    });
+}
+
 function updateMetrics() {
     const earningsEl = document.getElementById('shopierEarningsVal');
     if (earningsEl) {
@@ -171,13 +236,13 @@ function renderAdminProducts() {
     container.innerHTML = prods.map(p => `
     <div class="product-admin-card" id="prod-card-${p.id}">
       <div class="prod-img-box">
-        <span class="badge-cat">${p.category || 'genel'}</span>
-        <img src="${p.image || 'logo.png'}" alt="${p.name}" onerror="this.src='logo.png'">
+        <span class="badge-cat">${escapeHtml(p.category || 'genel')}</span>
+        <img src="${escapeHtml(p.image || 'logo.png')}" alt="${escapeHtml(p.name)}" onerror="this.src='logo.png'">
       </div>
 
       <div class="prod-body">
-        <div class="prod-title">${p.name}</div>
-        <div class="prod-desc">${p.desc || ''}</div>
+        <div class="prod-title">${escapeHtml(p.name)}</div>
+        <div class="prod-desc">${escapeHtml(p.desc || '')}</div>
 
         <div class="price-tag-wrap">
           <span class="curr-price">₺${p.price}</span>
@@ -238,7 +303,7 @@ async function saveProductFromForm() {
     const features = featuresRaw.split('\n').map(f => f.trim()).filter(f => f.length > 0);
 
     if (editId) {
-        // Update
+
         const idx = currentStoreData.products.findIndex(p => p.id === editId);
         if (idx !== -1) {
             currentStoreData.products[idx] = {
@@ -247,7 +312,7 @@ async function saveProductFromForm() {
             };
         }
     } else {
-        // Create new
+
         const newProd = {
             id: 'prod-' + Date.now(),
             name, category, price, oldPrice, image, desc, features
@@ -259,6 +324,7 @@ async function saveProductFromForm() {
     closeProductModal();
     renderAdminProducts();
     updateMetrics();
+    loadAuditLogs();
     showToast(editId ? 'Ürün güncellendi!' : 'Yeni ürün eklendi!');
 }
 
@@ -268,6 +334,7 @@ async function deleteProduct(id) {
     await persistDataToServer();
     renderAdminProducts();
     updateMetrics();
+    loadAuditLogs();
     showToast('Ürün silindi.');
 }
 
@@ -284,7 +351,10 @@ async function persistDataToServer() {
     try {
         const res = await fetch('/api/admin/save-data', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Admin-CSRF-Token': csrfToken
+            },
             body: JSON.stringify({
                 shopierEarnings: currentStoreData.shopierEarnings,
                 products: currentStoreData.products

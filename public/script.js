@@ -166,7 +166,6 @@ const PRODUCTS = [
     ]
   },
 
-
   {
     id: 'oz-1', name: 'Gold Vip', price: 300, category: 'ozel-ayricaliklar', icon: 'fa-gem',
     image: 'gold-vip.png',
@@ -230,7 +229,6 @@ const PRODUCTS = [
       'Alan yetkililerin tüm uyarıları silinecektir. Alan yetkili, Discord sunucumuzda üst yönetim talebi açsın.'
     ]
   },
-
 
   {
     id: 'dn-1', name: 'McLaren 720S Spider', price: 250, category: 'donate', icon: 'fa-car-side',
@@ -363,7 +361,7 @@ function saveStoredCart(cartData) {
 let cart = getStoredCart();
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // Sync Products & Store Data from server API if present
+
   try {
     const res = await fetch('/api/store-data');
     const result = await res.json();
@@ -480,7 +478,6 @@ function initShopPage() {
   const catCards = document.querySelectorAll('.grp-cat-card');
   const catBtns = document.querySelectorAll('.grp-cat-btn');
 
-
   const countDonate = PRODUCTS.filter(p => p.category === 'donate').length;
   const countYetkiler = PRODUCTS.filter(p => p.category === 'yetkiler').length;
   const countOzel = PRODUCTS.filter(p => p.category === 'ozel-ayricaliklar').length;
@@ -550,7 +547,6 @@ function initShopPage() {
       openCategory(cat);
     });
   });
-
 
   const urlParams = new URLSearchParams(window.location.search);
   const requestedCat = urlParams.get('cat');
@@ -1029,7 +1025,6 @@ function initDevToolsProtection() {
       return false;
     }
   });
-
 
   setInterval(() => {
     if (window.console) {

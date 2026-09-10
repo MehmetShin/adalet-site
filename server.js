@@ -10,18 +10,23 @@ const DATA_FILE = path.resolve(__dirname, 'data.json');
 const ADMIN_USER = 'Turkadaletadmin423';
 const ADMIN_PASS = 'tIy$C_[{rRIGR-k7Ss!dn6AWx-z4C5uIfrC.{cE3';
 
-// Salted Hash Generation for Admin Pass
 const ADMIN_SALT = 'Adalet_Super_Secret_Salt_2026';
 const ADMIN_PASS_HASH = crypto.pbkdf2Sync(ADMIN_PASS, ADMIN_SALT, 10000, 64, 'sha512').toString('hex');
 
-// In-memory active sessions
 const activeSessions = new Map();
-const SESSION_DURATION = 8 * 60 * 60 * 1000; // 8 hours
+const SESSION_DURATION = 8 * 60 * 60 * 1000;
 
-// Admin Rate Limiting (Brute-force protection)
+const bannedIps = new Map();
+const BAN_DURATION = 24 * 60 * 60 * 1000;
+
+const TRAP_ROUTES = [
+  '/admin', '/wp-admin', '/login', '/dashboard', '/administrator',
+  '/admin.php', '/wp-login.php', '/user/login', '/cpanel', '/phpmyadmin'
+];
+
 const loginAttempts = new Map();
 const MAX_LOGIN_ATTEMPTS = 5;
-const LOGIN_WINDOW = 15 * 60 * 1000; // 15 mins block
+const LOGIN_WINDOW = 15 * 60 * 1000;
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -54,22 +59,29 @@ setInterval(() => {
       activeSessions.delete(token);
     }
   }
+  for (const [ip, until] of bannedIps.entries()) {
+    if (now > until) {
+      bannedIps.delete(ip);
+    }
+  }
 }, RATE_LIMIT_WINDOW);
 
-// Helper function to read/write persistent data
 function loadStoreData() {
   if (fs.existsSync(DATA_FILE)) {
     try {
       const raw = fs.readFileSync(DATA_FILE, 'utf-8');
-      return JSON.parse(raw);
+      const parsed = JSON.parse(raw);
+      if (!parsed.auditLogs) parsed.auditLogs = [];
+      return parsed;
     } catch (e) {
       console.error('Error loading data.json:', e);
     }
   }
   return {
-    shopierEarnings: 145800, // Default baseline shopier total revenue
+    shopierEarnings: 145800,
     products: null,
-    categories: null
+    categories: null,
+    auditLogs: []
   };
 }
 
@@ -81,8 +93,73 @@ function saveStoreData(data) {
   }
 }
 
-// Session validation helper
-function checkAdminAuth(req) {
+function addAuditLog({ type, ip, userAgent, details, status }) {
+  try {
+    const data = loadStoreData();
+    if (!data.auditLogs) data.auditLogs = [];
+    data.auditLogs.unshift({
+      id: 'log-' + Date.now() + '-' + Math.floor(Math.random() * 10000),
+      timestamp: new Date().toISOString(),
+      type: type || 'SECURITY_EVENT',
+      ip: ip || 'unknown',
+      userAgent: userAgent ? userAgent.substring(0, 100) : 'unknown',
+      details: details || '',
+      status: status || 'INFO'
+    });
+    if (data.auditLogs.length > 100) {
+      data.auditLogs = data.auditLogs.slice(0, 100);
+    }
+    saveStoreData(data);
+  } catch (e) {
+    console.error('Audit log write error:', e);
+  }
+}
+
+function sanitizeText(str) {
+  if (typeof str !== 'string') return str;
+  return str
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
+    .replace(/on\w+\s*=\s*["'][^"']*["']/gi, '')
+    .replace(/on\w+\s*=\s*[^>\s]+/gi, '')
+    .replace(/javascript\s*:/gi, '')
+    .replace(/<\/?(?:script|iframe|object|embed|form|input|button|style)\b[^>]*>/gi, '');
+}
+
+function sanitizePayload(obj, clientIp, userAgent) {
+  let detectedXss = false;
+
+  function clean(val) {
+    if (typeof val === 'string') {
+      const sanitized = sanitizeText(val);
+      if (sanitized !== val) detectedXss = true;
+      return sanitized;
+    } else if (Array.isArray(val)) {
+      return val.map(clean);
+    } else if (val !== null && typeof val === 'object') {
+      const res = {};
+      for (const k of Object.keys(val)) {
+        res[k] = clean(val[k]);
+      }
+      return res;
+    }
+    return val;
+  }
+
+  const cleaned = clean(obj);
+  if (detectedXss) {
+    addAuditLog({
+      type: 'XSS_ATTEMPT',
+      ip: clientIp,
+      userAgent: userAgent,
+      details: 'Payload içerisinde zararlı betik (XSS) tespit edildi ve dezenfekte edildi.',
+      status: 'BLOCKED'
+    });
+  }
+  return cleaned;
+}
+
+function getSessionFromReq(req) {
   const cookieHeader = req.headers.cookie || '';
   const cookies = Object.fromEntries(
     cookieHeader.split(';').map(c => {
@@ -91,14 +168,26 @@ function checkAdminAuth(req) {
     })
   );
   const token = cookies['adm_sess'];
-  if (!token) return false;
+  if (!token) return null;
 
   const session = activeSessions.get(token);
   if (!session || Date.now() > session.expiresAt) {
     if (session) activeSessions.delete(token);
-    return false;
+    return null;
   }
-  return true;
+  return { token, session };
+}
+
+function checkAdminAuth(req) {
+  const sessObj = getSessionFromReq(req);
+  return !!sessObj;
+}
+
+function verifyCsrfToken(req) {
+  const sessObj = getSessionFromReq(req);
+  if (!sessObj) return false;
+  const reqCsrf = req.headers['x-csrf-token'] || '';
+  return reqCsrf && reqCsrf === sessObj.session.csrfToken;
 }
 
 function parseJsonBody(req) {
@@ -106,7 +195,7 @@ function parseJsonBody(req) {
     let body = '';
     req.on('data', chunk => {
       body += chunk.toString();
-      if (body.length > 5 * 1024 * 1024) { // 5MB limit
+      if (body.length > 5 * 1024 * 1024) {
         req.destroy();
         reject(new Error('Body too large'));
       }
@@ -121,11 +210,17 @@ function parseJsonBody(req) {
   });
 }
 
-const server = http.createServer(async (req, res) => {
+const requestHandler = async (req, res) => {
   const clientIp = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress || 'unknown';
+  const userAgent = req.headers['user-agent'] || '';
 
-  // Rate limiter
   const now = Date.now();
+  const bannedUntil = bannedIps.get(clientIp);
+  if (bannedUntil && now < bannedUntil) {
+    res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
+    return res.end('403 Forbidden - IP adresiniz güvenlik ihlali nedeniyle 24 saat engellendi.');
+  }
+
   const clientData = requestCounts.get(clientIp) || { count: 0, resetTime: now + RATE_LIMIT_WINDOW };
 
   if (now > clientData.resetTime) {
@@ -137,18 +232,17 @@ const server = http.createServer(async (req, res) => {
   requestCounts.set(clientIp, clientData);
 
   if (clientData.count > MAX_REQUESTS_PER_WINDOW) {
+    addAuditLog({ type: 'RATE_LIMIT_EXCEEDED', ip: clientIp, userAgent, details: 'Dakikalık 120 istek limiti aşıldı', status: 'BLOCKED' });
     res.writeHead(429, { 'Content-Type': 'text/plain; charset=utf-8', 'Retry-After': '60' });
     return res.end('429 Too Many Requests - Lütfen biraz bekleyin.');
   }
 
-  // Security scanner check
-  const userAgent = req.headers['user-agent'] || '';
   if (!userAgent || /curl|wget|python|nikto|sqlmap|nmap|dirbuster|gobuster/i.test(userAgent)) {
+    addAuditLog({ type: 'SCANNER_BLOCKED', ip: clientIp, userAgent, details: `Güvenlik tarayıcısı tespit edildi: ${userAgent}`, status: 'BLOCKED' });
     res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
     return res.end('403 Access Denied');
   }
 
-  // Security Headers
   res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -168,20 +262,31 @@ const server = http.createServer(async (req, res) => {
     return res.end('400 Bad Request');
   }
 
-  // API ROUTING FOR ADMIN & PUBLIC DATA
+  if (TRAP_ROUTES.includes(pathname.toLowerCase())) {
+    bannedIps.set(clientIp, now + BAN_DURATION);
+    addAuditLog({
+      type: 'HONEYPOT_TRAP',
+      ip: clientIp,
+      userAgent: userAgent,
+      details: `Sahte admin tuzak yoluna erişildi: ${pathname}. IP 24 saat engellendi.`,
+      status: 'BANNED_24H'
+    });
+    res.writeHead(403, { 'Content-Type': 'text/html; charset=utf-8' });
+    return res.end('<!DOCTYPE html><html><head><title>403 Forbidden</title></head><body style="background:#07090e;color:#e53e3e;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;"><h1>403 Forbidden | Güvenlik ihlali tespit edildi. IP adresiniz engellendi.</h1></body></html>');
+  }
+
   if (pathname.startsWith('/api/')) {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
 
-    // GET Public Store Data (products, categories, shopier totals if configured)
     if (pathname === '/api/store-data' && req.method === 'GET') {
       const data = loadStoreData();
-      return res.end(JSON.stringify({ success: true, data }));
+      return res.end(JSON.stringify({ success: true, data: { shopierEarnings: data.shopierEarnings, products: data.products, categories: data.categories } }));
     }
 
-    // POST Login Endpoint
     if (pathname === '/api/admin/login' && req.method === 'POST') {
       const attempts = loginAttempts.get(clientIp) || { count: 0, lockUntil: 0 };
       if (now < attempts.lockUntil) {
+        addAuditLog({ type: 'LOGIN_LOCKED', ip: clientIp, userAgent, details: 'Kilitlenmiş IP adresinden giriş denemesi', status: 'BLOCKED' });
         res.writeHead(429);
         return res.end(JSON.stringify({ success: false, message: 'Çok fazla hatalı deneme! Lütfen 15 dakika bekleyin.' }));
       }
@@ -193,20 +298,40 @@ const server = http.createServer(async (req, res) => {
         if (username === ADMIN_USER && inputHash === ADMIN_PASS_HASH) {
           loginAttempts.delete(clientIp);
           const token = crypto.randomBytes(32).toString('hex');
+          const csrfToken = crypto.randomBytes(32).toString('hex');
+
           activeSessions.set(token, {
             ip: clientIp,
+            userAgent: userAgent,
+            csrfToken: csrfToken,
             createdAt: now,
             expiresAt: now + SESSION_DURATION
           });
 
+          addAuditLog({
+            type: 'LOGIN_SUCCESS',
+            ip: clientIp,
+            userAgent: userAgent,
+            details: `Yönetici girişi başarılı (${username})`,
+            status: 'SUCCESS'
+          });
+
           res.setHeader('Set-Cookie', `adm_sess=${token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=28800`);
-          return res.end(JSON.stringify({ success: true, message: 'Giriş başarılı' }));
+          return res.end(JSON.stringify({ success: true, message: 'Giriş başarılı', csrfToken }));
         } else {
           attempts.count++;
           if (attempts.count >= MAX_LOGIN_ATTEMPTS) {
             attempts.lockUntil = now + LOGIN_WINDOW;
           }
           loginAttempts.set(clientIp, attempts);
+
+          addAuditLog({
+            type: 'LOGIN_FAILED',
+            ip: clientIp,
+            userAgent: userAgent,
+            details: `Hatalı kullanıcı adı (${username}) veya şifre denemesi (${attempts.count}/${MAX_LOGIN_ATTEMPTS})`,
+            status: 'FAILED'
+          });
 
           res.writeHead(401);
           return res.end(JSON.stringify({ success: false, message: 'Geçersiz kullanıcı adı veya şifre!' }));
@@ -217,39 +342,77 @@ const server = http.createServer(async (req, res) => {
       }
     }
 
-    // Admin Logout Endpoint
     if (pathname === '/api/admin/logout' && req.method === 'POST') {
       const cookieHeader = req.headers.cookie || '';
       const cookies = Object.fromEntries(cookieHeader.split(';').map(c => c.trim().split('=')));
       if (cookies['adm_sess']) {
         activeSessions.delete(cookies['adm_sess']);
       }
+      addAuditLog({ type: 'LOGOUT', ip: clientIp, userAgent, details: 'Yönetici oturumu kapatıldı', status: 'SUCCESS' });
       res.setHeader('Set-Cookie', 'adm_sess=; Path=/; HttpOnly; SameSite=Strict; Max-Age=0');
       return res.end(JSON.stringify({ success: true }));
     }
 
-    // Check Session Auth Status
     if (pathname === '/api/admin/check-auth' && req.method === 'GET') {
-      const isAuth = checkAdminAuth(req);
-      return res.end(JSON.stringify({ authenticated: isAuth }));
+      const sessObj = getSessionFromReq(req);
+      if (sessObj) {
+        return res.end(JSON.stringify({ authenticated: true, csrfToken: sessObj.session.csrfToken }));
+      } else {
+        return res.end(JSON.stringify({ authenticated: false }));
+      }
     }
 
-    // Protected Admin Data Save Endpoint
+    if (pathname === '/api/admin/audit-logs' && req.method === 'GET') {
+      if (!checkAdminAuth(req)) {
+        res.writeHead(403);
+        return res.end(JSON.stringify({ success: false, message: 'Erişim engellendi.' }));
+      }
+      const data = loadStoreData();
+      return res.end(JSON.stringify({ success: true, logs: data.auditLogs || [] }));
+    }
+
+    if (pathname === '/api/admin/clear-logs' && req.method === 'POST') {
+      if (!checkAdminAuth(req)) {
+        res.writeHead(403);
+        return res.end(JSON.stringify({ success: false, message: 'Erişim engellendi.' }));
+      }
+      if (!verifyCsrfToken(req)) {
+        addAuditLog({ type: 'CSRF_VIOLATION', ip: clientIp, userAgent, details: 'Log temizleme işleminde CSRF token eşleşmedi', status: 'BLOCKED' });
+        res.writeHead(403);
+        return res.end(JSON.stringify({ success: false, message: 'CSRF Güvenlik İhlali' }));
+      }
+
+      const currentData = loadStoreData();
+      currentData.auditLogs = [];
+      saveStoreData(currentData);
+
+      addAuditLog({ type: 'CLEAR_LOGS', ip: clientIp, userAgent, details: 'Güvenlik günlükleri temizlendi', status: 'SUCCESS' });
+      return res.end(JSON.stringify({ success: true, message: 'Güvenlik logları temizlendi.' }));
+    }
+
     if (pathname === '/api/admin/save-data' && req.method === 'POST') {
       if (!checkAdminAuth(req)) {
         res.writeHead(403);
         return res.end(JSON.stringify({ success: false, message: 'Erişim engellendi.' }));
       }
+      if (!verifyCsrfToken(req)) {
+        addAuditLog({ type: 'CSRF_VIOLATION', ip: clientIp, userAgent, details: 'Veri kaydetmede CSRF token eşleşmedi', status: 'BLOCKED' });
+        res.writeHead(403);
+        return res.end(JSON.stringify({ success: false, message: 'CSRF Güvenlik İhlali! İstek reddedildi.' }));
+      }
 
       try {
-        const payload = await parseJsonBody(req);
-        const currentData = loadStoreData();
+        const rawPayload = await parseJsonBody(req);
 
+        const payload = sanitizePayload(rawPayload, clientIp, userAgent);
+
+        const currentData = loadStoreData();
         if (payload.shopierEarnings !== undefined) currentData.shopierEarnings = payload.shopierEarnings;
         if (payload.products !== undefined) currentData.products = payload.products;
         if (payload.categories !== undefined) currentData.categories = payload.categories;
 
         saveStoreData(currentData);
+        addAuditLog({ type: 'DATA_SAVE', ip: clientIp, userAgent, details: 'Mağaza ürün/kazanç verileri güncellendi', status: 'SUCCESS' });
         return res.end(JSON.stringify({ success: true, message: 'Değişiklikler başarıyla kaydedildi.' }));
       } catch (e) {
         res.writeHead(500);
@@ -257,22 +420,19 @@ const server = http.createServer(async (req, res) => {
       }
     }
 
-    // Unauthorized API request fallback -> 404 Not Found to prevent discovery
     res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
     return res.end('404 Not Found');
   }
 
-  // ROUTE ACCESS & SECRET DASHBOARD PROTECTION
   if (pathname === '/index.html') {
     res.writeHead(301, { 'Location': '/' });
     return res.end();
   }
 
-  // Handle secret /dashadminx route
   if (pathname === '/dashadminx' || pathname === '/dashadminx.html') {
     pathname = '/dashadminx.html';
   } else {
-    // SECURITY REQUIREMENT: Any fake admin attempt or unlisted page must strictly 404
+
     if (pathname.includes('admin') || pathname.includes('login') || pathname.includes('dashboard')) {
       res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
       return res.end('<!DOCTYPE html><html><head><title>404 Not Found</title></head><body style="background:#090a0f;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;"><h1>404 | Sayfa Bulunamadı</h1></body></html>');
@@ -312,7 +472,16 @@ const server = http.createServer(async (req, res) => {
       }
     }
   });
-});
+};
+
+module.exports = requestHandler;
+
+if (require.main === module) {
+  const server = http.createServer(requestHandler);
+  server.listen(PORT, () => {
+    console.log(`[Güvenli Sunucu Aktif] Port: ${PORT}`);
+  });
+}
 
 process.on('uncaughtException', (err) => {
   console.error('[Server Error] Uncaught Exception:', err);
@@ -320,8 +489,4 @@ process.on('uncaughtException', (err) => {
 
 process.on('unhandledRejection', (reason) => {
   console.error('[Server Error] Unhandled Rejection:', reason);
-});
-
-server.listen(PORT, () => {
-  console.log(`[Güvenli Sunucu Aktif] Port: ${PORT}`);
 });
