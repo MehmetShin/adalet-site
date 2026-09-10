@@ -660,7 +660,11 @@ const requestHandler = async (req, res) => {
           });
 
           res.writeHead(401);
-          return res.end(JSON.stringify({ success: false, message: 'Geçersiz kullanıcı adı veya şifre!' }));
+          let errDetail = 'Geçersiz kullanıcı adı veya şifre!';
+          if (!envUser || !envPass) {
+            errDetail = 'Sunucu hatası: Vercel üzerinde ADMIN_USER veya ADMIN_PASS tanımlanmamış!';
+          }
+          return res.end(JSON.stringify({ success: false, message: errDetail }));
         }
       } catch (e) {
         res.writeHead(400);
