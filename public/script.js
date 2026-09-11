@@ -656,7 +656,7 @@ function initDetailPage() {
           <i class="fas fa-shield-halved"></i>
           <div>
             <strong>256-Bit SSL Güvenli Ödeme</strong>
-            <span>Ödeme işlemleriniz Shopier 3D Secure güvencesiyle yapılır.</span>
+            <span>Ödeme işlemleriniz 256-Bit SSL & 3D Secure güvencesiyle yapılır.</span>
           </div>
         </div>
         <div class="grp-trust-item">
@@ -985,7 +985,7 @@ function initCheckoutModal() {
       const btn = document.getElementById('paySuccessBtn');
       if (btn) {
         btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Shopier Sayfasına Yönlendiriliyorsunuz...';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Ödeme Sayfasına Yönlendiriliyorsunuz...';
       }
 
       try {
@@ -1018,21 +1018,21 @@ function initCheckoutModal() {
             showToast('Ödeme formu bulunamadı.', 'error');
             if (btn) {
               btn.disabled = false;
-              btn.innerHTML = '<i class="fas fa-lock"></i> Shopier ile Güvenli Öde';
+              btn.innerHTML = '<i class="fas fa-lock"></i> 3D Secure ile Güvenli Öde';
             }
           }
         } else {
           showToast(data.message || 'Ödeme başlatılamadı.', 'error');
           if (btn) {
             btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-lock"></i> Shopier ile Güvenli Öde';
+            btn.innerHTML = '<i class="fas fa-lock"></i> 3D Secure ile Güvenli Öde';
           }
         }
       } catch (err) {
         showToast('Sunucuyla bağlantı kurulamadı!', 'error');
         if (btn) {
           btn.disabled = false;
-          btn.innerHTML = '<i class="fas fa-lock"></i> Shopier ile Güvenli Öde';
+          btn.innerHTML = '<i class="fas fa-lock"></i> 3D Secure ile Güvenli Öde';
         }
       }
     });
