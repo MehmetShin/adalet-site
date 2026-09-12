@@ -82,11 +82,6 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  if (pathname === '/dashadminx' || pathname === '/dashadminx.html') {
-    res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
-    return res.end('<!DOCTYPE html><html><head><title>404 Sayfa Bulunamadı</title></head><body style="background:#07090e;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;"><div style="text-align:center;"><h2>404 | Aradığınız Sayfa Bulunamadı</h2><a href="/" style="color:#ff7b00;text-decoration:none;">Ana Sayfaya Dön</a></div></body></html>');
-  }
-
   let filePath = path.join(PUBLIC_DIR, pathname);
   if (pathname === '/') {
     filePath = path.join(PUBLIC_DIR, 'index.html');
