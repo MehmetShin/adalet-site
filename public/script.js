@@ -991,7 +991,7 @@ function initCheckoutModal() {
       try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 15000);
-        const res = await fetch('/api/shopier/create-payment', {
+        const res = await fetch('/api/payment/create-payment', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           signal: controller.signal,

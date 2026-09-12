@@ -22,7 +22,7 @@
   <meta name="description"
     content="Türkiyem Adalet Gaming alışveriş sepetiniz. Seçtiğiniz ürünleri kontrol edin ve 256-Bit SSL ile güvenle satın alın.">
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://www.shopier.com;">
+    content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self';">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <link rel="icon" href="logo.png" type="image/png">
@@ -122,39 +122,39 @@
   </main>
 
   <div class="grp-modal-overlay" id="checkoutModal">
-    <div class="grp-modal-content">
+    <div class="grp-modal-content" style="max-width: 480px;">
       <button type="button" class="grp-modal-close" id="closeCheckoutBtn">&times;</button>
       <div class="grp-modal-header">
-        <div class="grp-modal-icon"><i class="fas fa-shield-halved"></i></div>
-        <h3>Ödeme & Teslimat Bilgileri</h3>
-        <p>Siparişinizin hesabınıza sorunsuz aktarılması için bilgilerinizi eksiksiz girin.</p>
+        <div class="grp-modal-icon"
+          style="background: rgba(255, 123, 0, 0.15); color: #ff7b00; border-color: rgba(255, 123, 0, 0.3);">
+          <i class="fas fa-clock"></i>
+        </div>
+        <h3 style="font-size: 22px; font-weight: 700; margin-top: 10px; color: #fff;">ÇOK YAKINDA!</h3>
+        <p style="color: rgba(255, 255, 255, 0.7); font-size: 14px;">Ödeme altyapısı güncelleme aşamasındadır.</p>
       </div>
-      <form id="checkoutForm" novalidate>
-        <div class="grp-form-group">
-          <label><i class="fas fa-user"></i> Adınız Soyadınız</label>
-          <input type="text" id="buyerName" placeholder="Örn: Ahmet Yılmaz" autocomplete="off">
-          <span class="grp-field-error" id="errName"></span>
+      <div class="grp-coming-soon-box"
+        style="background: rgba(255, 123, 0, 0.05); border: 1px dashed rgba(255, 123, 0, 0.3); border-radius: 16px; padding: 25px 20px; text-align: center; margin: 15px 0 20px;">
+        <div style="font-size: 42px; color: #ff7b00; margin-bottom: 15px;">
+          <i class="fas fa-credit-card"></i>
         </div>
-        <div class="grp-form-group">
-          <label><i class="fas fa-envelope"></i> E-Posta Adresi</label>
-          <input type="email" id="buyerEmail" placeholder="Örn: test@gmail.com" autocomplete="off">
-          <span class="grp-field-error" id="errEmail"></span>
-        </div>
-        <div class="grp-form-group">
-          <label><i class="fas fa-phone"></i> Telefon Numarası</label>
-          <input type="tel" id="buyerPhone" placeholder="Örn: 5551112233" autocomplete="off">
-          <span class="grp-field-error" id="errPhone"></span>
-        </div>
-        <div class="grp-checkout-summary">
-          <span>Ödenecek Tutar:</span>
-          <strong id="checkoutTotalPrice">0 TL</strong>
-        </div>
-        <div class="grp-checkout-actions">
-          <button type="submit" class="grp-btn-pay" id="paySuccessBtn">
-            <i class="fas fa-lock"></i> 3D Secure ile Güvenli Öde
-          </button>
-        </div>
-      </form>
+        <h4 style="font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 10px;">256-Bit SSL & 3D Secure Ödeme
+          Altyapısı</h4>
+        <p style="font-size: 13.5px; color: rgba(255, 255, 255, 0.75); line-height: 1.6; margin-bottom: 0;">
+          Sistemimiz ödeme altyapısı güncellemesi sebebiyle geçici olarak online ödemelere kapalıdır. Çok yakında 3D
+          Secure güvenli ödeme seçeneği ile hizmetinizde olacağız.
+        </p>
+      </div>
+      <div class="grp-checkout-summary" style="margin-bottom: 15px;">
+        <span>Sepet Tutarı:</span>
+        <strong id="checkoutTotalPrice">0 TL</strong>
+      </div>
+      <div class="grp-checkout-actions">
+        <button type="button" class="grp-btn-pay"
+          onclick="document.getElementById('checkoutModal').classList.remove('open')"
+          style="background: linear-gradient(135deg, #ff7b00 0%, #e66e00 100%); width: 100%;">
+          <i class="fas fa-check"></i> Anlaşıldı, Kapat
+        </button>
+      </div>
     </div>
   </div>
 
