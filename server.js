@@ -31,13 +31,17 @@ const server = http.createServer((req, res) => {
     return res.end('400 Bad Request');
   }
 
-  // Security Headers
   res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://www.shopier.com;");
+
+  if (pathname === '/dashadminx' || pathname === '/dashadminx.html') {
+    res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
+    return res.end('<!DOCTYPE html><html><head><title>404 Sayfa Bulunamadı</title></head><body style="background:#07090e;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;"><div style="text-align:center;"><h2>404 | Aradığınız Sayfa Bulunamadı</h2><a href="/" style="color:#ff7b00;text-decoration:none;">Ana Sayfaya Dön</a></div></body></html>');
+  }
 
   let filePath = path.join(PUBLIC_DIR, pathname);
   if (pathname === '/') {
