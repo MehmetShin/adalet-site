@@ -172,7 +172,7 @@ const PRODUCTS = [
   },
 
   {
-    id: 'oz-1', name: 'Gold Vip', price: 300, category: 'ozel-ayricaliklar', icon: 'fa-gem',
+    id: 'oz-1', name: 'Gold Vip', price: 300, category: 'vipler', icon: 'fa-gem',
     image: 'gold-vip.png',
     shopierUrl: 'https://www.shopier.com/tagmagaza/50480200',
     desc: 'Gold VIP Yetki Paketi',
@@ -186,7 +186,7 @@ const PRODUCTS = [
     ]
   },
   {
-    id: 'oz-2', name: 'Silver Vip', price: 200, category: 'ozel-ayricaliklar', icon: 'fa-shield',
+    id: 'oz-2', name: 'Silver Vip', price: 200, category: 'vipler', icon: 'fa-shield',
     image: 'silver-vip.png',
     shopierUrl: 'https://www.shopier.com/tagmagaza/50480183',
     desc: 'Silver VIP Yetki Paketi',
@@ -199,7 +199,7 @@ const PRODUCTS = [
     ]
   },
   {
-    id: 'oz-3', name: 'Bronz Vip', price: 100, category: 'ozel-ayricaliklar', icon: 'fa-medal',
+    id: 'oz-3', name: 'Bronz Vip', price: 100, category: 'vipler', icon: 'fa-medal',
     image: 'bronz-vip.png',
     shopierUrl: 'https://www.shopier.com/tagmagaza/50480171',
     desc: 'Bronz VIP Yetki Paketi',
@@ -489,6 +489,7 @@ function updateCartBadge() {
 const CATEGORY_NAMES = {
   'donate': 'DONATE ÜRÜNLERİ',
   'yetkiler': 'YETKİ PAKETLERİ',
+  'vipler': 'VIP PAKETLERİ',
   'ozel-ayricaliklar': 'ÖZEL AYRICALIKLAR'
 };
 
@@ -502,14 +503,17 @@ function initShopPage() {
 
   const countDonate = PRODUCTS.filter(p => p.category === 'donate').length;
   const countYetkiler = PRODUCTS.filter(p => p.category === 'yetkiler').length;
+  const countVipler = PRODUCTS.filter(p => p.category === 'vipler').length;
   const countOzel = PRODUCTS.filter(p => p.category === 'ozel-ayricaliklar').length;
 
   const bDonate = document.getElementById('catBadgeDonate');
   const bYetkiler = document.getElementById('catBadgeYetkiler');
+  const bVipler = document.getElementById('catBadgeVipler');
   const bOzel = document.getElementById('catBadgeOzel');
 
   if (bDonate) bDonate.innerText = `${countDonate} Ürün Mevcut`;
   if (bYetkiler) bYetkiler.innerText = `${countYetkiler} Ürün Mevcut`;
+  if (bVipler) bVipler.innerText = `${countVipler} Ürün Mevcut`;
   if (bOzel) bOzel.innerText = `${countOzel} Ürün Mevcut`;
 
   function openCategory(cat) {
@@ -572,7 +576,7 @@ function initShopPage() {
 
   const urlParams = new URLSearchParams(window.location.search);
   const requestedCat = urlParams.get('cat');
-  if (requestedCat && ['donate', 'yetkiler', 'ozel-ayricaliklar'].includes(requestedCat)) {
+  if (requestedCat && ['donate', 'yetkiler', 'vipler', 'ozel-ayricaliklar'].includes(requestedCat)) {
     openCategory(requestedCat);
   }
 }

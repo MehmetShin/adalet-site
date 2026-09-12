@@ -2,10 +2,6 @@
   "cleanUrls": true,
   "rewrites": [
     {
-      "source": "/sepet",
-      "destination": "/magaza.html"
-    },
-    {
       "source": "/magaza",
       "destination": "/magaza.html"
     },

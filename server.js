@@ -39,11 +39,6 @@ const server = http.createServer((req, res) => {
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self' https://www.shopier.com;");
 
-  if (pathname === '/sepet' || pathname === '/sepet.html' || pathname === '/dashadminx' || pathname === '/dashadminx.html') {
-    res.writeHead(301, { 'Location': '/magaza' });
-    return res.end();
-  }
-
   let filePath = path.join(PUBLIC_DIR, pathname);
   if (pathname === '/') {
     filePath = path.join(PUBLIC_DIR, 'index.html');
