@@ -1502,6 +1502,7 @@ header.grp-header.scrolled {
     opacity: 0;
     transform: translateY(14px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1716,21 +1717,26 @@ header.grp-header.scrolled {
 }
 
 .grp-product-icon-wrap {
-  height: 130px;
+  height: 135px;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 10px;
   border-radius: 12px;
-  background: radial-gradient(circle at center, rgba(255, 107, 0, 0.15) 0%, transparent 70%);
+  background: rgba(0, 0, 0, 0.4);
   overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .grp-product-card-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  border-radius: 12px;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 11px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 4px;
 }
 
 .grp-product-icon-wrap i {
