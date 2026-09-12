@@ -1,7 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
   initDevToolsProtection();
   initNavigation();
+  checkAutoConnect();
 });
+
+function checkAutoConnect() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const ip = urlParams.get('ip') || '51.91.91.80:22003';
+  const auto = urlParams.get('auto');
+
+  if (auto === 'true') {
+    setTimeout(() => {
+      window.location.href = `mtasa://${ip}`;
+    }, 400);
+  }
+}
 
 function initNavigation() {
   const toggleBtn = document.getElementById('grpMobileToggle');
