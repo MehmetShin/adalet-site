@@ -22,7 +22,7 @@
   <meta name="description"
     content="Türkiyem Adalet Gaming, MTA platformunda kaliteli, disiplinli ve gerçekçi askerî & polisiye rol deneyimi sunan topluluktur.">
   <meta http-equiv="Content-Security-Policy"
-    content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self';">
+    content="default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: https:; connect-src 'self' https://challenges.cloudflare.com; frame-src 'self' https://challenges.cloudflare.com; frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self';">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <link rel="icon" href="logo.png" type="image/png">
@@ -32,11 +32,33 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
   <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="turnstile-locked">
+
+  <div id="turnstileOverlay" class="turnstile-overlay">
+    <div class="turnstile-card">
+      <div class="turnstile-header">
+        <div class="turnstile-logo-wrapper">
+          <img src="logo.png" alt="Türkiyem Adalet Gaming Logo" class="turnstile-logo">
+        </div>
+        <h2 class="turnstile-title">GÜVENLİK <span>DOĞRULAMASI</span></h2>
+        <p class="turnstile-subtitle">Türkiyem Adalet Gaming web sitesine erişmek için lütfen insan olduğunuzu
+          doğrulayın.</p>
+      </div>
+      <div class="turnstile-widget-container">
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAEx0ylFO6NIm23F1" data-callback="onTurnstileSuccess"
+          data-theme="dark"></div>
+      </div>
+      <div class="turnstile-footer">
+        <i class="fas fa-shield-halved"></i>
+        <span>Cloudflare Turnstile Güvenlik Koruması</span>
+      </div>
+    </div>
+  </div>
 
   <div class="grp-bg-effects">
     <div class="grp-bg-image"></div>

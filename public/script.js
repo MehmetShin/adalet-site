@@ -1,4 +1,45 @@
+window.onTurnstileSuccess = function (token) {
+  fetch('/api/verify-turnstile', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token: token })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        unlockSite();
+      } else {
+        alert('Güvenlik doğrulaması başarısız oldu. Lütfen sayfayı yenileyip tekrar deneyin.');
+      }
+    })
+    .catch(() => {
+      unlockSite();
+    });
+};
+
+function unlockSite() {
+  sessionStorage.setItem('turnstile_verified', 'true');
+  const overlay = document.getElementById('turnstileOverlay');
+  if (overlay) {
+    overlay.classList.add('verified');
+    setTimeout(() => {
+      overlay.style.display = 'none';
+      document.body.classList.remove('turnstile-locked');
+    }, 500);
+  } else {
+    document.body.classList.remove('turnstile-locked');
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  if (sessionStorage.getItem('turnstile_verified') === 'true') {
+    const overlay = document.getElementById('turnstileOverlay');
+    if (overlay) overlay.style.display = 'none';
+    document.body.classList.remove('turnstile-locked');
+  } else {
+    document.body.classList.add('turnstile-locked');
+  }
+
   initDevToolsProtection();
   initNavigation();
   checkAutoConnect();
