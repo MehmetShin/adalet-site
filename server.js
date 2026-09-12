@@ -401,7 +401,11 @@ const requestHandler = async (req, res) => {
       return res.end(JSON.stringify({ success: true, data: { products: data.products, categories: data.categories } }));
     }
 
-    if (pathname === '/api/payment/create-payment' || pathname === '/api/shopier/create-payment') {
+    if (pathname.startsWith('/api/payment')) {
+      if (req.method === 'GET') {
+        res.writeHead(302, { 'Location': '/' });
+        return res.end();
+      }
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
       return res.end(JSON.stringify({
         success: false,
