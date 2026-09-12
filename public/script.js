@@ -8,6 +8,7 @@ const PRODUCTS = [
     category: 'yetkiler',
     image: 'yonetici-personel.png',
     icon: 'fa-user-shield',
+    shopierUrl: 'https://www.shopier.com/tagmagaza/50480105',
     desc: 'Türkiyem Adalet Gaming sunucusunda geçerli Yönetici Personel yetkisi ve özel Yetkili Paneli (P Panel) izinleri.',
     features: [
       'Birimlere katılımcı alma yetkisi (/tag)',
@@ -32,6 +33,7 @@ const PRODUCTS = [
   {
     id: 'st-2', name: 'Yönetim Ekibi', price: 800, category: 'yetkiler', icon: 'fa-users-gear',
     image: 'yonetim-ekibi.png',
+    shopierUrl: 'https://www.shopier.com/tagmagaza/50480031',
     desc: 'Türkiyem Adalet Gaming sunucusunda geçerli Yönetim Ekibi yetkisi ve özel Yetkili Paneli (P Panel) izinleri.',
     features: [
       'Birimlere katılımcı alma yetkisi (/tag)',
@@ -62,6 +64,7 @@ const PRODUCTS = [
   {
     id: 'st-3', name: 'Üst Kademe Yönetim Ekibi', price: 1000, category: 'yetkiler', icon: 'fa-user-tie',
     image: 'ust-kademe-yonetim.png',
+    shopierUrl: 'https://www.shopier.com/tagmagaza/50479979',
     desc: 'Türkiyem Adalet Gaming sunucusunda geçerli Üst Kademe Yönetim Ekibi yetkisi ve özel Yetkili Paneli (P Panel) izinleri.',
     features: [
       'Birimlere katılımcı alma yetkisi (/tag)',
@@ -92,6 +95,7 @@ const PRODUCTS = [
   {
     id: 'st-4', name: 'Yönetim Kurulu Üyesi', price: 1500, category: 'yetkiler', icon: 'fa-award',
     image: 'yonetim-kurulu-uyesi.png',
+    shopierUrl: 'https://www.shopier.com/tagmagaza/50479331',
     desc: 'Türkiyem Adalet Gaming sunucusunda geçerli Yönetim Kurulu Üyesi yetkisi ve özel Yetkili Paneli (P Panel) izinleri.',
     features: [
       'Birimlere katılımcı alma yetkisi (/tag)',
@@ -130,6 +134,7 @@ const PRODUCTS = [
   {
     id: 'st-5', name: 'Üst Kademe Yönetim Kurulu Üyesi', price: 2000, category: 'yetkiler', icon: 'fa-crown',
     image: 'ust-kademe-yonetim-kurulu.png',
+    shopierUrl: 'https://www.shopier.com/tagmagaza/50478976',
     desc: 'Türkiyem Adalet Gaming sunucusunda geçerli Üst Kademe Yönetim Kurulu Üyesi yetkisi ve özel Yetkili Paneli (P Panel) izinleri.',
     features: [
       'Birimlere katılımcı alma yetkisi (/tag)',
@@ -169,6 +174,7 @@ const PRODUCTS = [
   {
     id: 'oz-1', name: 'Gold Vip', price: 300, category: 'ozel-ayricaliklar', icon: 'fa-gem',
     image: 'gold-vip.png',
+    shopierUrl: 'https://www.shopier.com/tagmagaza/50480200',
     desc: 'Gold VIP Yetki Paketi',
     features: [
       'Aldıktan sonra discord sunucumuzda destek talebi açınız.',
@@ -182,6 +188,7 @@ const PRODUCTS = [
   {
     id: 'oz-2', name: 'Silver Vip', price: 200, category: 'ozel-ayricaliklar', icon: 'fa-shield',
     image: 'silver-vip.png',
+    shopierUrl: 'https://www.shopier.com/tagmagaza/50480183',
     desc: 'Silver VIP Yetki Paketi',
     features: [
       'Aldıktan sonra discord sunucumuzda destek talebi açınız.',
@@ -194,6 +201,7 @@ const PRODUCTS = [
   {
     id: 'oz-3', name: 'Bronz Vip', price: 100, category: 'ozel-ayricaliklar', icon: 'fa-medal',
     image: 'bronz-vip.png',
+    shopierUrl: 'https://www.shopier.com/tagmagaza/50480171',
     desc: 'Bronz VIP Yetki Paketi',
     features: [
       'Aldıktan sonra discord sunucumuzda destek talebi açınız.',
@@ -206,6 +214,7 @@ const PRODUCTS = [
   {
     id: 'oz-4', name: 'Ek Klan Hakkı', price: 200, category: 'ozel-ayricaliklar', icon: 'fa-flag',
     image: 'ek-klan-hakki.png',
+    shopierUrl: 'https://www.shopier.com/tagmagaza/50480151',
     desc: 'Ek Klan Hakkı Paketi',
     features: [
       'Aldıktan sonra discord sunucumuzda destek talebi açınız.',
@@ -215,6 +224,7 @@ const PRODUCTS = [
   {
     id: 'oz-5', name: 'Hesap Kurtarma & Şifre Değiştirme', price: 200, category: 'ozel-ayricaliklar', icon: 'fa-key',
     image: 'hesap-kurtarma.png',
+    shopierUrl: 'https://www.shopier.com/tagmagaza/50480133',
     desc: 'Hesap Kurtarma & Şifre Değiştirme Hizmeti',
     features: [
       'Aldıktan sonra discord sunucumuzda destek talebi açınız.',
@@ -224,6 +234,7 @@ const PRODUCTS = [
   {
     id: 'oz-6', name: 'Yetkili Uyarı Sildirme', price: 500, category: 'ozel-ayricaliklar', icon: 'fa-trash-can',
     image: 'yetkili-uyari-sildirme.png',
+    shopierUrl: 'https://www.shopier.com/tagmagaza/50480819',
     desc: 'Yetkili Uyarı Sildirme Hizmeti',
     features: [
       'Alan yetkililerin tüm uyarıları silinecektir. Alan yetkili, Discord sunucumuzda üst yönetim talebi açsın.'
@@ -233,6 +244,7 @@ const PRODUCTS = [
   {
     id: 'dn-1', name: 'McLaren 720S Spider', price: 250, category: 'donate', icon: 'fa-car-side',
     image: 'mclaren-720s.jpg',
+    shopierUrl: 'https://www.shopier.com/tagmagaza/50480665',
     desc: 'McLaren 720S Spider Araç',
     features: [
       'Aldıktan sonra discord sunucumuzda destek talebi açınız.',
@@ -244,6 +256,7 @@ const PRODUCTS = [
   {
     id: 'dn-2', name: 'Ferrari California', price: 200, category: 'donate', icon: 'fa-car',
     image: 'ferrari-california.jpg',
+    shopierUrl: 'https://www.shopier.com/tagmagaza/50480650',
     desc: 'Ferrari California Araç',
     features: [
       'Aldıktan sonra discord sunucumuzda destek talebi açınız.',
@@ -254,6 +267,7 @@ const PRODUCTS = [
   {
     id: 'dn-3', name: 'Buckingham Swift Retro', price: 250, category: 'donate', icon: 'fa-helicopter',
     image: 'luxury-helikopter.png',
+    shopierUrl: 'https://www.shopier.com/tagmagaza/50480418',
     desc: 'Buckingham Swift Retro Helikopter',
     features: [
       'Aldıktan sonra discord sunucumuzda destek talebi açınız.',
@@ -264,6 +278,7 @@ const PRODUCTS = [
   {
     id: 'dn-4', name: 'Ramiz Karaeski', price: 200, category: 'donate', icon: 'fa-user-ninja',
     image: 'ramiz-karaeski.png',
+    shopierUrl: 'https://www.shopier.com/tagmagaza/50480396',
     desc: 'Ramiz Karaeski Karakter Görünümü',
     features: [
       'Aldıktan sonra discord sunucumuzda destek talebi açınız.',
@@ -274,6 +289,7 @@ const PRODUCTS = [
   {
     id: 'dn-5', name: 'Aslan Akbey', price: 200, category: 'donate', icon: 'fa-user-secret',
     image: 'aslan-akbey.png',
+    shopierUrl: 'https://www.shopier.com/tagmagaza/50480363',
     desc: 'Aslan Akbey Karakter Görünümü',
     features: [
       'Aldıktan sonra discord sunucumuzda destek talebi açınız.',
@@ -284,6 +300,7 @@ const PRODUCTS = [
   {
     id: 'dn-6', name: 'Behzat Ç.', price: 200, category: 'donate', icon: 'fa-user-astronaut',
     image: 'behzat-c.png',
+    shopierUrl: 'https://www.shopier.com/tagmagaza/50480339',
     desc: 'Behzat Ç. Karakter Görünümü',
     features: [
       'Aldıktan sonra discord sunucumuzda destek talebi açınız.',
@@ -294,6 +311,7 @@ const PRODUCTS = [
   {
     id: 'dn-7', name: 'Eşref Tek', price: 200, category: 'donate', icon: 'fa-user-large',
     image: 'esref-tek.png',
+    shopierUrl: 'https://www.shopier.com/tagmagaza/50480327',
     desc: 'Eşref Tek Karakter Görünümü',
     features: [
       'Aldıktan sonra discord sunucumuzda destek talebi açınız.',
@@ -304,6 +322,7 @@ const PRODUCTS = [
   {
     id: 'dn-8', name: 'Kuzey Tekinoğlu', price: 200, category: 'donate', icon: 'fa-person',
     image: 'kuzey-tekinoglu.png',
+    shopierUrl: 'https://www.shopier.com/tagmagaza/50480309',
     desc: 'Kuzey Tekinoğlu Karakter Görünümü',
     features: [
       'Aldıktan sonra discord sunucumuzda destek talebi açınız.',
@@ -314,6 +333,7 @@ const PRODUCTS = [
   {
     id: 'dn-9', name: 'Pala', price: 200, category: 'donate', icon: 'fa-glasses',
     image: 'pala.png',
+    shopierUrl: 'https://www.shopier.com/tagmagaza/50480296',
     desc: 'Pala Karakter Görünümü',
     features: [
       'Aldıktan sonra discord sunucumuzda destek talebi açınız.',
@@ -324,6 +344,7 @@ const PRODUCTS = [
   {
     id: 'dn-10', name: 'Polat Alemdar', price: 200, category: 'donate', icon: 'fa-user-check',
     image: 'polat-alemdar.png',
+    shopierUrl: 'https://www.shopier.com/tagmagaza/50480282',
     desc: 'Polat Alemdar Karakter Görünümü',
     features: [
       'Aldıktan sonra discord sunucumuzda destek talebi açınız.',
@@ -334,7 +355,8 @@ const PRODUCTS = [
   {
     id: 'dn-11', name: 'Reis', price: 200, category: 'donate', icon: 'fa-user-graduate',
     image: 'reis.png',
-    desc: 'Reis Karakter Görünümü',
+    shopierUrl: 'https://www.shopier.com/tagmagaza/50480256',
+    desc: 'Reis (Sedat Peker) Karakter Görünümü',
     features: [
       'Aldıktan sonra discord sunucumuzda destek talebi açınız.',
       'Yetki içeriği görseldedir.',
@@ -578,6 +600,9 @@ function renderProducts(category) {
       `;
     }
 
+    const shopierLink = p.shopierUrl || 'https://www.shopier.com/tagmagaza';
+    const isExternal = true;
+
     return `
       <div class="grp-product-card" data-category="${p.category}">
         <div class="grp-product-icon-wrap">
@@ -586,9 +611,12 @@ function renderProducts(category) {
         <h3 class="grp-product-title">${p.name}</h3>
         ${priceHtml}
         <div class="grp-product-divider"></div>
-        <div class="grp-product-footer">
-          <a href="/urun-detay?id=${p.id}" class="grp-btn-card-action btn-filled">
+        <div class="grp-product-footer" style="display: flex; gap: 8px;">
+          <a href="/urun-detay?id=${p.id}" class="grp-btn-card-action btn-outline" style="flex: 1; text-align: center; text-decoration: none;">
             <i class="fas fa-eye"></i> İncele
+          </a>
+          <a href="${shopierLink}" ${isExternal ? 'target="_blank" rel="noopener"' : ''} class="grp-btn-card-action btn-filled" style="flex: 1.2; text-align: center; background: linear-gradient(135deg, #ff7b00 0%, #e66e00 100%); text-decoration: none;">
+            <i class="fas fa-arrow-up-right-from-square"></i> Ürüne Git
           </a>
         </div>
       </div>
@@ -597,7 +625,6 @@ function renderProducts(category) {
 }
 
 function initDetailPage() {
-  detailQty = 1;
   const container = document.getElementById('productDetailContent');
   if (!container) return;
 
@@ -633,6 +660,9 @@ function initDetailPage() {
     `;
   }
 
+  const shopierLink = product.shopierUrl || 'https://www.shopier.com/tagmagaza';
+  const clickAttr = 'target="_blank" rel="noopener"';
+
   container.innerHTML = `
     <div class="grp-detail-left-column">
       <div class="grp-detail-image-box">
@@ -640,23 +670,18 @@ function initDetailPage() {
       </div>
       <div class="grp-detail-trust-card">
         <div class="grp-detail-actions">
-          <div class="grp-detail-qty-wrap">
-            <button type="button" id="btnQtyMinus">-</button>
-            <span id="detailQtyVal">1</span>
-            <button type="button" id="btnQtyPlus">+</button>
-          </div>
-          <button type="button" class="grp-btn-primary" id="btnAddToCartDetail">
-            <i class="fas fa-cart-plus"></i> Sepete Ekle
-          </button>
+          <a href="${shopierLink}" ${clickAttr} class="grp-btn-primary" style="display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; width: 100%; font-weight: 700; font-size: 15px; padding: 14px 18px; background: linear-gradient(135deg, #ff7b00 0%, #e66e00 100%); border-radius: 12px;">
+            <i class="fas fa-arrow-up-right-from-square"></i> Ürüne Git (Shopier ile Satın Al)
+          </a>
         </div>
 
-        <div class="grp-trust-divider" style="height: 1px; background: rgba(255, 255, 255, 0.08); margin: 4px 0;"></div>
+        <div class="grp-trust-divider" style="height: 1px; background: rgba(255, 255, 255, 0.08); margin: 12px 0;"></div>
 
         <div class="grp-trust-item">
           <i class="fas fa-shield-halved"></i>
           <div>
             <strong>256-Bit SSL Güvenli Ödeme</strong>
-            <span>Ödeme işlemleriniz 256-Bit SSL & 3D Secure güvencesiyle yapılır.</span>
+            <span>Ödeme işlemleriniz Shopier güvencesiyle 3D Secure ile yapılır.</span>
           </div>
         </div>
         <div class="grp-trust-item">
@@ -681,14 +706,6 @@ function initDetailPage() {
       ${rulesHtml}
     </div>
   `;
-
-  const btnMinus = document.getElementById('btnQtyMinus');
-  const btnPlus = document.getElementById('btnQtyPlus');
-  const btnAdd = document.getElementById('btnAddToCartDetail');
-
-  if (btnMinus) btnMinus.addEventListener('click', () => window.changeDetailQty(-1));
-  if (btnPlus) btnPlus.addEventListener('click', () => window.changeDetailQty(1));
-  if (btnAdd) btnAdd.addEventListener('click', () => window.addDetailToCart(product.id));
 }
 
 const MAX_QTY = 5;
