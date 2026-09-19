@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function checkAutoConnect() {
   const urlParams = new URLSearchParams(window.location.search);
-  const ip = urlParams.get('ip') || '51.91.91.80:22003';
+  const ip = urlParams.get('ip') || '178.32.203.118:22003';
   const auto = urlParams.get('auto');
 
   if (auto === 'true') {
