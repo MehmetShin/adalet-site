@@ -29,32 +29,77 @@ function unlockSite() {
   const overlay = document.getElementById('turnstileOverlay');
   if (overlay) {
     overlay.classList.add('verified');
+    overlay.style.pointerEvents = 'none';
     setTimeout(() => {
       overlay.style.display = 'none';
       document.body.classList.remove('turnstile-locked');
-    }, 500);
+    }, 300);
   } else {
     document.body.classList.remove('turnstile-locked');
   }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Turnstile kontrolü
   if (sessionStorage.getItem('turnstile_verified') === 'true') {
-    const overlay = document.getElementById('turnstileOverlay');
-    if (overlay) overlay.style.display = 'none';
-    document.body.classList.remove('turnstile-locked');
+    unlockSite();
   } else {
     document.body.classList.add('turnstile-locked');
-    // Turnstile yanıt vermezse 3 saniye sonra otomatik ekran kilidini kaldır
     setTimeout(() => {
       unlockSite();
-    }, 3000);
+    }, 1500);
   }
 
   initDevToolsProtection();
   initNavigation();
+  initMtaConnectButtons();
   checkAutoConnect();
 });
+
+function launchMta(ip = '178.32.203.118:22003') {
+  const mtaUrl = `mtasa://${ip}`;
+
+  // 1. Doğrudan yönlendirme dene
+  window.location.href = mtaUrl;
+
+  // 2. Görünmez iframe ile garanti başlatma (Chrome/Edge engelleyicileri aşmak için)
+  let iframe = document.getElementById('mtaLauncherIframe');
+  if (!iframe) {
+    iframe = document.createElement('iframe');
+    iframe.id = 'mtaLauncherIframe';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+  }
+  iframe.src = mtaUrl;
+}
+
+function initMtaConnectButtons() {
+  const selectors = [
+    'a[href^="mtasa:"]',
+    '.grp-login-button',
+    '.grp-btn-primary',
+    '.grp-btn-faction'
+  ];
+
+  document.querySelectorAll(selectors.join(', ')).forEach(button => {
+    // Sadece Discord/Mağaza harici olan MTA bağlantı butonlarını yakala
+    const href = button.getAttribute('href') || '';
+    if (href.includes('discord') || href.includes('shopier')) return;
+
+    button.style.cursor = 'pointer';
+    button.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      let targetIp = '178.32.203.118:22003';
+      if (href.startsWith('mtasa://')) {
+        targetIp = href.replace('mtasa://', '');
+      }
+
+      launchMta(targetIp);
+    });
+  });
+}
 
 function checkAutoConnect() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -63,7 +108,7 @@ function checkAutoConnect() {
 
   if (auto === 'true') {
     setTimeout(() => {
-      window.location.href = `mtasa://${ip}`;
+      launchMta(ip);
     }, 400);
   }
 }
