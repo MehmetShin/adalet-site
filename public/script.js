@@ -6,7 +6,6 @@ window.onTurnstileSuccess = function (token) {
   })
     .then(res => {
       if (!res.ok) {
-        // API henüz hazır değilse veya static yayınlanıyorsa yine de geçişe izin ver
         unlockSite();
         return null;
       }
@@ -40,7 +39,6 @@ function unlockSite() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Turnstile kontrolü
   if (sessionStorage.getItem('turnstile_verified') === 'true') {
     unlockSite();
   } else {
@@ -56,8 +54,135 @@ document.addEventListener('DOMContentLoaded', () => {
   checkAutoConnect();
 });
 
-function launchMta(ip = '178.32.203.118:22003') {
+function openConnectModal(ip = '178.32.203.118:22003') {
   window.location.href = `mtasa://${ip}`;
+
+  let modal = document.getElementById('mtaConnectModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'mtaConnectModal';
+    modal.style.cssText = `
+      position: fixed;
+      inset: 0;
+      z-index: 9999999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 20px;
+      font-family: 'Poppins', sans-serif;
+    `;
+    modal.innerHTML = `
+      <div style="
+        width: 100%;
+        max-width: 440px;
+        background: #140b06;
+        border: 1px solid #ff6b00;
+        border-radius: 20px;
+        padding: 30px 24px;
+        text-align: center;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 30px rgba(255,107,0,0.3);
+        position: relative;
+        color: #fff;
+      ">
+        <button id="closeMtaModalBtn" style="
+          position: absolute;
+          top: 16px;
+          right: 18px;
+          background: none;
+          border: none;
+          color: rgba(255,255,255,0.6);
+          font-size: 24px;
+          cursor: pointer;
+          line-height: 1;
+        ">&times;</button>
+        
+        <div style="font-size: 42px; color: #ff6b00; margin-bottom: 12px;">
+          <i class="fas fa-rocket"></i>
+        </div>
+        
+        <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 6px; color: #fff; letter-spacing: 0.5px;">
+          TÜRKİYEM ADALET GAMİNG
+        </h3>
+        <p style="font-size: 13.5px; color: rgba(255,255,255,0.7); margin-bottom: 20px;">
+          MTA:SA Sunucusuna bağlanılıyor...
+        </p>
+
+        <div style="
+          background: rgba(0,0,0,0.5);
+          border: 1px solid rgba(255,107,0,0.35);
+          border-radius: 12px;
+          padding: 12px;
+          margin-bottom: 20px;
+          font-family: monospace;
+          font-size: 17px;
+          color: #ff962d;
+          font-weight: 700;
+          letter-spacing: 1px;
+        ">
+          ${ip}
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <a href="mtasa://${ip}" style="
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #ff7b00, #ff4500);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            text-decoration: none;
+          ">
+            <i class="fas fa-play"></i> Oyuna Doğrudan Bağlan (mtasa://)
+          </a>
+
+          <button id="copyMtaIpBtn" style="
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+          ">
+            <i class="fas fa-copy"></i> IP Adresini Kopyala
+          </button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    modal.querySelector('#closeMtaModalBtn').addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+
+    modal.querySelector('#copyMtaIpBtn').addEventListener('click', function () {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(ip).catch(() => { });
+      }
+      this.innerHTML = '<i class="fas fa-check" style="color:#00d282;"></i> IP Kopyalandı!';
+      setTimeout(() => {
+        this.innerHTML = '<i class="fas fa-copy"></i> IP Adresini Kopyala';
+      }, 2000);
+    });
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.style.display = 'none';
+    });
+  } else {
+    modal.style.display = 'flex';
+  }
 }
 
 function initMtaConnectButtons() {
@@ -69,7 +194,6 @@ function initMtaConnectButtons() {
   ];
 
   document.querySelectorAll(selectors.join(', ')).forEach(button => {
-    // Sadece Discord/Mağaza harici olan MTA bağlantı butonlarını yakala
     const href = button.getAttribute('href') || '';
     if (href.includes('discord') || href.includes('shopier')) return;
 
@@ -83,7 +207,7 @@ function initMtaConnectButtons() {
         targetIp = href.replace('mtasa://', '');
       }
 
-      launchMta(targetIp);
+      openConnectModal(targetIp);
     });
   });
 }
@@ -95,7 +219,7 @@ function checkAutoConnect() {
 
   if (auto === 'true') {
     setTimeout(() => {
-      launchMta(ip);
+      openConnectModal(ip);
     }, 400);
   }
 }
