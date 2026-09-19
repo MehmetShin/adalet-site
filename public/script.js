@@ -53,19 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initDevToolsProtection();
   initNavigation();
-  initMtaConnectButtons();
   checkAutoConnect();
 });
-
-function initMtaConnectButtons() {
-  document.querySelectorAll('a[href^="mtasa:"]').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const href = link.getAttribute('href') || 'mtasa://178.32.203.118:22003';
-      window.location.href = href;
-    });
-  });
-}
 
 function checkAutoConnect() {
   const urlParams = new URLSearchParams(window.location.search);
