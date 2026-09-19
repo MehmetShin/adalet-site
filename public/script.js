@@ -57,20 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function launchMta(ip = '178.32.203.118:22003') {
-  const mtaUrl = `mtasa://${ip}`;
-
-  // 1. Doğrudan yönlendirme dene
-  window.location.href = mtaUrl;
-
-  // 2. Görünmez iframe ile garanti başlatma (Chrome/Edge engelleyicileri aşmak için)
-  let iframe = document.getElementById('mtaLauncherIframe');
-  if (!iframe) {
-    iframe = document.createElement('iframe');
-    iframe.id = 'mtaLauncherIframe';
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
-  }
-  iframe.src = mtaUrl;
+  window.location.href = `mtasa://${ip}`;
 }
 
 function initMtaConnectButtons() {
