@@ -45,12 +45,84 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.classList.remove('turnstile-locked');
   } else {
     document.body.classList.add('turnstile-locked');
+    // Turnstile yanıt vermezse 3 saniye sonra otomatik ekran kilidini kaldır
+    setTimeout(() => {
+      unlockSite();
+    }, 3000);
   }
 
   initDevToolsProtection();
   initNavigation();
+  initMtaConnectButtons();
   checkAutoConnect();
 });
+
+function initMtaConnectButtons() {
+  document.querySelectorAll('a[href^="mtasa:"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const href = link.getAttribute('href') || 'mtasa://178.32.203.118:22003';
+      const ip = href.replace('mtasa://', '');
+
+      // 1. MTA uygulamasını başlatmayı tetikle
+      window.location.href = href;
+
+      // 2. IP adresini panoya kopyala
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(ip).catch(() => { });
+      }
+
+      // 3. Ekranda şık bildirim göster
+      showConnectToast(ip);
+    });
+  });
+}
+
+function showConnectToast(ip) {
+  let toast = document.getElementById('mtaConnectToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'mtaConnectToast';
+    toast.style.cssText = `
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 999999;
+      background: rgba(20, 11, 6, 0.96);
+      border: 1px solid #ff6b00;
+      border-radius: 12px;
+      padding: 16px 22px;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 20px rgba(255,107,0,0.3);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: all 0.3s ease;
+      transform: translateY(100px);
+      opacity: 0;
+      pointer-events: none;
+    `;
+    toast.innerHTML = `
+      <div style="font-size: 24px; color: #ff6b00;"><i class="fas fa-rocket"></i></div>
+      <div>
+        <div style="font-weight: 700; font-size: 15px; color: #fff;">MTA:SA Başlatılıyor...</div>
+        <div style="font-size: 13px; color: rgba(255,255,255,0.75);">IP (<code style="background: rgba(255,107,0,0.25); padding: 2px 6px; border-radius: 4px; color: #ff962d; font-weight: 600;">${ip}</code>) panoya kopyalandı!</div>
+      </div>
+    `;
+    document.body.appendChild(toast);
+  }
+
+  setTimeout(() => {
+    toast.style.transform = 'translateY(0)';
+    toast.style.opacity = '1';
+  }, 50);
+
+  setTimeout(() => {
+    toast.style.transform = 'translateY(100px)';
+    toast.style.opacity = '0';
+  }, 4500);
+}
 
 function checkAutoConnect() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -60,6 +132,7 @@ function checkAutoConnect() {
   if (auto === 'true') {
     setTimeout(() => {
       window.location.href = `mtasa://${ip}`;
+      showConnectToast(ip);
     }, 400);
   }
 }
