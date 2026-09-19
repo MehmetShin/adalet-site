@@ -55,8 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function openConnectModal(ip = '178.32.203.118:22003') {
-  window.location.href = `mtasa://${ip}`;
-
   let modal = document.getElementById('mtaConnectModal');
   if (!modal) {
     modal = document.createElement('div');
@@ -107,7 +105,7 @@ function openConnectModal(ip = '178.32.203.118:22003') {
           TÜRKİYEM ADALET GAMİNG
         </h3>
         <p style="font-size: 13.5px; color: rgba(255,255,255,0.7); margin-bottom: 20px;">
-          MTA:SA Sunucusuna bağlanılıyor...
+          Aşağıdaki butona tıklayarak oyuna direkt giriş yapabilirsiniz.
         </p>
 
         <div style="
@@ -126,18 +124,19 @@ function openConnectModal(ip = '178.32.203.118:22003') {
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 10px;">
-          <a href="mtasa://${ip}" style="
+          <a id="directMtaLink" href="mtasa://${ip}" style="
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             background: linear-gradient(135deg, #ff7b00, #ff4500);
             color: #fff;
-            padding: 12px 20px;
+            padding: 14px 20px;
             border-radius: 12px;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 15px;
             text-decoration: none;
+            box-shadow: 0 4px 15px rgba(255,107,0,0.4);
           ">
             <i class="fas fa-play"></i> Oyuna Doğrudan Bağlan (mtasa://)
           </a>
@@ -181,6 +180,8 @@ function openConnectModal(ip = '178.32.203.118:22003') {
       if (e.target === modal) modal.style.display = 'none';
     });
   } else {
+    const directLink = modal.querySelector('#directMtaLink');
+    if (directLink) directLink.setAttribute('href', `mtasa://${ip}`);
     modal.style.display = 'flex';
   }
 }
@@ -194,6 +195,9 @@ function initMtaConnectButtons() {
   ];
 
   document.querySelectorAll(selectors.join(', ')).forEach(button => {
+    // Modal içindeki butonları tamamen hariç tut ki varsayılan tıklama engellenmesin!
+    if (button.closest('#mtaConnectModal')) return;
+
     const href = button.getAttribute('href') || '';
     if (href.includes('discord') || href.includes('shopier')) return;
 
