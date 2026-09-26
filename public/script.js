@@ -168,7 +168,7 @@ function openConnectModal(ip = '178.32.203.118:22003') {
 
     modal.querySelector('#copyMtaIpBtn').addEventListener('click', function () {
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(ip).catch(() => { });
+        navigator.clipboard.writeText(ip).catch(() => {});
       }
       this.innerHTML = '<i class="fas fa-check" style="color:#00d282;"></i> IP Kopyalandı!';
       setTimeout(() => {
