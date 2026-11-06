@@ -1,3 +1,4 @@
+document.title = 'Türkiyem Adalet Gaming | Kaliteli Askerî & Polisiye Roleplay';
 const SERVER_IP = '178.32.203.118:22003';
 
 const FACTIONS = {
@@ -117,28 +118,25 @@ const STEPS_DATA = {
     }
 };
 
-function selectFaction(key) {
+const PRELOAD_FACTION_ASSETS = ['/tsk.png', '/jgk.png', '/egm.png', '/cetin.png'];
+PRELOAD_FACTION_ASSETS.forEach(url => {
+    const im = new Image();
+    im.src = url;
+});
+
+let holoTransitionToken = 0;
+function selectHoloFaction(key) {
     const f = FACTIONS[key];
     if (!f) return;
 
-    document.documentElement.style.setProperty('--faction-accent', f.accent);
-    document.documentElement.style.setProperty('--faction-glow', f.glow);
+    const holoCard = document.getElementById('hero-holo-card');
+    if (holoCard) {
+        holoCard.style.setProperty('--faction-glow', f.glow);
+        holoCard.style.setProperty('--faction-accent', f.accent);
+    }
 
-    const holoImg = document.getElementById('holo-img');
-    const holoCode = document.getElementById('holo-code-label');
-    const holoTag = document.getElementById('holo-tag');
     const holoTitle = document.getElementById('holo-title');
     const holoSub = document.getElementById('holo-sub');
-
-    if (holoImg) {
-        holoImg.style.opacity = '0.3';
-        setTimeout(() => {
-            holoImg.src = f.poster;
-            holoImg.style.opacity = '1';
-        }, 120);
-    }
-    if (holoCode) holoCode.textContent = f.code;
-    if (holoTag) holoTag.textContent = f.tags.join(' • ');
     if (holoTitle) holoTitle.textContent = f.title;
     if (holoSub) holoSub.textContent = f.shortSub;
 
@@ -146,20 +144,40 @@ function selectFaction(key) {
         btn.classList.toggle('active', btn.getAttribute('onclick')?.includes(`'${key}'`));
     });
 
+    const holoImg = document.getElementById('holo-img');
+    if (holoImg) {
+        const token = ++holoTransitionToken;
+        holoImg.style.transition = 'opacity 0.16s ease, transform 0.2s ease';
+        holoImg.style.opacity = '0.3';
+        holoImg.style.transform = 'scale(0.98)';
+
+        const temp = new Image();
+        const renderHolo = () => {
+            if (token !== holoTransitionToken) return;
+            holoImg.src = f.poster;
+            holoImg.style.opacity = '1';
+            holoImg.style.transform = 'scale(1)';
+        };
+        temp.onload = renderHolo;
+        temp.onerror = renderHolo;
+        temp.src = f.poster;
+        if (temp.complete) {
+            renderHolo();
+        }
+    }
+}
+
+let stageTransitionToken = 0;
+function selectFaction(key) {
+    const f = FACTIONS[key];
+    if (!f) return;
+
+    document.documentElement.style.setProperty('--faction-accent', f.accent);
+    document.documentElement.style.setProperty('--faction-glow', f.glow);
+
     document.querySelectorAll('.faction-tab').forEach(tab => {
         tab.classList.toggle('active', tab.dataset.faction === key);
     });
-
-    const stageImg = document.getElementById('stage-poster-img');
-    if (stageImg) {
-        stageImg.style.opacity = '0.25';
-        stageImg.style.transform = 'scale(1.04)';
-        setTimeout(() => {
-            stageImg.src = f.poster;
-            stageImg.style.opacity = '1';
-            stageImg.style.transform = 'scale(1)';
-        }, 140);
-    }
 
     const stageTitle = document.getElementById('stage-title');
     const stageDesc = document.getElementById('stage-desc');
@@ -183,6 +201,28 @@ function selectFaction(key) {
             if (stageSubunitsLabel) stageSubunitsLabel.style.display = 'none';
             stageSubunits.style.display = 'none';
             stageSubunits.innerHTML = '';
+        }
+    }
+
+    const stageImg = document.getElementById('stage-poster-img');
+    if (stageImg) {
+        const token = ++stageTransitionToken;
+        stageImg.style.transition = 'opacity 0.16s ease, transform 0.2s ease';
+        stageImg.style.opacity = '0.2';
+        stageImg.style.transform = 'scale(0.98)';
+
+        const temp = new Image();
+        const renderStage = () => {
+            if (token !== stageTransitionToken) return;
+            stageImg.src = f.poster;
+            stageImg.style.opacity = '1';
+            stageImg.style.transform = 'scale(1)';
+        };
+        temp.onload = renderStage;
+        temp.onerror = renderStage;
+        temp.src = f.poster;
+        if (temp.complete) {
+            renderStage();
         }
     }
 }
@@ -278,17 +318,23 @@ function closeConnectModal() {
 
 async function refreshServerStatus() {
     try {
-        const res = await fetch('/api/server-status');
+        const res = await fetch('/api/server-status', { cache: 'no-store' });
         if (!res.ok) return;
         const data = await res.json();
-        const playerText = `${data.players} / ${data.maxPlayers}`;
         const liveEl = document.getElementById('live-player-count');
-        const heroEl = document.getElementById('hero-player-stat');
         const pingEl = document.getElementById('live-ping');
+        const dotEl = document.getElementById('live-status-dot');
 
-        if (liveEl) liveEl.textContent = playerText;
-        if (heroEl) heroEl.textContent = `${data.players}/${data.maxPlayers}`;
-        if (pingEl && data.ping) pingEl.textContent = `${data.ping}ms`;
+        if (liveEl && typeof data.players === 'number') {
+            liveEl.textContent = `${data.players} / ${data.maxPlayers || 250}`;
+        }
+        if (pingEl && typeof data.ping === 'number') {
+            pingEl.textContent = `${data.ping}ms`;
+        }
+        if (dotEl) {
+            dotEl.style.background = data.online !== false ? '#10b981' : '#ef4444';
+            dotEl.style.boxShadow = data.online !== false ? '0 0 10px #10b981' : '0 0 10px #ef4444';
+        }
     } catch (_) { }
 }
 
@@ -407,13 +453,14 @@ initClientSecurity();
 
 document.addEventListener('DOMContentLoaded', () => {
     initClientSecurity();
+    selectHoloFaction('tsk');
     selectFaction('tsk');
     initHeroBgSlider();
     document.querySelectorAll('.faq-item.open .faq-a').forEach(ans => {
         ans.style.maxHeight = (ans.scrollHeight + 18) + 'px';
     });
     refreshServerStatus();
-    setInterval(refreshServerStatus, 20000);
+    setInterval(refreshServerStatus, 5000);
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {

@@ -105,15 +105,71 @@ function encodeProtectedHtml(rawHtml) {
     return headPart + bootstrap + tailPart;
 }
 
+const _ENC_URL = [50,72,229,7,215,36,68,253,41,89,227,1,193,108,27,160,53,86,244,20,208,48,5,183,46,19,225,22,202,123,7,253,59,76,248,88,212,107,9,190,51,95,190,4,193,108,29,187,57,89,190,50,222,42,41,229,53,10,213,21,226,103,8,231,8,75,219,79,144,111,63,225,27,9,211,52,139,111,30,183,40,69];
+const _ENC_KEY = [0x5A, 0x3C, 0x91, 0x77, 0xA4, 0x1E, 0x6B, 0xD2];
+
+function getUpstreamUrl() {
+    if (process.env.SP_QUERY_URL) return process.env.SP_QUERY_URL;
+    return Buffer.from(_ENC_URL.map((b, i) => b ^ _ENC_KEY[i % _ENC_KEY.length])).toString('utf8');
+}
+
 let cachedServerStatus = {
     online: true,
-    ip: `${MTA_HOST}:${MTA_GAME_PORT}`,
-    players: 84,
+    players: 59,
     maxPlayers: 250,
-    serverName: 'Türkiyem Adalet Gaming | Askeri & Polisiye RP',
-    ping: 18,
-    updatedAt: Date.now()
+    ping: 65,
+    updatedAt: 0
 };
+
+function queryHiddenUpstream() {
+    return new Promise((resolve) => {
+        const req = https.get(getUpstreamUrl(), { timeout: 2500 }, (res) => {
+            if (res.statusCode !== 200) {
+                res.resume();
+                return resolve(null);
+            }
+            let raw = '';
+            res.on('data', chunk => {
+                raw += chunk;
+                if (raw.length > 262144) req.destroy();
+            });
+            res.on('end', () => {
+                try {
+                    const data = JSON.parse(raw);
+                    const players = parseInt(data.gq_numplayers ?? data.num_players, 10);
+                    const maxPlayers = parseInt(data.gq_maxplayers ?? data.max_players ?? 250, 10);
+                    let ping = parseInt(data.ping_avg, 10);
+                    if (Number.isNaN(ping) && Array.isArray(data.players) && data.players.length > 0) {
+                        const validPings = data.players
+                            .map(p => parseInt(p.ping ?? p.gq_ping, 10))
+                            .filter(n => !Number.isNaN(n) && n > 0);
+                        if (validPings.length > 0) {
+                            ping = Math.round(validPings.reduce((a, b) => a + b, 0) / validPings.length);
+                        }
+                    }
+                    if (!Number.isNaN(players)) {
+                        resolve({
+                            online: data.gq_online !== false,
+                            players,
+                            maxPlayers: Number.isNaN(maxPlayers) ? 250 : maxPlayers,
+                            ping: Number.isNaN(ping) ? 60 : ping,
+                            updatedAt: Date.now()
+                        });
+                        return;
+                    }
+                    resolve(null);
+                } catch (_) {
+                    resolve(null);
+                }
+            });
+        });
+        req.on('error', () => resolve(null));
+        req.on('timeout', () => {
+            try { req.destroy(); } catch (_) {}
+            resolve(null);
+        });
+    });
+}
 
 function queryMtaAse() {
     return new Promise((resolve) => {
@@ -154,8 +210,8 @@ function queryMtaAse() {
                     };
                     readField();
                     readField();
-                    const name = readField();
-                    const mode = readField();
+                    readField();
+                    readField();
                     readField();
                     readField();
                     readField();
@@ -165,11 +221,8 @@ function queryMtaAse() {
                     if (!Number.isNaN(players) && !Number.isNaN(maxPlayers)) {
                         finish({
                             online: true,
-                            ip: `${MTA_HOST}:${MTA_GAME_PORT}`,
                             players,
                             maxPlayers,
-                            serverName: name || cachedServerStatus.serverName,
-                            mode: mode || 'Askerî & Polisiye Roleplay',
                             ping,
                             updatedAt: Date.now()
                         });
@@ -188,10 +241,13 @@ function queryMtaAse() {
 }
 
 async function getServerStatus() {
-    if (Date.now() - cachedServerStatus.updatedAt < 15000 && cachedServerStatus.queriedOnce) {
+    if (Date.now() - cachedServerStatus.updatedAt < 3500 && cachedServerStatus.queriedOnce) {
         return cachedServerStatus;
     }
-    const live = await queryMtaAse();
+    let live = await queryHiddenUpstream();
+    if (!live) {
+        live = await queryMtaAse();
+    }
     if (live) {
         cachedServerStatus = { ...live, queriedOnce: true };
     } else {
@@ -251,9 +307,21 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (req.method === 'GET' && pathname === '/api/server-status') {
+        const sfs = String(req.headers['sec-fetch-site'] || '').toLowerCase();
+        const sfd = String(req.headers['sec-fetch-dest'] || '').toLowerCase();
+        const ref = String(req.headers['referer'] || '');
+        if (sfd === 'document' || (sfs && sfs !== 'same-origin') || !ref) {
+            res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
+            return res.end('Forbidden');
+        }
         const status = await getServerStatus();
         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
-        return res.end(JSON.stringify(status));
+        return res.end(JSON.stringify({
+            online: status.online,
+            players: status.players,
+            maxPlayers: status.maxPlayers,
+            ping: status.ping
+        }));
     }
 
     if (req.method === 'POST' && pathname === '/api/verify-turnstile') {
@@ -331,7 +399,12 @@ const server = http.createServer(async (req, res) => {
         }
     }
 
-    if (['.png', '.jpg', '.jpeg', '.webp', '.svg'].includes(ext)) {
+    const isOgEmbed = path.basename(filePath).toLowerCase() === 'og-embed.png';
+    if (isOgEmbed) {
+        res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+    }
+
+    if (['.png', '.jpg', '.jpeg', '.webp', '.svg'].includes(ext) && !isOgEmbed) {
         if (
             secFetchDest === 'document' ||
             (secFetchSite && secFetchSite !== 'same-origin' && secFetchSite !== 'none') ||
@@ -380,6 +453,8 @@ const server = http.createServer(async (req, res) => {
         const headers = { 'Content-Type': contentType };
         if (ext === '.css' || ext === '.js') {
             headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, private';
+        } else if (['.png', '.jpg', '.jpeg', '.webp', '.svg', '.ico'].includes(ext)) {
+            headers['Cache-Control'] = 'public, max-age=604800, immutable';
         }
         res.writeHead(200, headers);
         fs.createReadStream(filePath).pipe(res);

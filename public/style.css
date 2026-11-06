@@ -505,6 +505,46 @@ img, a {
     color: #f1f5f9;
 }
 
+.hero-live-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 22px;
+    padding: 14px 24px;
+    border-radius: 16px;
+    background: rgba(10, 14, 24, 0.84);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    flex-wrap: wrap;
+}
+.hero-live-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    letter-spacing: 0.04em;
+}
+.hero-live-icon {
+    color: var(--brand-amber);
+    font-size: 14px;
+}
+.hero-live-label {
+    color: #94a3b8;
+    font-weight: 600;
+}
+.hero-live-val {
+    color: var(--brand-amber);
+    font-weight: 800;
+    font-size: 14.5px;
+}
+.hero-live-divider {
+    width: 1px;
+    height: 22px;
+    background: rgba(255, 255, 255, 0.14);
+}
+
 .command-dock {
     background: rgba(12, 17, 29, 0.85);
     border: 1px solid var(--border-bright);

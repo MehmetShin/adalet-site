@@ -4,9 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Türkiyem Adalet Gaming | Kaliteli Askerî & Polisiye Roleplay</title>
-    <meta name="description"
-        content="2020'den bugüne Türkiye'nin en köklü MTA:SA Sesli ve Yazılı Askerî & Polisiye Roleplay topluluğu. TSK, JGK, EGM ve Çetin Aşireti klanlarıyla hemen role katıl!">
+    <meta name="theme-color" content="#ff7b00">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://adaletgaming.com/">
+    <meta property="og:image" content="https://adaletgaming.com/og-embed.png">
+    <meta property="og:image:secure_url" content="https://adaletgaming.com/og-embed.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="540">
+    <meta name="twitter:image" content="https://adaletgaming.com/og-embed.png">
     <link rel="icon" type="image/png" href="/logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,31 +35,6 @@
             <div class="hero-bg-slide" style="background-image: url('/bg5.webp');"></div>
             <div class="hero-bg-slide" style="background-image: url('/bg6.jpg');"></div>
             <div class="hero-bg-overlay"></div>
-        </div>
-        <div class="telemetry-bar">
-            <div class="container telemetry-inner">
-                <div class="telemetry-left">
-                    <div class="status-indicator">
-                        <span class="pulse-dot"></span>
-                        <span id="top-server-state">SUNUCU AKTİF</span>
-                    </div>
-                    <span class="telemetry-tag">
-                        <i class="fa-solid fa-users"></i>
-                        AKTİF OYUNCU: <strong id="live-player-count">84 / 200</strong>
-                    </span>
-                    <span class="telemetry-tag">
-                        <i class="fa-solid fa-signal"></i>
-                        PİNG: <strong id="live-ping">18ms</strong>
-                    </span>
-                </div>
-                <div class="telemetry-right">
-                    <button class="ip-quick-pill" onclick="copyServerIP()" title="IP Adresini Kopyala">
-                        <i class="fa-solid fa-terminal"></i>
-                        <span>178.32.203.118:22003</span>
-                        <i class="fa-regular fa-copy"></i>
-                    </button>
-                </div>
-            </div>
         </div>
         <header class="navbar" id="navbar">
             <div class="container">
@@ -99,6 +81,21 @@
                         <strong>ve otomasyon </strong>
                         teknolojisiyle tek çatı altında buluşturur.
                     </p>
+
+                    <div class="hero-live-box">
+                        <div class="hero-live-item">
+                            <span class="pulse-dot" id="live-status-dot"></span>
+                            <i class="fa-solid fa-users hero-live-icon"></i>
+                            <span class="hero-live-label">AKTİF OYUNCU:</span>
+                            <strong class="hero-live-val" id="live-player-count">-- / 250</strong>
+                        </div>
+                        <span class="hero-live-divider"></span>
+                        <div class="hero-live-item">
+                            <i class="fa-solid fa-signal hero-live-icon"></i>
+                            <span class="hero-live-label">PİNG:</span>
+                            <strong class="hero-live-val" id="live-ping">--ms</strong>
+                        </div>
+                    </div>
                 </div>
                 <div class="hero-visual" data-reveal>
                     <div class="holo-card" id="hero-holo-card">
@@ -112,10 +109,10 @@
                         </div>
 
                         <div class="holo-quick-switcher">
-                            <button class="holo-switch-btn active" onclick="selectFaction('tsk')">TSK</button>
-                            <button class="holo-switch-btn" onclick="selectFaction('jgk')">JGK</button>
-                            <button class="holo-switch-btn" onclick="selectFaction('egm')">EGM</button>
-                            <button class="holo-switch-btn" onclick="selectFaction('cetin')">ÇETİN</button>
+                            <button class="holo-switch-btn active" onclick="selectHoloFaction('tsk')">TSK</button>
+                            <button class="holo-switch-btn" onclick="selectHoloFaction('jgk')">JGK</button>
+                            <button class="holo-switch-btn" onclick="selectHoloFaction('egm')">EGM</button>
+                            <button class="holo-switch-btn" onclick="selectHoloFaction('cetin')">ÇETİN</button>
                         </div>
                     </div>
                 </div>
