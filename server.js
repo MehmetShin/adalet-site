@@ -10,6 +10,7 @@ const PUBLIC_DIR = path.join(__dirname, 'public');
 const MTA_HOST = '178.32.203.118';
 const MTA_GAME_PORT = 22003;
 const MTA_ASE_PORT = 22126;
+const gtasaDownloadHandler = require('./api/gtasa-indir');
 
 const MIME_TYPES = {
     '.html': 'text/html; charset=utf-8',
@@ -322,6 +323,10 @@ const server = http.createServer(async (req, res) => {
             maxPlayers: status.maxPlayers,
             ping: status.ping
         }));
+    }
+
+    if (pathname === '/api/gtasa-indir') {
+        return gtasaDownloadHandler(req, res);
     }
 
     if (req.method === 'POST' && pathname === '/api/verify-turnstile') {
