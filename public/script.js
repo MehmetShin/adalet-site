@@ -7,7 +7,7 @@ const FACTIONS = {
         title: 'TÜRK SİLAHLI KUVVETLERİ',
         shortSub: 'Özel Kuvvetler, Kara, Hava ve Deniz Kuvvetleri Komutanlığı sınır ve sınır ötesi operasyon gücü.',
         desc: 'Kara, Hava ve Deniz Kuvvetleri Komutanlığı ile Özel Kuvvetler (Bordo Bereliler) unsurlarından oluşan en üst düzey askerî güç. Sınır güvenliği, hava taarruz operasyonları ve ağır zırhlı tugay sevkiyatlarını yönetir.',
-        poster: '/tsk.png',
+        poster: '/tsk.webp',
         accent: '#ef4444',
         glow: 'rgba(239, 68, 68, 0.32)',
         readiness: '%100 TAM KADRO AKTİF',
@@ -25,7 +25,7 @@ const FACTIONS = {
         title: 'JANDARMA GENEL KOMUTANLIĞI',
         shortSub: 'JÖH, JÖAK, Jandarma Havacılık ve Kırsal/Otoyol Asayiş Komutanlığı.',
         desc: 'Kırsal bölgelerde, dağlık arazilerde ve stratejik otoyol güzergahlarında kanun hâkimiyetini sağlayan, Jandarma Özel Harekat (JÖH) ve Jandarma Havacılık unsurlarıyla yüksek hareket kabiliyetine sahip kolluk kuvveti.',
-        poster: '/jgk.png',
+        poster: '/jgk.webp',
         accent: '#06b6d4',
         glow: 'rgba(6, 182, 212, 0.32)',
         readiness: 'OPERASYONA HAZIR',
@@ -43,7 +43,7 @@ const FACTIONS = {
         title: 'EMNİYET GENEL MÜDÜRLÜĞÜ',
         shortSub: 'Polis Özel Harekat (PÖH), Cumhurbaşkanlığı Koruma (CAT), Yunus, TEM ve Asayiş.',
         desc: 'Şehir içi güvenliği, yüksek riskli rehine kurtarma ve baskın operasyonlarını, VIP devlet büyükleri eskort görevlerini ve organize suçlarla mücadeleyi yürüten merkezî teşkilat.',
-        poster: '/egm.png',
+        poster: '/egm.webp',
         accent: '#3b82f6',
         glow: 'rgba(59, 130, 246, 0.34)',
         readiness: '7/24 ŞEHİR DEVRİYESİ',
@@ -61,7 +61,7 @@ const FACTIONS = {
         title: 'ÇETİN AŞİRETİ',
         shortSub: 'Sadakat, konvoy gücü, bölge hakimiyeti ve yeraltı ticaret ağı.',
         desc: 'Geleneksel aşiret hiyerarşisini modern yeraltı operasyonlarıyla birleştiren en büyük sivil/gayrimeşru güç. Özel zırhlı makam konvoyları, malikane savunması ve stratejik bölge savaşlarında söz sahibidir.',
-        poster: '/cetin.png',
+        poster: '/cetin.webp',
         accent: '#f59e0b',
         glow: 'rgba(245, 158, 11, 0.32)',
         readiness: 'KONVOY & HAKİMİYET AKTİF',
@@ -118,7 +118,7 @@ const STEPS_DATA = {
     }
 };
 
-const PRELOAD_FACTION_ASSETS = ['/tsk.png', '/jgk.png', '/egm.png', '/cetin.png'];
+const PRELOAD_FACTION_ASSETS = ['/tsk.webp', '/jgk.webp', '/egm.webp', '/cetin.webp'];
 PRELOAD_FACTION_ASSETS.forEach(url => {
     const im = new Image();
     im.src = url;
